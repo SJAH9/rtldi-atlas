@@ -2,6 +2,10 @@
 """
 Generate choropleth map(s) of "enclosure strength" (RTLP R score, 0-1) across the 193 UN Member States.
 
+Uses Mollweide (equal-area) projection for the world view (good area preservation for choropleths).
+True Dymaxion or Goode's butterfly/interrupted projections are not supported by Plotly's geo engine;
+Mollweide is the recommended low-distortion alternative within the current stack.
+
 Uses the pre-built 2026 ATLAS data (R computed from 8 V-Dem 2024 indicators + 1 real WB socioeconomic per the source crosswalk;
 G₀ = 2026-fresh GDP per capita as the more dynamic variable per project rule).
 
