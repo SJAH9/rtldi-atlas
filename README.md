@@ -64,6 +64,12 @@ python3 -m src.generate_enclosure_map --year 2026
 ```
 Outputs land in `outputs/figures/` (PNG at print resolution, PDF vector, interactive HTML with full hover details + vintage labels).
 
+You can also (re)build the full print PDF ebook, which now includes a compact 3-year RTLDI trend plot (based on 3 years of GDP data, R fixed) on every nation's profile page:
+```bash
+python3 -m src.generate_atlas_ebook
+```
+The ebook is at `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (206 pages). Nation pages still fit on a single A4 page each.
+
 ### Getting the V-Dem Data (one-time, ~few hundred MB)
 1. Go to https://www.v-dem.net/data/the-v-dem-dataset/
 2. Download the latest **Country-Year: V-Dem Full+Others** (or Core if you want smaller).
