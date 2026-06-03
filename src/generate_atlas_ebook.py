@@ -280,6 +280,61 @@ def get_nation_focus_map(iso3: str, country: str, un_region: Optional[str], all_
     return p
 
 
+def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Path]:
+    """Generate a choropleth map for all countries in a UN region (zoomed to the region).
+    Saved to outputs/figures/regional_choropleths/ (gitignored; regenerated on build).
+    """
+    if not HAS_PLOTLY or not region_name:
+        return None
+    out_dir = Path("outputs/figures/regional_choropleths")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    slug = region_name.lower().replace(" ", "_").replace("/", "_").replace(",", "")
+    p = out_dir / f"{slug}.png"
+    if p.exists():
+        return p
+    focus = [n for n in all_nations if (n.get("un_region") or "") == region_name]
+    if not focus:
+        return None
+    focus_df = pd.DataFrame([
+        {"iso3": n["iso3"], "r": float(n.get("r", 0.0)), "country": n.get("country", n["iso3"])}
+        for n in focus
+    ])
+    fig = px.choropleth(
+        focus_df,
+        locations="iso3",
+        locationmode="ISO-3",
+        color="r",
+        color_continuous_scale="Viridis",
+        range_color=[0.0, 1.0],
+        hover_name="country",
+        hover_data={"r": ":.3f"},
+    )
+    fig.update_geos(
+        fitbounds="locations",
+        showcoastlines=True,
+        coastlinecolor="rgba(180,180,180,0.6)",
+        showland=True,
+        landcolor="rgba(245,245,245,0.9)",
+        showocean=True,
+        oceancolor="rgba(230,242,255,0.6)",
+        projection_type="natural earth",
+    )
+    fig.update_layout(
+        coloraxis_colorbar=dict(
+            title=dict(text="R", font=dict(size=7)),
+            len=0.4,
+            thickness=6,
+        ),
+        title=dict(text=f"{region_name} Region — Enclosure Strength (R)", font=dict(size=8)),
+        margin=dict(l=1, r=1, t=14, b=1),
+        height=200,
+        width=400,
+        paper_bgcolor="white",
+    )
+    fig.write_image(p, width=400, height=200, scale=1.5)
+    return p
+
+
 def create_pdf():
     pdf = RTLDIAtlasPDF()
     detailed_all, detailed_alpha = load_detailed_data()
@@ -288,6 +343,75 @@ def create_pdf():
     print("Loading 3-year G0 series for nation trend plots...")
     all_isos = [d["iso3"] for d in detailed_all]
     g0_series = load_g0_series(all_isos)
+
+    # Compute regional aggregates for UN Regional Summaries section (one page per UN region)
+    print("Computing regional summaries for UN Regional Summaries (aggregates + 9-indicator breakdowns)...")
+    from collections import defaultdict
+    region_countries = defaultdict(list)
+    for d in detailed_all:
+        reg = d.get("un_region") or "Unknown"
+        region_countries[reg].append(d)
+    regional_data = {}
+    for reg, cs in region_countries.items():
+        n = len(cs)
+        if n == 0:
+            continue
+        pops = [float(c.get("population") or 0) for c in cs]
+        total_pop = sum(pops)
+        rs = [float(c.get("r") or 0) for c in cs]
+        mean_r = sum(rs) / n
+        weighted_r = sum(r * p for r, p in zip(rs, pops)) / total_pop if total_pop > 0 else mean_r
+        losts = [float(c.get("total_deficit_usd") or 0) for c in cs]
+        total_lost = sum(losts)
+        g0s = [float(c.get("g0") or 0) for c in cs]
+        mean_g0 = sum(g0s) / n if n else 0
+        # 9 indicators: frac Yes + attributable lost GDP
+        inds = []
+        if cs and "components" in cs[0]:
+            for i in range(9):
+                comps = [c["components"][i] for c in cs if "components" in c and len(c.get("components", [])) > i]
+                if not comps:
+                    continue
+                bins = [int(comp.get("bin", 0)) for comp in comps]
+                raws = [comp.get("raw") for comp in comps]
+                n_yes = sum(bins)
+                frac_yes = n_yes / len(bins) if bins else 0
+                valid_raws = []
+                for x in raws:
+                    if x is not None:
+                        try:
+                            valid_raws.append(float(x))
+                        except (ValueError, TypeError):
+                            pass
+                avg_raw = sum(valid_raws) / len(valid_raws) if valid_raws else 0
+                # attributable: for bin==0 countries, add (0.05/9 * g0 * pop)
+                attr_lost = 0.0
+                for c in cs:
+                    if "components" in c and len(c.get("components", [])) > i:
+                        if int(c["components"][i].get("bin", 0)) == 0:
+                            g0 = float(c.get("g0") or 0)
+                            pop = float(c.get("population") or 0)
+                            attr_lost += 0.05 * (1.0 / 9.0) * g0 * pop
+                inds.append({
+                    "num": i + 1,
+                    "name": comps[0].get("name", ""),
+                    "desc": comps[0].get("desc", ""),
+                    "frac_yes": frac_yes,
+                    "n_yes": n_yes,
+                    "n_countries": len(bins),
+                    "avg_raw": avg_raw,
+                    "attributable_lost_gdp": attr_lost,
+                })
+        regional_data[reg] = {
+            "n_countries": n,
+            "total_pop": total_pop,
+            "mean_r": mean_r,
+            "weighted_r": weighted_r,
+            "total_lost_gdp": total_lost,
+            "mean_g0": mean_g0,
+            "indicators": inds,
+        }
+    sorted_regions = sorted(regional_data.items(), key=lambda x: -x[1]["total_lost_gdp"])
 
     # Sort for summary table by total loss desc (highest impact first)
     detailed_by_loss = sorted(
@@ -444,7 +568,8 @@ def create_pdf():
         ("Methodology and Data Sources", "3"),
         ("Diagnostic Guide: Using RTLDI for Reform", "4"),
         ("Summary Table of All 193 UN Member Nations", "6"),
-        ("Detailed Nation Profiles (A–Z)", "10"),
+        ("UN Regional Summaries (22 regions)", "8"),
+        ("Detailed Nation Profiles (A–Z)", "~30"),
         ("Data Attribution and Sources", "~210"),
         ("Index of Terms", "~211"),
         ("Credits and Acknowledgments", "~212"),
@@ -521,6 +646,84 @@ def create_pdf():
         pdf.cell(col_widths[4], 4.2, per_cap_str, border=1, align="R")
         pdf.cell(col_widths[5], 4.2, total_str, border=1, align="R")
         pdf.cell(col_widths[6], 4.2, pop_str, border=1, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+    # ========== UN REGIONAL SUMMARIES ==========
+    pdf.add_page()
+    pdf.chapter_title("UN Regional Summaries")
+    pdf.body_text(
+        "The 193 UN Member States are grouped into 22 geographic regions. Below are one-page overviews for each region, "
+        "aggregating the RTLDI metrics. For each region we show a choropleth of enclosure strength (R) for its member "
+        "countries (zoomed to the region using the same Viridis scale as the global map), key aggregates (population-weighted "
+        "average R, total annual lost GDP), and a breakdown of the 9 RTLP indicators. The breakdown reports the percentage "
+        "of countries in the region scoring 'Yes' on each indicator and the estimated portion of the region's total lost GDP "
+        "attributable to shortfalls on that indicator (the sum, across countries lacking the protection, of 0.05/9 × G₀ × population)."
+    )
+    pdf.small_text(
+        "Regional statistics are derived directly from the per-country 2026 atlas values. High-impact regions (by total lost GDP) are shown first."
+    )
+
+    for reg_name, reg_sum in sorted_regions:
+        pdf.add_page()
+        # Region header + stats
+        pdf.set_font(FONT_NAME, "", 11)
+        pdf.set_text_color(*HEADER_COLOR)
+        pdf.cell(0, 5, f"{reg_name} Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.set_font(FONT_NAME, "", 7)
+        pdf.set_text_color(70, 70, 70)
+        stats = (
+            f"Countries: {reg_sum['n_countries']}  |  "
+            f"Population: {reg_sum['total_pop']/1e6:,.1f} million  |  "
+            f"Pop-weighted Avg R: {reg_sum['weighted_r']:.3f}  |  "
+            f"Total Annual Lost GDP: ${reg_sum['total_lost_gdp']/1e9:,.2f} billion"
+        )
+        pdf.cell(0, 4, stats, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(1)
+
+        # Choropleth for the region
+        map_p = get_regional_choropleth(reg_name, detailed_all)
+        if map_p and map_p.exists():
+            pdf.set_font(FONT_NAME, "", 6.5)
+            pdf.set_text_color(*HEADER_COLOR)
+            pdf.cell(0, 3, "Regional Choropleth — Enclosure Strength (R)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            ym = pdf.get_y()
+            pdf.image(str(map_p), x=MARGIN + 5, w=CONTENT_WIDTH - 10, h=38)
+            pdf.set_y(ym + 39)
+            pdf.set_font(FONT_NAME, "", 5)
+            pdf.set_text_color(90, 90, 90)
+            pdf.multi_cell(0, 2.3,
+                "Zoomed to countries in this UN region (colored by their individual R; same scale as the global choropleth). "
+                "★ would mark a specific nation in per-country views."
+            )
+            pdf.ln(0.5)
+
+        # 9 indicators breakdown for region
+        pdf.set_font(FONT_NAME, "", 6.5)
+        pdf.set_text_color(*HEADER_COLOR)
+        pdf.cell(0, 3.5, "RTLP Indicator Breakdown for the Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(0.3)
+
+        for ind in reg_sum.get("indicators", []):
+            pct = ind["frac_yes"] * 100
+            lost_b = ind.get("attributable_lost_gdp", 0) / 1e9
+            pdf.set_font(FONT_NAME, "", 5.2)
+            pdf.set_text_color(*BLACK)
+            line = f"{ind['num']}. {ind['name']}: {pct:.0f}% Yes ({ind['n_yes']}/{ind['n_countries']}) | avg raw {ind['avg_raw']:.2f}"
+            pdf.cell(0, 2.6, line, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.set_font(FONT_NAME, "", 4.8)
+            pdf.set_text_color(70, 70, 70)
+            pdf.set_x(MARGIN + 2)
+            pdf.multi_cell(0, 2.2,
+                f"Attributable lost GDP: ${lost_b:,.2f} billion ({(lost_b * 1e9 / reg_sum['total_lost_gdp'] * 100) if reg_sum['total_lost_gdp'] > 0 else 0:.0f}% of region total). {ind['desc']}"
+            )
+            pdf.set_x(MARGIN)
+
+        pdf.ln(0.5)
+        pdf.set_font(FONT_NAME, "", 4.8)
+        pdf.set_text_color(100, 100, 100)
+        pdf.multi_cell(0, 2.1,
+            "Note: Weighted R is population-weighted mean of member countries' R. Attributable lost for an indicator = sum over countries with 'No' on that indicator of (0.05/9 × G₀ × pop). "
+            "See individual nation profiles for country-level detail and 3-year trends. Full global choropleth appears in the front matter / outputs/figures/."
+        )
 
     # ========== DETAILED PROFILES (A-Z) ==========
     pdf.add_page()
