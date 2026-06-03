@@ -1,0 +1,11 @@
+{
+  "atlas_year":2023,
+  "eta":0.05,
+  "n_countries":193,
+  "n_with_gdp":187,
+  "global_avg_r":0.34945308,
+  "total_global_deficit_est_usd":2436804965143.1455078125,
+  "median_r":0.3333333333,
+  "use_real_vdem":true,
+  "note":"R from 8 V-Dem components (crosswalk) + real WB socio #9. See docs\/indicator_crosswalk.md"
+}

@@ -1,0 +1,49 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Project data sets - EXCLUDED from repo (NGOs download their own)
+# V-Dem (large CSV ~hundreds MB)
+data/raw/V-Dem*
+data/raw/*.zip
+# WB bulk downloads
+data/raw/wb_gdp/
+data/raw/API_*
+# Codebooks (large PDFs, users get with data)
+data/raw/*codebook*.pdf
+data/raw/codebook*.pdf
+
+# Processed / generated data (reproducible)
+data/processed/
+# But we allow committing example small atlases for demos
+!outputs/atlas/rtl_di_atlas_un_members_2023.csv
+!outputs/atlas/rtl_di_atlas_un_members_2023.xlsx
+!outputs/atlas/rtl_di_atlas_summary_2023.json
+
+# Keep the tiny canonical list
+!data/raw/un_member_states.csv
+
+# Original source document (large, not needed in repo)
+Causality_and_Attraction_Hubbard_2026V3.pdf
+Causality_and_Attraction_Hubbard_2026V3.txt
+
+# Other generated
+outputs/figures/
+*.log
