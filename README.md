@@ -12,7 +12,7 @@ The ATLAS operationalizes the 9-indicator RTLP score and the RTLDI equation (ΔG
 - High-quality indicator mapping from the 9 binary questions to observable variables.
 - Reproducible pipeline (fetch → clean → score → compute → export).
 - Multiple outputs: master dataset (CSV/Parquet/XLSX), summaries, ranks, time series where available, methodology documentation.
-- Foundation for maps, dashboards, further analysis (e.g., correlations with other indices, historical trends, scenario modeling with η).
+- Foundation for maps, dashboards, further analysis (e.g., correlations with other indices, historical trends, scenario modeling with η). The 2026 release includes a global choropleth of enclosure strength (RTLP R).
 
 ## Core RTLDI (from source)
 See [docs/RTLDI_SPEC.md](docs/RTLDI_SPEC.md) for the verbatim 9 indicators, equation, examples, and notes.
@@ -47,6 +47,9 @@ git clone https://github.com/SJAH9/rtldi-atlas.git
 cd rtldi-atlas
 python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter
 python3 -m src.build_atlas --year 2026 --eta 0.05
+# Optional (for choropleth maps of enclosure strength / other figures):
+python3 -m pip install plotly kaleido
+python3 -m src.generate_enclosure_map --year 2026
 ```
 
 The code will:
@@ -54,6 +57,12 @@ The code will:
 - Look for your V-Dem CSV in `data/raw/` (see "Getting the Data" below).
 - Compute the full 9-component RTLP score using the published crosswalk.
 - Output CSV + XLSX + summary in `outputs/atlas/`.
+
+After the atlas is built you can generate the choropleth of enclosure strength (RTLP R):
+```bash
+python3 -m src.generate_enclosure_map --year 2026
+```
+Outputs land in `outputs/figures/` (PNG at print resolution, PDF vector, interactive HTML with full hover details + vintage labels).
 
 ### Getting the V-Dem Data (one-time, ~few hundred MB)
 1. Go to https://www.v-dem.net/data/the-v-dem-dataset/
@@ -73,8 +82,22 @@ No manual download required for the core indicators. The code uses `wbgapi` to p
 
 If you prefer offline bulk, download the corresponding API_*.csv from data.worldbank.org and place in data/raw/ — the loaders will prefer local files.
 
+### Visualizations: Enclosure Strength Choropleth
+"Enclosure strength" = the RTLP R score (0–1 average of the 9 binary indicators of right-to-life protection).
+
+```bash
+python -m src.generate_enclosure_map --year 2026
+```
+
+Produces:
+- High-resolution PNG (scale=2, suitable for print/PDF embedding)
+- Vector PDF
+- Interactive HTML (hover any country for R, ΔG, total deficit, vintage years, region)
+
+All outputs carry the exact 2026 rule footnote: V-Dem components 2024 + 2026 G₀ baseline. See the committed example in `outputs/figures/rtl_di_enclosure_strength_2026_choropleth.*`.
+
 ## Current Status
-See the private repo history for the full development log. The public launch version will include the 2026 ATLAS, improved NGO UX, and full documentation.
+See the private repo history for the full development log. The public launch version will include the 2026 ATLAS (tables + 206-page print ebook), enclosure strength choropleth maps, improved NGO UX, and full documentation.
 
 ## Project Layout (committed files only)
 ```
@@ -85,7 +108,8 @@ See the private repo history for the full development log. The public launch ver
 │   └── un_member_states.csv   # tiny canonical list (committed)
 ├── src/                # the full pipeline
 ├── docs/               # specs + crosswalk + methodology
-├── outputs/atlas/      # example 2023 real ATLAS (committed as demo)
+├── outputs/atlas/      # example 2023/2026 real ATLAS (committed as demo)
+├── outputs/figures/    # committed example choropleth of enclosure strength (R) for 2026
 └── ...
 ```
 

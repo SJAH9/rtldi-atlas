@@ -50,6 +50,10 @@ data/processed/
 Causality_and_Attraction_Hubbard_2026V3.pdf
 Causality_and_Attraction_Hubbard_2026V3.txt
 
-# Other generated
-outputs/figures/
+# Other generated (temp charts ignored by default)
+outputs/figures/*
+# Whitelist the example choropleth committed for demos / NGO distribution (regeneratable via the script)
+!outputs/figures/rtl_di_enclosure_strength_2026_choropleth.png
+!outputs/figures/rtl_di_enclosure_strength_2026_choropleth.pdf
+!outputs/figures/rtl_di_enclosure_strength_2026_choropleth.html
 *.log
