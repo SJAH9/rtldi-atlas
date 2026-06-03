@@ -8,7 +8,7 @@ Structure:
 - Methodology (condensed)
 - Table of Contents
 - Summary Table of All 193 UN Member Nations (paginated, sorted by total loss)
-- Detailed profiles: one page per nation (A-Z order), with GDP loss projections + full 9-indicator RTLP breakdown
+- Detailed profiles: one page per nation (A-Z order), with GDP loss projections + full 9-indicator RTLP breakdown + three-year RTLDI trend plot (varying G0, R fixed)
 - Data Attribution & Sources
 - Index of Terms
 - Credits
@@ -25,6 +25,18 @@ from fpdf.enums import XPos, YPos
 import json
 from pathlib import Path
 import math
+import numpy as np
+import pandas as pd
+from typing import Optional, Dict, Any
+
+# Optional matplotlib for the per-nation 3-year RTLDI (GDP) trend plots
+try:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    HAS_MPL = True
+except Exception:
+    HAS_MPL = False
 
 # Page setup (A4 for print ebook, good margins)
 PAGE_WIDTH = 210
@@ -96,9 +108,105 @@ def load_detailed_data():
     data_sorted = sorted(data, key=lambda x: x["country"])
     return data, data_sorted
 
+
+def load_g0_series(iso3_list, years=(2023, 2024, 2025)):
+    """Load 3 years of G0 (GDP per capita current US$) for the given ISO3s.
+    Prefers local WB bulk CSV (if present, as used by build_atlas), falls back to wbgapi.
+    Returns dict iso3 -> {year: g0_value or None}
+    """
+    iso3s = {i.upper() for i in iso3_list}
+    g0s = {iso: {y: None for y in years} for iso in iso3s}
+    bulk = Path("data/raw/wb_gdp/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_46.csv")
+    has_bulk_data = False
+    if bulk.exists():
+        try:
+            df = pd.read_csv(bulk, skiprows=4)
+            df["iso3"] = df["Country Code"].astype(str).str.upper()
+            for y in years:
+                col = str(y)
+                if col in df.columns:
+                    sub = df[df["iso3"].isin(iso3s)][["iso3", col]].dropna(subset=[col])
+                    for _, r in sub.iterrows():
+                        g0s[r["iso3"]][y] = float(r[col])
+                    has_bulk_data = True
+            if has_bulk_data:
+                print("  3yr G0: loaded from local bulk")
+                return g0s
+        except Exception as e:
+            print(f"  3yr G0 bulk load failed ({e}), trying wbgapi...")
+    # Fallback to live API (requires wbgapi; already used in core pipeline)
+    try:
+        import wbgapi as wb
+        # numericTimeKeys for int years
+        df = wb.data.DataFrame("NY.GDP.PCAP.CD", list(iso3s), time=list(years), labels=False, numericTimeKeys=True)
+        df = df.reset_index().rename(columns={"index": "iso3"})
+        df["iso3"] = df["iso3"].astype(str).str.upper()
+        for y in years:
+            if y in df.columns:
+                sub = df[df["iso3"].isin(iso3s)][["iso3", y]].dropna(subset=[y])
+                for _, r in sub.iterrows():
+                    g0s[r["iso3"]][y] = float(r[y])
+        print("  3yr G0: loaded via wbgapi fallback")
+    except Exception as e:
+        print(f"  3yr G0 wbgapi failed ({e}); trends will be partial/missing for some nations.")
+    return g0s
+
+
+def get_trend_plot_path(iso3: str, country: str, r: float, population: float, g0_by_year: dict,
+                        years=(2023, 2024, 2025)) -> Optional[Path]:
+    """Generate (or return cached temp) small PNG trend plot for this nation's RTLDI over 3 G0 years.
+    Uses fixed R + pop from the 2026 atlas; varies only G0. Returns path or None if insufficient data.
+    """
+    if not HAS_MPL:
+        return None
+    tmpdir = Path("/tmp") / "rtl_di_trends_2026"
+    tmpdir.mkdir(parents=True, exist_ok=True)
+    p = tmpdir / f"{iso3}.png"
+    # Always (re)build for freshness during this run; cheap
+    xs, ys_tot, ys_pc = [], [], []
+    for y in years:
+        g0 = g0_by_year.get(y)
+        if g0 is None or (isinstance(g0, float) and np.isnan(g0)):
+            continue
+        if r is None or population is None or population <= 0:
+            continue
+        try:
+            dg = 0.05 * (1.0 - float(r)) * float(g0)
+            tot_b = dg * float(population) / 1e9
+            xs.append(int(y))
+            ys_tot.append(tot_b)
+            ys_pc.append(dg)
+        except Exception:
+            continue
+    if len(xs) < 2:
+        return None
+    fig, ax = plt.subplots(figsize=(5.2, 1.7), dpi=100)
+    c = "#1F4E79"
+    ax.plot(xs, ys_tot, "-o", color=c, lw=1.1, ms=3.5)
+    ax.fill_between(xs, ys_tot, alpha=0.12, color=c)
+    short = (country[:22] + "…") if len(country) > 23 else country
+    ax.set_title(f"RTLDI Deficit Trend — {short} (R={r:.2f} fixed)", fontsize=6.5, pad=1)
+    ax.set_ylabel("Total annual loss\n(USD billions)", fontsize=5.5)
+    ax.set_xlabel("Year (G₀)", fontsize=5.5)
+    ax.tick_params(axis="both", labelsize=5)
+    for x, y, pc in zip(xs, ys_tot, ys_pc):
+        ax.annotate(f"${pc:,.0f}", xy=(x, y), xytext=(0, 3), textcoords="offset points",
+                    fontsize=4.2, ha="center", color="#333")
+    ax.grid(True, ls=":", alpha=0.35)
+    plt.tight_layout(pad=0.2)
+    fig.savefig(p, dpi=100, facecolor="white", edgecolor="none", bbox_inches="tight")
+    plt.close(fig)
+    return p
+
+
 def create_pdf():
     pdf = RTLDIAtlasPDF()
     detailed_all, detailed_alpha = load_detailed_data()
+
+    # Load 3 years G0 series for the per-nation RTLDI trend plots (GDP-driven, R fixed)
+    print("Loading 3-year G0 series for nation trend plots...")
+    all_isos = [d["iso3"] for d in detailed_all]
+    g0_series = load_g0_series(all_isos)
 
     # Sort for summary table by total loss desc (highest impact first)
     detailed_by_loss = sorted(
@@ -306,35 +414,57 @@ def create_pdf():
         )
         pdf.set_y(y_start + 22)
 
-        pdf.ln(3)
-        pdf.set_font(FONT_NAME, "", 9)
-        pdf.set_text_color(*HEADER_COLOR)
-        pdf.cell(0, 5, "RTLP Score Breakdown — 9 Indicators", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(1)
+        # ========== 3-YEAR RTLDI (GDP) TREND PLOT ==========
+        # Inserted per request: small plot of RTLDI deficit using 3 years of G0 (R fixed from 2024 components)
+        plot_path = get_trend_plot_path(
+            d["iso3"], d["country"], d.get("r"), d.get("population"),
+            g0_series.get(d["iso3"], {})
+        )
+        if plot_path and plot_path.exists():
+            pdf.ln(1)
+            pdf.set_font(FONT_NAME, "", 7)
+            pdf.set_text_color(*HEADER_COLOR)
+            pdf.cell(0, 3.5, "Three-Year RTLDI Trend (based on 3 years of GDP data)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            y_plot = pdf.get_y()
+            img_w = CONTENT_WIDTH - 8
+            # Fixed height ~24-25mm keeps most profiles on 1 page; aspect preserved by generator
+            pdf.image(str(plot_path), x=MARGIN + 4, w=img_w, h=24)
+            pdf.set_y(y_plot + 25)
+            pdf.set_font(FONT_NAME, "", 5.5)
+            pdf.set_text_color(95, 95, 95)
+            pdf.multi_cell(0, 2.6,
+                "R fixed from 2024 V-Dem crosswalk + latest socio #9 (see breakdown); G₀ varies (WB NY.GDP.PCAP.CD); pop fixed at latest. "
+                "ΔG = 0.05 × (1 − R) × G₀; total = ΔG × pop. Years: 2023/2024/2025 (data availability in source bulk/API)."
+            )
+            pdf.ln(1)
 
-        # 9 indicators - clean block layout
+        pdf.ln(2)
+        pdf.set_font(FONT_NAME, "", 8)
+        pdf.set_text_color(*HEADER_COLOR)
+        pdf.cell(0, 4, "RTLP Score Breakdown — 9 Indicators", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(0.5)
+
+        # 9 indicators - clean block layout (compacted to fit + 3yr plot on one page)
         for c in d['components']:
             yes = c['yes']
             color = YES_COLOR if yes == "Yes" else NO_COLOR
-            raw_str = str(c['raw'])[:55] if c['raw'] is not None else "N/A"
+            raw_str = str(c['raw'])[:50] if c['raw'] is not None else "N/A"
             pdf.set_text_color(*BLACK)
-            pdf.set_font(FONT_NAME, "", 7.5)
+            pdf.set_font(FONT_NAME, "", 6)
             status = f"[{yes}]"
             pdf.set_text_color(*color)
-            pdf.cell(0, 3.6, f"{c['num']}. {c['name']} {status}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.cell(0, 2.9, f"{c['num']}. {c['name']} {status}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             pdf.set_text_color(80,80,80)
-            pdf.set_font(FONT_NAME, "", 6.5)
-            pdf.set_x(MARGIN + 4)
-            pdf.multi_cell(0, 3.2, f"raw: {raw_str}  —  {c['desc']}")
+            pdf.set_font(FONT_NAME, "", 5.2)
+            pdf.set_x(MARGIN + 3)
+            pdf.multi_cell(0, 2.5, f"raw: {raw_str} — {c['desc']}")
             pdf.set_x(MARGIN)
 
-        pdf.ln(1)
-        pdf.set_font(FONT_NAME, "", 7)
+        pdf.ln(0.5)
+        pdf.set_font(FONT_NAME, "", 5.5)
         pdf.set_text_color(100,100,100)
-        pdf.multi_cell(0, 3.5,
-            "Note: [Yes] means the binarized indicator contributes +1 to the RTLP score R. "
-            "Raw values are the underlying V-Dem interval scores (higher = stronger protection) or World Bank percentages. "
-            "Thresholds are documented in the Methodology section. Some countries have partial V-Dem coverage."
+        pdf.multi_cell(0, 2.8,
+            "Note: [Yes] = contributes +1 to R. Raw = V-Dem/WB value (higher=stronger protection). Thresholds in Methodology. Partial coverage possible for some nations."
         )
 
     # ========== DATA ATTRIBUTION ==========
