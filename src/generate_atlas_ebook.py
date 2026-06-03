@@ -410,6 +410,7 @@ def create_pdf():
             "total_lost_gdp": total_lost,
             "mean_g0": mean_g0,
             "indicators": inds,
+            "members": cs,  # full per-country dicts for the nations table on the region page
         }
     sorted_regions = sorted(regional_data.items(), key=lambda x: -x[1]["total_lost_gdp"])
 
@@ -686,8 +687,8 @@ def create_pdf():
             pdf.set_text_color(*HEADER_COLOR)
             pdf.cell(0, 3, "Regional Choropleth — Enclosure Strength (R)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             ym = pdf.get_y()
-            pdf.image(str(map_p), x=MARGIN + 5, w=CONTENT_WIDTH - 10, h=38)
-            pdf.set_y(ym + 39)
+            pdf.image(str(map_p), x=MARGIN + 5, w=CONTENT_WIDTH - 10, h=32)
+            pdf.set_y(ym + 33)
             pdf.set_font(FONT_NAME, "", 5)
             pdf.set_text_color(90, 90, 90)
             pdf.multi_cell(0, 2.3,
@@ -695,6 +696,58 @@ def create_pdf():
                 "★ would mark a specific nation in per-country views."
             )
             pdf.ln(0.5)
+
+        # Table of nations in the region + totals row
+        members = reg_sum.get("members", [])
+        if members:
+            pdf.set_font(FONT_NAME, "", 5.5)
+            pdf.set_text_color(*HEADER_COLOR)
+            pdf.cell(0, 3, "Member Nations (RTLP R, G0 per capita, Population, RTLD I total lost)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.ln(0.3)
+            tcols = [36, 9, 15, 16, 20]  # ~96mm wide, compact for 1-page fit
+            thdrs = ["Country", "R", "G0 ($)", "Pop", "Lost ($)"]
+            pdf.set_font(FONT_NAME, "", 4.5)
+            pdf.set_fill_color(*HEADER_COLOR)
+            pdf.set_text_color(255, 255, 255)
+            for ii, hh in enumerate(thdrs):
+                pdf.cell(tcols[ii], 2.6, hh, border=1, fill=True, align="C")
+            pdf.ln()
+            pdf.set_text_color(*BLACK)
+            for m in members:
+                cname = str(m.get("country") or m.get("iso3", ""))[:20]
+                rr = m.get("r")
+                rstr = f"{rr:.2f}" if rr is not None else "N/A"
+                gg = m.get("g0")
+                gstr = f"{gg:,.0f}" if gg is not None else "N/A"
+                pp = m.get("population")
+                pstr = f"{pp/1e6:.1f}m" if pp else "N/A"
+                ll = m.get("total_deficit_usd")
+                if ll is not None:
+                    lstr = f"${ll/1e9:.2f}b" if ll >= 1e9 else f"${ll/1e6:.0f}m"
+                else:
+                    lstr = "N/A"
+                pdf.set_font(FONT_NAME, "", 4.2)
+                pdf.cell(tcols[0], 2.4, cname, border=1)
+                pdf.cell(tcols[1], 2.4, rstr, border=1, align="C")
+                pdf.cell(tcols[2], 2.4, gstr, border=1, align="R")
+                pdf.cell(tcols[3], 2.4, pstr, border=1, align="R")
+                pdf.cell(tcols[4], 2.4, lstr, border=1, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            # Totals row
+            pdf.set_font(FONT_NAME, "", 4.5)
+            pdf.set_fill_color(200, 200, 200)
+            pdf.set_text_color(*BLACK)
+            totp = reg_sum["total_pop"]
+            totl = reg_sum["total_lost_gdp"]
+            totpstr = f"{totp/1e6:.1f}m"
+            totlstr = f"${totl/1e9:.2f}b"
+            wrstr = f"{reg_sum['weighted_r']:.2f}"
+            pdf.cell(tcols[0], 2.6, "REGIONAL TOTAL", border=1, fill=True)
+            pdf.cell(tcols[1], 2.6, wrstr, border=1, align="C", fill=True)
+            pdf.cell(tcols[2], 2.6, "", border=1, fill=True)
+            pdf.cell(tcols[3], 2.6, totpstr, border=1, align="R", fill=True)
+            pdf.cell(tcols[4], 2.6, totlstr, border=1, align="R", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.set_fill_color(240, 240, 240)
+            pdf.ln(0.8)
 
         # 9 indicators breakdown for region
         pdf.set_font(FONT_NAME, "", 6.5)
