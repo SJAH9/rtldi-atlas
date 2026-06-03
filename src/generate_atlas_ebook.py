@@ -159,9 +159,10 @@ def get_trend_plot_path(iso3: str, country: str, r: float, population: float, g0
     """
     if not HAS_MPL:
         return None
-    tmpdir = Path("/tmp") / "rtl_di_trends_2026"
-    tmpdir.mkdir(parents=True, exist_ok=True)
-    p = tmpdir / f"{iso3}.png"
+    # Write to outputs (gitignored by outputs/figures/* rule) so user can inspect the per-nation trend plots after build
+    outdir = Path("outputs/figures/rtl_di_trends_2026")
+    outdir.mkdir(parents=True, exist_ok=True)
+    p = outdir / f"{iso3}.png"
     # Always (re)build for freshness during this run; cheap
     xs, ys_tot, ys_pc = [], [], []
     for y in years:
@@ -255,8 +256,13 @@ def create_pdf():
     pdf.ln(3)
     pdf.body_text(
         "The Atlas is intended as a practical reference for NGOs, national human-rights institutions, "
-        "development agencies, and researchers who need country-level numbers grounded in the published "
-        "equations and the best available open data."
+        "development agencies, researchers, and — most importantly — for the people and policymakers "
+        "inside each of the 193 nations who want to understand the concrete economic costs of incomplete "
+        "right-to-life protection and to use that knowledge as a diagnostic for reform.\n\n"
+        "A dedicated Diagnostic Guide (following the Methodology) explains how to read the R scores and "
+        "9-component breakdowns as levers: which policy choices and cultural norms move each indicator, "
+        "how the resulting economic drag becomes visible and attributable, and how awareness of lost "
+        "potential can shift incentives for the very indicators that are at cause."
     )
 
     # ========== METHODOLOGY ==========
@@ -291,6 +297,64 @@ def create_pdf():
         "Source equations: Sid J.A. Hubbard, Causality and Attraction v3 (2026), DOI 10.5281/zenodo.19468550"
     )
 
+    # ========== DIAGNOSTIC GUIDE ==========
+    pdf.add_page()
+    pdf.chapter_title("Diagnostic Guide: Using RTLDI as a Reform Tool")
+
+    pdf.body_text(
+        "The RTLDI ATLAS is not only a ranking. It is a diagnostic instrument that converts the presence or absence of nine specific protections into a recurring, measurable annual economic cost.\n\n"
+        "This section explains how people and policymakers inside these nations can use the R scores, the 9-component breakdowns, the per-capita ΔG figures, and the total national deficits as concrete levers for change."
+    )
+
+    pdf.chapter_title("The Core Translation")
+    pdf.body_text(
+        "The equation is ΔG = 0.05 × (1 − R) × G₀.\n\n"
+        "R is the average of the nine binary RTLP indicators. G₀ is GDP per capita. ΔG is the estimated annual loss per person caused by incomplete protection of life. Total national deficit ≈ ΔG × population.\n\n"
+        "A country with R = 0.44 and G₀ = $10,000 loses roughly $280 per person every year — money that never materializes in budgets, never circulates, never funds the next generation. When this number is large, persistent, and broken down into nine specific, fixable components, it stops being an abstract 'governance problem' and becomes a structural drag with a visible price tag."
+    )
+
+    pdf.chapter_title("The Nine Levers — What Actually Moves R")
+    pdf.body_text(
+        "R changes only when one or more indicators flip from 0 to 1. Each flip is worth ~0.11 in R and therefore ~0.55 % of G₀ in reduced annual per-capita loss for the whole population.\n\n"
+        "1. Legal Protections (transparent, predictable enforcement that actually constrains power). Moved by consistent application of ordinary law against state agents, not by paper constitutions.\n\n"
+        "2. Independent Judiciary. Moved by insulated appointments, secure tenure, and a professional culture that rewards fidelity to law over political advancement.\n\n"
+        "3. Law Enforcement Accountability. Moved by independent investigations, data transparency, civilian oversight with power, and political leadership that refuses to incite or excuse unlawful killings.\n\n"
+        "4. Protection Against Arbitrary Detention. Moved by real habeas, time limits on pre-trial detention, legal aid, and courts willing to order release of politically inconvenient people.\n\n"
+        "5. Freedom from Torture. Moved by criminalization with no loopholes, exclusion of tainted evidence, monitoring of detention, and training that treats torture as career suicide.\n\n"
+        "6. Civilian Protection in Conflict/High-Violence Areas. Moved by rules of engagement that enforce distinction and proportionality, effective command responsibility, and post-incident accountability even when victims are unpopular.\n\n"
+        "7. Access to Justice. Moved by affordable legal aid for serious claims, protection for lawyers taking hard cases, timely proceedings, and enforcement of judgments against the state itself.\n\n"
+        "8. Freedom of Expression & Whistleblower Protection. Moved by decriminalization of criticism, source protection, real whistleblower remedies, and a political culture that treats exposure of state violence as legitimate rather than disloyal.\n\n"
+        "9. Socioeconomic Conditions (basic nutrition and health). Moved by fiscal priorities, social insurance design, land and labor policy, and the political decision to treat minimal life-sustaining conditions as a public responsibility rather than a private consumption choice.\n\n"
+        "These nine are causally nested. Weak judicial independence undermines accountability for killings and torture. Weak expression rights make it harder for anyone to document the other failures. The source document frames them as structural parameters inside 'nested causal enclosures' that enable or constrain higher-order economic and social steady states."
+    )
+
+    pdf.chapter_title("How Awareness of Lost Economic Potential Changes the Indicators")
+    pdf.body_text(
+        "When the only available language is 'human rights are good,' the political costs of reform (upsetting security services, elites, or nationalist stories) usually prevail. The benefits remain moral and diffuse.\n\n"
+        "When the same reform can also be described as 'this specific change would return roughly $X billion per year to our economy, every year, and here are the three statutes and one appointment that would flip the indicator,' the political economy shifts.\n\n"
+        "Finance ministries acquire a stake. Business groups can be recruited. Opposition parties can campaign on stopping the waste. Media has a concrete number instead of another abstract abuse story. International partners can target assistance to the exact weak indicators rather than generic 'rule of law' programs.\n\n"
+        "The 3-year trend plots on each nation page exist for this purpose: they show whether the drag is stable, growing with the economy even while R is flat, or beginning to shrink as specific protections improve."
+    )
+
+    pdf.chapter_title("Practical Use")
+    pdf.body_text(
+        "For national policymakers: Open your profile. Note your R and the specific 'No' indicators. Compare the total annual deficit to your health or education budget. Ask the civil service to cost the political and budgetary effort required to move one or two indicators in the next V-Dem cycle and compare it to the recurring benefit.\n\n"
+        "For civil society and media: Use the numbers in domestic advocacy, not only international forums. 'We lose $2.3 billion every year because we have not made law enforcement accountable for killings. That is more than the entire health budget. Here is the one change that begins to close the gap.'\n\n"
+        "For citizens: The data is public. When leaders promise 'development,' ask which of the nine protections they will strengthen and how we will know in four years whether R has moved.\n\n"
+        "For international actors: Stop separating 'human rights' and 'economic growth' pillars. Target a share of governance and security assistance explicitly to the indicators that are currently 'No' for that country and measure success partly by movement on those variables in the next data release."
+    )
+
+    pdf.chapter_title("Limitations and Responsible Use")
+    pdf.body_text(
+        "R in this edition uses 2024 V-Dem data paired with the freshest published GDP figures. Real-time events after the data cutoff are not yet visible. Binarization thresholds are modeling choices; always examine the raw values in the nation breakdowns. The 0.05 coefficient is a central estimate; the identity of the weak indicators is more robust than the precise dollar figure. Causality runs both ways: low R produces drag, and severe economic stress can degrade state capacity and rights performance.\n\n"
+        "The deeper claim, taken from the source document, is that these nine protections are not a moral add-on but structural parameters that make certain kinds of economic and social steady states easier or harder to reach. Making the cost of a weak parameter legible in annual GDP terms does not reduce rights to economics. It makes the causal structure visible to the actors who can actually adjust the parameters."
+    )
+
+    pdf.small_text(
+        "Full version and updates: docs/diagnostic_guide.md\n"
+        "Source framework: Sid J.A. Hubbard, Causality and Attraction v3 (2026), DOI 10.5281/zenodo.19468550"
+    )
+
     # ========== TABLE OF CONTENTS ==========
     pdf.add_page()
     pdf.chapter_title("Table of Contents")
@@ -298,8 +362,9 @@ def create_pdf():
     toc_items = [
         ("Executive Description", "2"),
         ("Methodology and Data Sources", "3"),
-        ("Summary Table of All 193 UN Member Nations", "4"),
-        ("Detailed Nation Profiles (A–Z)", "8"),
+        ("Diagnostic Guide: Using RTLDI for Reform", "4"),
+        ("Summary Table of All 193 UN Member Nations", "6"),
+        ("Detailed Nation Profiles (A–Z)", "10"),
         ("Data Attribution and Sources", "~210"),
         ("Index of Terms", "~211"),
         ("Credits and Acknowledgments", "~212"),
