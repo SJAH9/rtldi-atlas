@@ -147,13 +147,20 @@ VDEM_R_VARS = [
     "v2x_freexp",   # 8 expression
 ]
 
-def load_vdem_for_rtlp(year: int = 2023, vdem_csv: Optional[str] = None) -> pd.DataFrame:
-    """Load the minimal columns for the 8 V-Dem RTLP components for a given year."""
+def load_vdem_for_rtlp(year: int = 2026, vdem_csv: Optional[str] = None) -> pd.DataFrame:
+    """Load the minimal columns for the 8 V-Dem RTLP components for a given year.
+    If the exact year is not present, falls back to the maximum year available in the file (for 2026+ updates).
+    """
     path = find_vdem_csv(vdem_csv)
     if path is None:
         raise FileNotFoundError("V-Dem CSV not found. Place or symlink it in data/raw/ or pass path.")
     df = pd.read_csv(path, usecols=lambda c: c in VDEM_R_VARS)
-    df = df[df["year"] == year].copy()
+    if year in df["year"].values:
+        df = df[df["year"] == year].copy()
+    else:
+        max_year = df["year"].max()
+        print(f"Warning: year {year} not in V-Dem file (max={max_year}). Using {max_year}.")
+        df = df[df["year"] == max_year].copy()
     return df
 
 
@@ -185,7 +192,7 @@ def compute_rtlp_vdem_row(row: pd.Series, cfg: Optional["RTLDIConfig"] = None) -
     return yes / 8.0
 
 
-def get_vdem_r_for_iso3s(year: int = 2023, iso3s: Optional[list] = None) -> pd.DataFrame:
+def get_vdem_r_for_iso3s(year: int = 2026, iso3s: Optional[list] = None) -> pd.DataFrame:
     """Return df with iso3 (from country_text_id), r_vdem8 (0-1 from 8 components)."""
     df = load_vdem_for_rtlp(year)
     df["iso3"] = df["country_text_id"].astype(str).str.upper()

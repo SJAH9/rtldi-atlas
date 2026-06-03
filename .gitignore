@@ -32,10 +32,16 @@ data/raw/codebook*.pdf
 
 # Processed / generated data (reproducible)
 data/processed/
-# But we allow committing example small atlases for demos
+# But we allow committing example small atlases, detailed breakdowns, and the main ebook for demos / distribution
 !outputs/atlas/rtl_di_atlas_un_members_2023.csv
 !outputs/atlas/rtl_di_atlas_un_members_2023.xlsx
 !outputs/atlas/rtl_di_atlas_summary_2023.json
+!outputs/atlas/rtl_di_atlas_un_members_2026.csv
+!outputs/atlas/rtl_di_atlas_un_members_2026.xlsx
+!outputs/atlas/rtl_di_atlas_summary_2026.json
+!outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf
+!data/processed/rtl_di_nation_breakdown_2026.json
+!data/processed/rtl_di_nation_breakdown_2026.csv
 
 # Keep the tiny canonical list
 !data/raw/un_member_states.csv

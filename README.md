@@ -38,38 +38,79 @@ Total deficit ≈ ΔG × population
 └── (future: tests/, docker/, etc.)
 ```
 
-## Current Status (2026-06-03)
-- ✅ Document (v3) fetched, full text extracted, spec documented (`docs/RTLDI_SPEC.md`).
-- ✅ Project layout, UN 193 list (with ISO3), V-Dem v16 codebook downloaded.
-- ✅ Indicator crosswalk researched + written (`docs/indicator_crosswalk.md`).
-- ✅ Core RTLDI equation + binarization + socio scoring implemented (`src/rtl_di.py`).
-- ✅ WB data acquisition (wbgapi, batched, mrv + year) for GDP pc, pop, undernourish, poverty — 193 UN members.
-- ✅ V-Dem loader stub ready (download instructions + usecols subsetter).
-- ✅ **First RTLDI ATLAS produced** (outputs/atlas/): 193 countries, real WB G0 + pop + socio, *placeholder R* (socio real + avg on other 8, modulated), exact ΔG + totals + ranks. Global est. ~$2.19T (close to source illustration). Includes CSV + formatted XLSX.
-- ✅ **Real 9-component RTLDI ATLAS (2023)** now available using your V-Dem v15 Full+Others CSV (symlinked) + your local WB GDP download: `rtl_di_atlas_un_members_2023.csv` / `.xlsx`. Real R from the exact crosswalk (8 V-Dem integrity/rule/expression/access components + WB socio #9). Avg R ~0.35, 10 countries at R=1.0 on components, 57 at R=0, global est. deficit ~$2.44T. Uses user's downloaded files directly (no API for G0).
-- 📝 Methodology for v0 placeholder in `docs/methodology_v0_placeholder.md`.
-- Next: drop in V-Dem CSV → replace placeholder R with true 9-component scores per crosswalk; add scenarios, full docs, perhaps maps.
+## For NGOs and Researchers (Recommended Use)
+This toolkit is designed so NGOs and analysts can run their own RTLDI ATLAS using the **latest official open data** from V-Dem and the World Bank — no need to bundle the (large) data files in the repo.
 
-## Quick Start / Reproduce First ATLAS
+### Quick Start (2026 data)
 ```bash
-# Ensure deps (one-time)
+git clone https://github.com/SJAH9/rtldi-atlas.git
+cd rtldi-atlas
 python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter
-
-# (Optional but recommended) Download V-Dem Core/Full v16 CSV to data/raw/ per src/fetch_vdem.py docstring
-
-# Build real version (uses your local V-Dem symlink + local WB GDP download + crosswalk)
-python3 -m src.build_atlas --year 2023 --eta 0.05
-
-# Or the legacy placeholder for comparison
-python3 -m src.build_atlas --year 2023 --eta 0.05  # (defaults to real now)
-
-# Outputs:
-#   outputs/atlas/rtl_di_atlas_un_members_2024_placeholder.csv
-#   outputs/atlas/rtl_di_atlas_un_members_2024_placeholder.xlsx
-#   outputs/atlas/rtl_di_atlas_summary_2024.json
+python3 -m src.build_atlas --year 2026 --eta 0.05
 ```
 
-See `src/fetch_wb.py` (can re-fetch), `src/build_atlas.py`, and the docs/ for mapping decisions.
+The code will:
+- Fetch the required World Bank indicators live via the official API (always up-to-date).
+- Look for your V-Dem CSV in `data/raw/` (see "Getting the Data" below).
+- Compute the full 9-component RTLP score using the published crosswalk.
+- Output CSV + XLSX + summary in `outputs/atlas/`.
+
+### Getting the V-Dem Data (one-time, ~few hundred MB)
+1. Go to https://www.v-dem.net/data/the-v-dem-dataset/
+2. Download the latest **Country-Year: V-Dem Full+Others** (or Core if you want smaller).
+3. Unzip and place the main CSV in this repo as:
+   `data/raw/V-Dem-CY-Full+Others-v16.csv` (or whatever the version is; the loader auto-detects common names).
+4. Re-run `python3 -m src.build_atlas --year 2026`
+
+The loader only reads the ~12 columns it needs.
+
+### World Bank Data
+No manual download required for the core indicators. The code uses `wbgapi` to pull exactly:
+- NY.GDP.PCAP.CD (G0)
+- SP.POP.TOTL (population)
+- SN.ITK.DEFC.ZS (undernourishment for socio #9)
+- SI.POV.DDAY (poverty headcount for socio #9)
+
+If you prefer offline bulk, download the corresponding API_*.csv from data.worldbank.org and place in data/raw/ — the loaders will prefer local files.
+
+## Current Status
+See the private repo history for the full development log. The public launch version will include the 2026 ATLAS, improved NGO UX, and full documentation.
+
+## Project Layout (committed files only)
+```
+.
+├── .gitignore          # ensures no data sets are committed
+├── README.md
+├── data/raw/
+│   └── un_member_states.csv   # tiny canonical list (committed)
+├── src/                # the full pipeline
+├── docs/               # specs + crosswalk + methodology
+├── outputs/atlas/      # example 2023 real ATLAS (committed as demo)
+└── ...
+```
+
+Large V-Dem CSVs, WB bulk downloads, and generated 202x atlases are intentionally **not** in the repo.
+
+## Core RTLDI (from source)
+See `docs/RTLDI_SPEC.md`.
+
+ΔG (per capita) = 0.05 × (1 − R) × G0  
+Total = ΔG × population
+
+R is computed from the exact 9 binary RTLP questions mapped to V-Dem + WB variables (see `docs/indicator_crosswalk.md`).
+
+## Updating to 2026+
+- Set `--year 2026` (or future).
+- Provide the latest V-Dem release CSV (when published).
+- WB data is live via API and will reflect the most recent releases.
+- The crosswalk and binarization thresholds are versioned in docs/ for transparency and sensitivity analysis.
+
+## License / Attribution
+- RTLDI equations, 9 indicators, paradigm: © Sid J.A. Hubbard (Zenodo 10.5281/zenodo.19468550)
+- Code: MIT (or similar — to be confirmed at public launch)
+- V-Dem & World Bank data: follow their respective terms (open for research / with attribution)
+
+This repo was initialized privately and will be made public at launch.
 
 ## Data Sources (target)
 - **V-Dem Dataset** (Country-Year, latest release): https://www.v-dem.net/data/the-v-dem-dataset/ — rich indicators on rule of law, judicial independence, physical violence (killings, torture), freedom of expression, arbitrary power, etc.

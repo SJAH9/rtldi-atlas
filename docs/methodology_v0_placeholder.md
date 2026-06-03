@@ -3,7 +3,9 @@
 **Date**: 2026-06-03  
 **Version**: Initial pipeline + WB data + equation (full 9-indicator R pending V-Dem)
 
-**Update (same day)**: With user-provided V-Dem v15 Full+Others (384MB CSV from ~/Downloads, symlinked) + local WB GDP API bulk, the first *real* 9-component RTLDI ATLAS for 2023 was generated using the crosswalk. See outputs/rtl_di_atlas_un_members_2023.* (non-placeholder). Avg real R ~0.35. The v0 placeholder remains for comparison.  
+**Update (same day)**: With user-provided V-Dem v15 Full+Others (384MB CSV from ~/Downloads, symlinked) + local WB GDP API bulk, the first *real* 9-component RTLDI ATLAS for 2023 was generated using the crosswalk. See outputs/rtl_di_atlas_un_members_2023.* (non-placeholder). Avg real R ~0.35. The v0 placeholder remains for comparison.
+
+**2026 ATLAS rule (per user)**: The 2026 atlas uses V-Dem RTLP components from the latest available year in the data file (2024), but **must use 2026-fresh G0 (GDP per capita)** pulled via WB API (mrv/latest published). This is because RTLP scores (from V-Dem) are less dynamic year-to-year than GDP. The build script and output now explicitly carry `vdem_year` and `g0_year`, with data_notes documenting the distinction. See outputs/rtl_di_atlas_un_members_2026.* and the updated src/build_atlas.py logic.  
 **Source**: Hubbard, *Causality and Attraction: A Continuum of Steady States* v3 (May 2026), DOI 10.5281/zenodo.19468550
 
 ## Scope

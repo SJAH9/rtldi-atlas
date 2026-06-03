@@ -1,0 +1,10 @@
+{
+  "atlas_year":2024,
+  "eta":0.05,
+  "n_countries":193,
+  "n_with_gdp":187,
+  "global_avg_r_placeholder":0.5383962579,
+  "total_global_deficit_est_usd":2192862155625.1452636719,
+  "median_r":0.4722222222,
+  "note":"PLACEHOLDER R until V-Dem integration. Equation and 9-indicator logic per source."
+}

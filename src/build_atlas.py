@@ -111,7 +111,7 @@ def compute_placeholder_r(
 
 
 def build_atlas(
-    year: int = 2023,
+    year: int = 2026,
     eta: float = 0.05,
     un_path: str = "data/raw/un_member_states.csv",
     wb_path: str = "data/processed/wb_un_members_2023_2024_latest.csv",
@@ -121,13 +121,7 @@ def build_atlas(
     """Build RTLDI ATLAS. When use_real_vdem=True (default), uses the 9-component R from V-Dem + WB socio."""
     un = load_un_members(un_path)
 
-    # Prefer local WB GDP the user provided for G0
-    try:
-        g0_df = load_local_wb_gdp_for_year(year)
-        print(f"Using local WB GDP CSV for G0 ({year}): {len(g0_df)} countries")
-    except Exception:
-        g0_df = pd.DataFrame(columns=["iso3", "g0", "g0_year"])
-        print("Local WB GDP not found, will fall back to processed wb_latest if available.")
+    vdem_year_used = 2024 if year >= 2025 else year
 
     # Socio + pop from previous processed (or could call wbgapi here)
     wb = load_wb_latest(wb_path)
@@ -135,14 +129,37 @@ def build_atlas(
     # Join UN + socio/pop
     df = un.merge(wb, on="iso3", how="left")
 
-    # Override/add G0 from local if present
-    if len(g0_df):
-        g0m = g0_df[["iso3", "g0"]].rename(columns={"g0": "g0_local"})
-        df = df.merge(g0m, on="iso3", how="left")
-        df["g0"] = df["g0_local"].fillna(df.get("gdp_pc_current"))
-        df = df.drop(columns=["g0_local"], errors="ignore")
+    # For 2026+ atlas: MUST use the freshest available GDP (most dynamic variable),
+    # even if V-Dem RTLP components are from 2024. Load the pre-fetched latest GDP table.
+    vdem_year_used = 2024
+    if year >= 2025:
+        try:
+            g0_latest = pd.read_csv("data/processed/wb_gdp_latest_for_2026_atlas.csv")
+            print(f"Using fresh latest GDP data for {year} atlas baseline (from WB API mrv): {len(g0_latest)} countries")
+            g0m = g0_latest[["iso3", "g0_latest", "g0_year"]].rename(columns={"g0_latest": "g0"})
+            df = df.merge(g0m, on="iso3", how="left")
+            df["g0"] = df["g0"].fillna(df.get("gdp_pc_current"))
+            df["g0_year"] = df["g0_year"].fillna(2026)
+        except Exception as e:
+            print(f"Could not load fresh 2026 GDP table ({e}), falling back.")
+            df["g0"] = df.get("gdp_pc_current")
+            df["g0_year"] = 2026
     else:
-        df["g0"] = df["gdp_pc_current"]
+        # For historical years, prefer local WB GDP the user provided for G0
+        try:
+            g0_df = load_local_wb_gdp_for_year(year)
+            print(f"Using local WB GDP CSV for G0 ({year}): {len(g0_df)} countries")
+            if len(g0_df):
+                g0m = g0_df[["iso3", "g0"]].rename(columns={"g0": "g0_local"})
+                df = df.merge(g0m, on="iso3", how="left")
+                df["g0"] = df["g0_local"].fillna(df.get("gdp_pc_current"))
+                df = df.drop(columns=["g0_local"], errors="ignore")
+            else:
+                df["g0"] = df.get("gdp_pc_current")
+        except Exception:
+            df["g0"] = df.get("gdp_pc_current")
+            df["g0_year"] = year
+            print("Local WB GDP not found for historical year.")
 
     if use_real_vdem:
         print(f"Loading real V-Dem components for year {year} ...")
@@ -168,11 +185,15 @@ def build_atlas(
 
         df["r"] = df.apply(_real_r_for_row, axis=1)
         r_col = "r"
-        note = "R from 8 V-Dem components (crosswalk) + real WB socio #9. See docs/indicator_crosswalk.md"
+        note = f"R from 8 V-Dem components (crosswalk, year={vdem_year_used}) + real WB socio #9 + 2026-fresh G0 (GDP is the more dynamic variable). See docs/indicator_crosswalk.md"
+        df["vdem_year"] = vdem_year_used
     else:
         df["r_placeholder"] = df.apply(compute_placeholder_r, axis=1)
         r_col = "r_placeholder"
         note = "PLACEHOLDER R (socio real + avg 0.70 on other 8)."
+        df["vdem_year"] = vdem_year_used
+    if "g0_year" not in df.columns:
+        df["g0_year"] = year
 
     # ΔG per capita using the chosen r
     df["delta_g_per_capita"] = df.apply(
@@ -203,7 +224,7 @@ def build_atlas(
     if "r" not in df.columns:
         df["r"] = df.get(r_col)
     master_cols = [
-        "iso3", "country", "UNregion", "r", "g0", "delta_g_per_capita", "population",
+        "iso3", "country", "UNregion", "r", "g0", "g0_year", "vdem_year", "delta_g_per_capita", "population",
         "total_deficit_usd", "rank_by_total_deficit", "rank_by_r_lowest",
         "undernourish_pct", "poverty_215_pct", "has_gdp", "has_socio", "data_notes"
     ]
@@ -345,7 +366,7 @@ def write_xlsx_atlas(
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--year", type=int, default=2024)
+    parser.add_argument("--year", type=int, default=2026)
     parser.add_argument("--eta", type=float, default=0.05)
     parser.add_argument("--output-dir", default="outputs/atlas")
     args = parser.parse_args()
