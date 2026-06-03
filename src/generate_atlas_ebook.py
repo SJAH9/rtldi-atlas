@@ -38,6 +38,12 @@ try:
 except Exception:
     HAS_MPL = False
 
+try:
+    import plotly.express as px
+    HAS_PLOTLY = True
+except Exception:
+    HAS_PLOTLY = False
+
 # Page setup (A4 for print ebook, good margins)
 PAGE_WIDTH = 210
 PAGE_HEIGHT = 297
@@ -197,6 +203,80 @@ def get_trend_plot_path(iso3: str, country: str, r: float, population: float, g0
     plt.tight_layout(pad=0.2)
     fig.savefig(p, dpi=100, facecolor="white", edgecolor="none", bbox_inches="tight")
     plt.close(fig)
+    return p
+
+
+def get_nation_focus_map(iso3: str, country: str, un_region: Optional[str], all_nations: list) -> Optional[Path]:
+    """Generate a small 'zoomed' choropleth for this nation + others in its UN region (proxy for geographic neighbors/context).
+    Uses the same Viridis R scale as the global map. Cached in outputs/figures/nation_focus_maps/
+    """
+    if not HAS_PLOTLY:
+        return None
+    out_dir = Path("outputs/figures/nation_focus_maps")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    p = out_dir / f"{iso3}_focus.png"
+    if p.exists():
+        return p
+
+    # Focus set: the target country + all others in the same UN region (reasonable "neighborhood" proxy)
+    region = un_region or ""
+    focus = [n for n in all_nations if (n.get("un_region") or "") == region or n["iso3"] == iso3]
+    if len(focus) < 2:
+        focus = [n for n in all_nations if n["iso3"] == iso3]
+
+    focus_df = pd.DataFrame([
+        {"iso3": n["iso3"], "r": float(n.get("r", 0.0)), "country": n.get("country", n["iso3"])}
+        for n in focus
+    ])
+
+    fig = px.choropleth(
+        focus_df,
+        locations="iso3",
+        locationmode="ISO-3",
+        color="r",
+        color_continuous_scale="Viridis",
+        range_color=[0.0, 1.0],
+        hover_name="country",
+        hover_data={"r": ":.3f"},
+    )
+
+    fig.update_geos(
+        fitbounds="locations",
+        showcoastlines=True,
+        coastlinecolor="rgba(180,180,180,0.6)",
+        showland=True,
+        landcolor="rgba(245,245,245,0.9)",
+        showocean=True,
+        oceancolor="rgba(230,242,255,0.6)",
+        projection_type="natural earth",
+    )
+
+    fig.update_layout(
+        coloraxis_colorbar=dict(
+            title=dict(text="R", font=dict(size=7)),
+            len=0.4,
+            thickness=6,
+        ),
+        title=dict(text=f"{country} + region (enclosure strength R)", font=dict(size=8)),
+        margin=dict(l=1, r=1, t=16, b=1),
+        height=180,
+        width=380,
+        paper_bgcolor="white",
+    )
+
+    # Mark the target nation
+    fig.add_annotation(
+        text=f"★ {iso3}",
+        x=0.5,
+        y=0.92,
+        xref="paper",
+        yref="paper",
+        showarrow=False,
+        font=dict(size=6, color="#c00"),
+        bgcolor="rgba(255,255,255,0.75)",
+    )
+
+    fig.write_image(p, width=380, height=180, scale=1.5)
     return p
 
 
@@ -503,7 +583,24 @@ def create_pdf():
             )
             pdf.ln(1)
 
-        pdf.ln(2)
+        # Regional focus choropleth: this nation + others in its UN region (practical proxy for bordering/neighboring states)
+        focus_p = get_nation_focus_map(d["iso3"], d["country"], d.get("un_region"), detailed_all)
+        if focus_p and focus_p.exists():
+            pdf.ln(0.5)
+            pdf.set_font(FONT_NAME, "", 6.5)
+            pdf.set_text_color(*HEADER_COLOR)
+            pdf.cell(0, 3, "Regional Zoom — Enclosure Strength (R): this nation + region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            yf = pdf.get_y()
+            pdf.image(str(focus_p), x=MARGIN + 8, w=CONTENT_WIDTH - 16, h=17)
+            pdf.set_y(yf + 18)
+            pdf.set_font(FONT_NAME, "", 5)
+            pdf.set_text_color(95, 95, 95)
+            pdf.multi_cell(0, 2.3,
+                "Cropped/zoomed view using the same global choropleth data and Viridis scale. ★ = this nation. Region used as practical stand-in for immediate geographic neighbors."
+            )
+            pdf.ln(0.5)
+
+        pdf.ln(1.5)
         pdf.set_font(FONT_NAME, "", 8)
         pdf.set_text_color(*HEADER_COLOR)
         pdf.cell(0, 4, "RTLP Score Breakdown — 9 Indicators", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
