@@ -692,7 +692,7 @@ def create_pdf():
             pdf.set_font(FONT_NAME, "", 5)
             pdf.set_text_color(90, 90, 90)
             pdf.multi_cell(0, 2.3,
-                "Zoomed to countries in this UN region (colored by their individual R; same scale as the global choropleth). "
+                "Zoomed to countries in this UN region (Mollweide projection, same Viridis R scale as the global choropleth). "
                 "★ would mark a specific nation in per-country views."
             )
             pdf.ln(0.5)
@@ -852,7 +852,7 @@ def create_pdf():
             pdf.set_font(FONT_NAME, "", 5)
             pdf.set_text_color(95, 95, 95)
             pdf.multi_cell(0, 2.3,
-                "Cropped/zoomed view using the same global choropleth data and Viridis scale. ★ = this nation. Region used as practical stand-in for immediate geographic neighbors."
+                "Zoomed view using the same global choropleth data (Mollweide projection, Viridis R scale). ★ = this nation. Region used as practical stand-in for immediate geographic neighbors."
             )
             pdf.ln(0.5)
 
