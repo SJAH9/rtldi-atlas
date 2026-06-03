@@ -529,7 +529,8 @@ def create_pdf():
         pdf.set_font(FONT_NAME, "", 5.5)
         pdf.set_text_color(100,100,100)
         pdf.multi_cell(0, 2.8,
-            "Note: [Yes] = contributes +1 to R. Raw = V-Dem/WB value (higher=stronger protection). Thresholds in Methodology. Partial coverage possible for some nations."
+            "Note: [Yes] = contributes +1 to R. Raw = V-Dem/WB value (higher=stronger protection). Thresholds in Methodology. Partial coverage possible for some nations. "
+            "See the Diagnostic Guide section for how to use your R and component scores as a reform diagnostic tool."
         )
 
     # ========== DATA ATTRIBUTION ==========
