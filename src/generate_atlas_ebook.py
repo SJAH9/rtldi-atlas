@@ -248,7 +248,7 @@ def get_nation_focus_map(iso3: str, country: str, un_region: Optional[str], all_
         landcolor="rgba(245,245,245,0.9)",
         showocean=True,
         oceancolor="rgba(230,242,255,0.6)",
-        projection_type="natural earth",
+        projection_type="mollweide",
     )
 
     fig.update_layout(
@@ -317,7 +317,7 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
         landcolor="rgba(245,245,245,0.9)",
         showocean=True,
         oceancolor="rgba(230,242,255,0.6)",
-        projection_type="natural earth",
+        projection_type="mollweide",
     )
     fig.update_layout(
         coloraxis_colorbar=dict(

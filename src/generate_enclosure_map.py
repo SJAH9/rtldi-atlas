@@ -102,7 +102,12 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
         },
     )
 
-    # Improve geo aesthetics and projection (natural earth is balanced for global view)
+    # Improve geo aesthetics and projection.
+    # Using "mollweide" (equal-area pseudocylindrical) for better area preservation
+    # in a world choropleth than the previous "natural earth".
+    # Note: True Dymaxion (icosahedral/butterfly) or Goode's interrupted homolosine
+    # are not supported in Plotly's built-in geo projections. Mollweide is a strong
+    # low-distortion choice for thematic maps of enclosure strength.
     fig.update_geos(
         showcoastlines=True,
         coastlinecolor="rgba(180,180,180,0.6)",
@@ -112,7 +117,7 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
         oceancolor="rgba(230,242,255,0.6)",
         showlakes=True,
         lakecolor="rgba(230,242,255,0.6)",
-        projection_type="natural earth",
+        projection_type="mollweide",
         lataxis_showgrid=False,
         lonaxis_showgrid=False,
         framecolor="rgba(150,150,150,0.5)",
