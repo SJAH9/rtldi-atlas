@@ -560,6 +560,49 @@ def create_pdf():
         "Source framework: Sid J.A. Hubbard, Causality and Attraction v3 (2026), DOI 10.5281/zenodo.19468550"
     )
 
+    # ========== CARTOGRAPHIC APPROACH AND THE NESTED MAP ==========
+    pdf.add_page()
+    pdf.chapter_title("Cartographic Approach and the Nested Map")
+
+    pdf.set_x(MARGIN)
+    pdf.body_text(
+        "The source document (Causality and Attraction, Hubbard 2026V3) critiques the insufficiency of flat maps and praises the low-distortion Fuller-inspired butterfly map. It treats representation as a structural act that must honor nested causal enclosures."
+    )
+
+    pdf.set_x(MARGIN)
+    pdf.body_text(
+        "Hybrid model: All generated choropleths (global, 22 regional, 193 nation zooms) use Mollweide (equal-area) via Plotly. This ensures accurate area representation, full reproducibility with standard tools (no heavy GIS required), and accessibility for NGOs using their own data. Mollweide is the practical default."
+    )
+
+    pdf.set_x(MARGIN)
+    pdf.body_text(
+        "Canonical whole-earth view: The image below serves as the primary visual anchor, embodying the source's call for structurally faithful, low-distortion mapping of the global human enclosure."
+    )
+
+    # Embed the canonical global map
+    global_map_path = "outputs/figures/rtl_di_enclosure_strength_2026_choropleth.png"
+    try:
+        pdf.ln(2)
+        pdf.set_font(FONT_NAME, "", 7)
+        pdf.set_text_color(*HEADER_COLOR)
+        pdf.cell(0, 3, "Canonical Global Choropleth - Enclosure Strength (R)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        y_map = pdf.get_y()
+        pdf.image(global_map_path, x=MARGIN + 5, w=CONTENT_WIDTH - 10, h=70)
+        pdf.set_y(y_map + 71)
+        pdf.set_font(FONT_NAME, "", 5.5)
+        pdf.set_text_color(80, 80, 80)
+        pdf.multi_cell(0, 2.5,
+            "Primary anchor for the RTLDI ATLAS (Mollweide). Enacts commitment to accuracy and structural wholeness per the source framework. See regional and nation pages for localized views using the same projection."
+        )
+    except Exception:
+        pdf.set_x(MARGIN)
+        pdf.small_text("[Global map could not be embedded]")
+
+    pdf.set_x(MARGIN)
+    pdf.body_text(
+        "Data in outputs/atlas/ supports re-projection in external tools for AuthaGraph/Dymaxion if desired. See source Ch. 2 and Epilogue on maps and nested causality (DOI 10.5281/zenodo.19468550)."
+    )
+
     # ========== TABLE OF CONTENTS ==========
     pdf.add_page()
     pdf.chapter_title("Table of Contents")
@@ -568,6 +611,7 @@ def create_pdf():
         ("Executive Description", "2"),
         ("Methodology and Data Sources", "3"),
         ("Diagnostic Guide: Using RTLDI for Reform", "4"),
+        ("Cartographic Approach and the Nested Map", "5"),
         ("Summary Table of All 193 UN Member Nations", "6"),
         ("UN Regional Summaries (22 regions)", "8"),
         ("Detailed Nation Profiles (A–Z)", "~30"),
