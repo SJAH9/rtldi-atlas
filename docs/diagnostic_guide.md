@@ -137,3 +137,14 @@ That is the diagnostic utility of the RTLDI.
 **Data and methods**: See the Methodology section, `docs/indicator_crosswalk.md`, and the per-nation component breakdowns in this Atlas.
 
 **Code and reproducibility**: All 193 country calculations and the generator that produced this PDF are in the open repository. Anyone can re-run the numbers with newer V-Dem or World Bank releases or with alternative thresholds and η values.
+## Cartographic Approach and the Nested Map
+
+The atlas uses a hybrid cartographic model in fidelity to the source document's discussion of the insufficiency of flat maps and its praise for low-distortion Fuller-inspired representations.
+
+All generated choropleths (global, regional, and per-nation zooms) use the Mollweide equal-area projection via Plotly. This provides accurate area representation for thematic data while remaining fully reproducible with standard Python tools and the user's own latest data releases — without requiring heavy GIS dependencies.
+
+The primary global choropleth is presented in the PDF as the canonical whole-earth anchor, explicitly framed as enacting the project's commitment to accuracy and structural wholeness (see the "Cartographic Approach and the Nested Map" section in the generated ebook).
+
+Master data tables support import into external tools for AuthaGraph, Dymaxion, or other advanced projections if desired.
+
+See also the source document, Chapter 2 ("The Insufficiency of Flat Maps") and the Epilogue ("The Nested Map – From Vector to Self").
