@@ -929,10 +929,10 @@ def build_regions(data: dict) -> Path:
 
     for reg_name, reg_sum in sorted_regions:
         pdf.add_page()
-        pdf.set_font(FONT_NAME, "", 11)
+        pdf.set_font(FONT_NAME, "", 12)
         pdf.set_text_color(*HEADER_COLOR)
         pdf.cell(0, 5, f"{reg_name} Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.set_font(FONT_NAME, "", 7)
+        pdf.set_font(FONT_NAME, "", 8)
         pdf.set_text_color(70, 70, 70)
         stats = (
             f"Countries: {reg_sum['n_countries']}  |  "
@@ -941,7 +941,7 @@ def build_regions(data: dict) -> Path:
             f"Total Annual Lost GDP: ${reg_sum['total_lost_gdp']/1e9:,.2f} billion"
         )
         pdf.cell(0, 4, stats, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(1)
+        pdf.ln(0.5)
 
         members = reg_sum.get("members", [])
         n = reg_sum['n_countries']
@@ -953,6 +953,8 @@ def build_regions(data: dict) -> Path:
                 worst = min(valid, key=lambda x: x["r"])
 
         inds = reg_sum.get("indicators", [])
+        para1 = ""
+        para2 = ""
         if inds:
             sorted_inds = sorted(inds, key=lambda x: x.get("frac_yes", 0), reverse=True)
             strong_names = [i["name"].split(" (")[0] for i in sorted_inds[:2] if i.get("frac_yes", 0) > 0.4]
@@ -980,44 +982,64 @@ def build_regions(data: dict) -> Path:
                 f"Such reforms would enhance per-capita output, attract investment, and reinforce the nested causal enclosures "
                 f"that underpin long-term economic and social steady states, consistent with the source framework."
             )
-            pdf.set_font(FONT_NAME, "", 6)
-            pdf.set_text_color(40, 40, 40)
-            pdf.multi_cell(0, 2.8, para1)
-            pdf.ln(0.8)
-            pdf.multi_cell(0, 2.8, para2)
-            pdf.ln(1)
-            pdf.set_font(FONT_NAME, "", 7)
-            pdf.set_text_color(70, 70, 70)
 
+        # Place map on the right; flow descriptive text (larger) on the left beside it.
+        # Then put the member table full-width beneath the text+map area, before the RTLP breakdown.
         map_p = get_regional_choropleth(reg_name, detailed_all)
+        map_h = 0
         if map_p and map_p.exists():
-            pdf.set_font(FONT_NAME, "", 6.5)
-            pdf.set_text_color(*HEADER_COLOR)
-            pdf.cell(0, 3, "Regional Choropleth — Enclosure Strength (R)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            ym = pdf.get_y()
-            pdf.image(str(map_p), x=MARGIN + 5, w=CONTENT_WIDTH - 10, h=32)
-            pdf.set_y(ym + 33)
-            pdf.set_font(FONT_NAME, "", 5)
-            pdf.set_text_color(90, 90, 90)
-            pdf.multi_cell(0, 2.3,
-                "Zoomed to countries in this UN region (Mollweide projection, same Viridis R scale as the global choropleth). "
-                "★ would mark a specific nation in per-country views."
-            )
+            map_w = 92  # mm, right side for side-by-side
+            map_h = map_w / 2.0  # preserve 2:1 aspect ratio from generated 400x200 (fixes squashed/distorted appearance)
+            map_x = PAGE_WIDTH - MARGIN - map_w
+            y_map = pdf.get_y()
+
+            pdf.image(str(map_p), x=map_x, w=map_w, h=map_h)
+
+            # Flow the two descriptive paragraphs on the left of the map (enlarged for readability)
+            left_w = CONTENT_WIDTH - map_w - 5
+            pdf.set_xy(MARGIN, y_map)
+            pdf.set_font(FONT_NAME, "", 8)
+            pdf.set_text_color(40, 40, 40)
+            if para1:
+                pdf.multi_cell(left_w, 3.3, para1)
+            if para2:
+                pdf.set_xy(MARGIN, pdf.get_y() + 0.6)
+                pdf.multi_cell(left_w, 3.3, para2)
+
+            # Advance past the map for content below
+            pdf.set_y(max(pdf.get_y(), y_map + map_h + 2))
+
+            # Compact map caption under the flowed area
+            pdf.set_font(FONT_NAME, "", 5.5)
+            pdf.set_text_color(85, 85, 85)
+            pdf.multi_cell(0, 2.2,
+                "Mollweide projection (equal-area, same Viridis R scale as global choropleth).")
+            pdf.ln(0.3)
+        else:
+            # Fallback: full-width larger text if no map
+            pdf.set_font(FONT_NAME, "", 8)
+            pdf.set_text_color(40, 40, 40)
+            if para1:
+                pdf.multi_cell(0, 3.3, para1)
+            if para2:
+                pdf.ln(0.4)
+                pdf.multi_cell(0, 3.3, para2)
             pdf.ln(0.5)
 
+        # Member nations table — now beneath the (flowed) text and map, above the RTLP breakdown
         members_sorted = sorted(reg_sum.get("members", []), key=lambda x: x.get("r", 0) or 0, reverse=True)
         if members_sorted:
-            pdf.set_font(FONT_NAME, "", 5.5)
+            pdf.set_font(FONT_NAME, "", 6.5)
             pdf.set_text_color(*HEADER_COLOR)
-            pdf.cell(0, 3, "Member Nations (RTLP R, G0 per capita, Population, RTLD I total lost) — sorted by R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            pdf.ln(0.3)
+            pdf.cell(0, 3.5, "Member Nations (RTLP R, G0 per capita, Population, total lost) — sorted by R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.ln(0.2)
             tcols = [36, 9, 15, 16, 20]
             thdrs = ["Country", "R", "G0 ($)", "Pop", "Lost ($)"]
-            pdf.set_font(FONT_NAME, "", 4.5)
+            pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_fill_color(*HEADER_COLOR)
             pdf.set_text_color(255, 255, 255)
             for ii, hh in enumerate(thdrs):
-                pdf.cell(tcols[ii], 2.6, hh, border=1, fill=True, align="C")
+                pdf.cell(tcols[ii], 2.8, hh, border=1, fill=True, align="C")
             pdf.ln()
             pdf.set_text_color(*BLACK)
             for m in members_sorted:
@@ -1037,7 +1059,7 @@ def build_regions(data: dict) -> Path:
                 is_best = best and m.get("iso3") == best.get("iso3")
                 is_worst = worst and m.get("iso3") == worst.get("iso3")
                 font = "B" if (is_best or is_worst) else ""
-                pdf.set_font(FONT_NAME, font, 4.2)
+                pdf.set_font(FONT_NAME, font, 5)
 
                 if rr is not None:
                     if rr >= 0.6:
@@ -1049,14 +1071,14 @@ def build_regions(data: dict) -> Path:
                 else:
                     pdf.set_text_color(*BLACK)
 
-                pdf.cell(tcols[0], 2.4, cname, border=1)
-                pdf.cell(tcols[1], 2.4, rstr, border=1, align="C")
+                pdf.cell(tcols[0], 2.5, cname, border=1)
+                pdf.cell(tcols[1], 2.5, rstr, border=1, align="C")
                 pdf.set_text_color(*BLACK)
-                pdf.cell(tcols[2], 2.4, gstr, border=1, align="R")
-                pdf.cell(tcols[3], 2.4, pstr, border=1, align="R")
-                pdf.cell(tcols[4], 2.4, lstr, border=1, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+                pdf.cell(tcols[2], 2.5, gstr, border=1, align="R")
+                pdf.cell(tcols[3], 2.5, pstr, border=1, align="R")
+                pdf.cell(tcols[4], 2.5, lstr, border=1, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
-            pdf.set_font(FONT_NAME, "", 4.5)
+            pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_fill_color(200, 200, 200)
             pdf.set_text_color(*BLACK)
             totp = reg_sum["total_pop"]
@@ -1064,30 +1086,30 @@ def build_regions(data: dict) -> Path:
             totpstr = f"{totp/1e6:.1f}m"
             totlstr = f"${totl/1e9:.2f}b"
             wrstr = f"{reg_sum['weighted_r']:.2f}"
-            pdf.cell(tcols[0], 2.6, "REGIONAL TOTAL", border=1, fill=True)
-            pdf.cell(tcols[1], 2.6, wrstr, border=1, align="C", fill=True)
-            pdf.cell(tcols[2], 2.6, "", border=1, fill=True)
-            pdf.cell(tcols[3], 2.6, totpstr, border=1, align="R", fill=True)
-            pdf.cell(tcols[4], 2.6, totlstr, border=1, align="R", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.cell(tcols[0], 2.7, "REGIONAL TOTAL", border=1, fill=True)
+            pdf.cell(tcols[1], 2.7, wrstr, border=1, align="C", fill=True)
+            pdf.cell(tcols[2], 2.7, "", border=1, fill=True)
+            pdf.cell(tcols[3], 2.7, totpstr, border=1, align="R", fill=True)
+            pdf.cell(tcols[4], 2.7, totlstr, border=1, align="R", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             pdf.set_fill_color(240, 240, 240)
-            pdf.ln(0.8)
+            pdf.ln(0.6)
 
-        pdf.set_font(FONT_NAME, "", 6.5)
+        pdf.set_font(FONT_NAME, "", 7.5)
         pdf.set_text_color(*HEADER_COLOR)
-        pdf.cell(0, 3.5, "RTLP Indicator Breakdown for the Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(0.3)
+        pdf.cell(0, 4, "RTLP Indicator Breakdown for the Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(0.2)
 
         for ind in reg_sum.get("indicators", []):
             pct = ind["frac_yes"] * 100
             lost_b = ind.get("attributable_lost_gdp", 0) / 1e9
-            pdf.set_font(FONT_NAME, "", 5.2)
+            pdf.set_font(FONT_NAME, "", 6)
             pdf.set_text_color(*BLACK)
             line = f"{ind['num']}. {ind['name']}: {pct:.0f}% Yes ({ind['n_yes']}/{ind['n_countries']}) | avg raw {ind['avg_raw']:.2f}"
-            pdf.cell(0, 2.6, line, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            pdf.set_font(FONT_NAME, "", 4.8)
+            pdf.cell(0, 2.8, line, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_text_color(70, 70, 70)
             pdf.set_x(MARGIN + 2)
-            pdf.multi_cell(0, 2.2,
+            pdf.multi_cell(0, 2.4,
                 f"Attributable lost GDP: ${lost_b:,.2f} billion ({(lost_b * 1e9 / reg_sum['total_lost_gdp'] * 100) if reg_sum['total_lost_gdp'] > 0 else 0:.0f}% of region total). {ind['desc']}"
             )
             pdf.set_x(MARGIN)
@@ -1097,20 +1119,20 @@ def build_regions(data: dict) -> Path:
             if common_fails:
                 chosen = max(common_fails, key=lambda x: x.get("attributable_lost_gdp", 0))
                 gain_b = chosen.get("attributable_lost_gdp", 0) / 1e9
-                pdf.set_font(FONT_NAME, "", 5.5)
+                pdf.set_font(FONT_NAME, "", 6)
                 pdf.set_text_color(20, 20, 20)
-                pdf.multi_cell(0, 2.6,
+                pdf.multi_cell(0, 2.8,
                     f"Critically, every single nation in the {reg_name} region is currently failing indicator {chosen['num']}. {chosen['name']}. "
                     f"Getting this one indicator right across the whole region would recover an estimated ${gain_b:,.2f} billion in annual GDP."
                 )
                 pdf.ln(0.3)
 
-        pdf.ln(0.5)
-        pdf.set_font(FONT_NAME, "", 4.8)
+        pdf.ln(0.4)
+        pdf.set_font(FONT_NAME, "", 5.5)
         pdf.set_text_color(100, 100, 100)
-        pdf.multi_cell(0, 2.1,
+        pdf.multi_cell(0, 2.3,
             "Note: Weighted R is population-weighted mean of member countries' R. Attributable lost for an indicator = sum over countries with 'No' on that indicator of (0.05/9 × G₀ × pop). "
-            "See individual nation profiles for country-level detail and 3-year trends. Full global choropleth appears in the front matter / outputs/figures/."
+            "See individual nation profiles for country-level detail and 3-year trends."
         )
 
     out_path = Path(REGIONS_PDF)
