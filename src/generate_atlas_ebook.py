@@ -1137,6 +1137,20 @@ def create_pdf():
         ("V-Dem", "Varieties of Democracy project. Supplies the expert-coded governance and civil liberties indicators for eight of the nine RTLP components."),
         ("Crosswalk", "The explicit mapping from the nine verbatim RTLP questions to observable V-Dem variables and World Bank statistics, with defined binarization thresholds."),
         ("2026-fresh G0", "The most recent published GDP per capita values used as the dynamic baseline for the 2026 edition (even when RTLP components are from 2024)."),
+        ("Mollweide", "Equal-area pseudocylindrical map projection used for all choropleths (global, regional, and per-nation zooms) to ensure visual area corresponds to geographic reality."),
+        ("Choropleth", "Thematic map in which countries or regions are shaded by enclosure strength R (0–1) using the Viridis colormap; primary visual for the global, regional, and focus views."),
+        ("Diagnostic (tool/guide)", "The use of RTLP scores, component breakdowns, and attributable lost-GDP figures as a practical instrument for citizens, NGOs, and policymakers to identify reform priorities and quantify upside."),
+        ("Trend (3-year)", "The per-nation GDP-driven RTLDI plots (R held fixed at 2024 values) that illustrate recent economic-drag dynamics alongside the regional and global maps."),
+        ("Attributable lost GDP", "The share of a country or region's total lost output that is directly traceable to the absence of one specific RTLP indicator (sum of 0.05/9 × G₀ × pop over countries failing that indicator)."),
+        ("Enclosure (nested causal / human)", "The source document's central metaphor: the interdependent, layered structures of protection whose strength or weakness shapes higher-order economic and social steady states."),
+        ("Causality and Attraction", "The source monograph (Hubbard 2026V3, Zenodo 19468550) that supplies the RTLDI equation, the nine RTLP indicators, the nested-enclosures paradigm, and the cartographic critique of distortion."),
+        ("Binarization / threshold", "The documented conversion of continuous V-Dem and World Bank values into the binary 0/1 scores for the nine indicators (e.g., ≥2.0 on 0-4 scales, ≤5 % undernourishment + ≤10 % poverty for #9)."),
+        ("η (eta)", "The sensitivity coefficient (default 0.05) in ΔG = η(1 − R) × G₀; the economic 'premium' the source associates with moving from zero to full right-to-life protection."),
+        ("Steady state", "A balanced biological, economic, or social condition that the framework argues is supported or undermined by the strength of the nine life protections and the resulting causal enclosures."),
+        ("UN region / regional summary", "One of the 22 geographic groupings used for aggregates, focused choropleths, member-nations tables (with R / G0 / population / lost + REGIONAL TOTAL row), and 9-indicator breakdowns."),
+        ("Member-nations table", "The compact table on each regional summary page that lists every country in the region together with its R, G0, population, and total lost GDP, plus a bottom row of regional totals."),
+        ("Viridis", "The perceptually uniform sequential colormap (dark low-R → yellow high-R) used consistently for every enclosure-strength choropleth in the atlas."),
+        ("Fitbounds / regional zoom", "The per-nation choropleth view that automatically zooms to the target country plus the rest of its UN region, using the same Mollweide projection and Viridis scale as the global map."),
     ]
     pdf.set_font(FONT_NAME, "", 8)
     for term, definition in terms:
