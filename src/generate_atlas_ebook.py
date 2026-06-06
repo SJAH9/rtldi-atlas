@@ -724,6 +724,37 @@ def create_pdf():
         pdf.cell(0, 4, stats, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(1)
 
+        # Two-paragraph description of cumulative RTLP scores, strengths, and growth potential
+        inds = reg_sum.get("indicators", [])
+        if inds:
+            sorted_inds = sorted(inds, key=lambda x: x.get("frac_yes", 0), reverse=True)
+            strong_names = [i["name"].split(" (")[0] for i in sorted_inds[:2] if i.get("frac_yes", 0) > 0.4]
+            weak_names = [i["name"].split(" (")[0] for i in sorted_inds[-2:]]
+            potential_b = sum(i.get("attributable_lost_gdp", 0) for i in sorted_inds[-3:]) / 1e9
+            para1 = (
+                f"The {reg_name} region has a population-weighted average RTLP score of {reg_sum['weighted_r']:.2f}. "
+                f"This cumulative measure indicates that, across its {reg_sum['n_countries']} member countries, "
+                f"roughly {reg_sum['weighted_r']*100:.0f}% of the nine core protections are in place on average, "
+                f"resulting in an estimated ${reg_sum['total_lost_gdp']/1e9:,.2f} billion in annual lost GDP. "
+                f"The region demonstrates particular strength in {', '.join(strong_names) if strong_names else 'several key areas'}, "
+                f"where a substantial share of countries satisfy the binarization thresholds for those indicators."
+            )
+            para2 = (
+                f"Addressing the weaker indicators—especially {', '.join(weak_names) if weak_names else 'priority areas'}—"
+                f"offers significant growth potential. Improving these failing protections across the region could "
+                f"recover an estimated ${potential_b:,.2f} billion in annual GDP (a meaningful fraction of the current deficit). "
+                f"Such reforms would enhance per-capita output, attract investment, and reinforce the nested causal enclosures "
+                f"that underpin long-term economic and social steady states, consistent with the source framework."
+            )
+            pdf.set_font(FONT_NAME, "", 6)
+            pdf.set_text_color(40, 40, 40)
+            pdf.multi_cell(0, 2.8, para1)
+            pdf.ln(0.8)
+            pdf.multi_cell(0, 2.8, para2)
+            pdf.ln(1)
+            pdf.set_font(FONT_NAME, "", 7)
+            pdf.set_text_color(70, 70, 70)
+
         # Choropleth for the region
         map_p = get_regional_choropleth(reg_name, detailed_all)
         if map_p and map_p.exists():
