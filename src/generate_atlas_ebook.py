@@ -726,6 +726,7 @@ def create_pdf():
 
         # Two-paragraph description of cumulative RTLP scores, strengths, and growth potential
         inds = reg_sum.get("indicators", [])
+        n = reg_sum['n_countries']
         if inds:
             sorted_inds = sorted(inds, key=lambda x: x.get("frac_yes", 0), reverse=True)
             strong_names = [i["name"].split(" (")[0] for i in sorted_inds[:2] if i.get("frac_yes", 0) > 0.4]
@@ -733,12 +734,24 @@ def create_pdf():
             potential_b = sum(i.get("attributable_lost_gdp", 0) for i in sorted_inds[-3:]) / 1e9
             para1 = (
                 f"The {reg_name} region has a population-weighted average RTLP score of {reg_sum['weighted_r']:.2f}. "
-                f"This cumulative measure indicates that, across its {reg_sum['n_countries']} member countries, "
+                f"This cumulative measure indicates that, across its {n} member countries, "
                 f"roughly {reg_sum['weighted_r']*100:.0f}% of the nine core protections are in place on average, "
                 f"resulting in an estimated ${reg_sum['total_lost_gdp']/1e9:,.2f} billion in annual lost GDP. "
                 f"The region demonstrates particular strength in {', '.join(strong_names) if strong_names else 'several key areas'}, "
                 f"where a substantial share of countries satisfy the binarization thresholds for those indicators."
             )
+            if n > 3:
+                members = reg_sum.get("members", [])
+                valid = [m for m in members if m.get("r") is not None]
+                if valid:
+                    best = max(valid, key=lambda x: x["r"])
+                    worst = min(valid, key=lambda x: x["r"])
+                    best_name = best.get("country", best.get("iso3", ""))
+                    worst_name = worst.get("country", worst.get("iso3", ""))
+                    para1 += (
+                        f" The highest-scoring nation is {best_name} (R={best['r']:.2f}), "
+                        f"while the lowest is {worst_name} (R={worst['r']:.2f})."
+                    )
             para2 = (
                 f"Addressing the weaker indicators—especially {', '.join(weak_names) if weak_names else 'priority areas'}—"
                 f"offers significant growth potential. Improving these failing protections across the region could "
@@ -844,6 +857,19 @@ def create_pdf():
                 f"Attributable lost GDP: ${lost_b:,.2f} billion ({(lost_b * 1e9 / reg_sum['total_lost_gdp'] * 100) if reg_sum['total_lost_gdp'] > 0 else 0:.0f}% of region total). {ind['desc']}"
             )
             pdf.set_x(MARGIN)
+
+        if n > 3:
+            common_fails = [ind for ind in inds if ind.get("frac_yes", 0) == 0]
+            if common_fails:
+                chosen = max(common_fails, key=lambda x: x.get("attributable_lost_gdp", 0))
+                gain_b = chosen.get("attributable_lost_gdp", 0) / 1e9
+                pdf.set_font(FONT_NAME, "", 5.5)
+                pdf.set_text_color(20, 20, 20)
+                pdf.multi_cell(0, 2.6,
+                    f"Critically, every single nation in the {reg_name} region is currently failing indicator {chosen['num']}. {chosen['name']}. "
+                    f"Getting this one indicator right across the whole region would recover an estimated ${gain_b:,.2f} billion in annual GDP."
+                )
+                pdf.ln(0.3)
 
         pdf.ln(0.5)
         pdf.set_font(FONT_NAME, "", 4.8)
