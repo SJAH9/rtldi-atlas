@@ -1128,6 +1128,8 @@ def create_pdf():
     # ========== INDEX OF TERMS ==========
     pdf.add_page()
     pdf.chapter_title("Index of Terms")
+
+    # Base terms (core concepts)
     terms = [
         ("ΔG (delta G)", "Annual GDP per capita loss due to incomplete right-to-life protection. Core output of the RTLDI equation."),
         ("G₀ (G-zero)", "Baseline GDP per capita (World Bank, current US$). The 'current' economic size against which the deficit is measured."),
@@ -1152,6 +1154,47 @@ def create_pdf():
         ("Viridis", "The perceptually uniform sequential colormap (dark low-R → yellow high-R) used consistently for every enclosure-strength choropleth in the atlas."),
         ("Fitbounds / regional zoom", "The per-nation choropleth view that automatically zooms to the target country plus the rest of its UN region, using the same Mollweide projection and Viridis scale as the global map."),
     ]
+
+    # Add the 9 indicators themselves (loaded from breakdown data for exact wording)
+    if detailed_all and "components" in detailed_all[0]:
+        for comp in detailed_all[0]["components"]:
+            name = comp.get("name", "")
+            desc = comp.get("desc", "One of the nine binary RTLP indicators averaged to produce the RTLP score R.")
+            if name:
+                terms.append( (name, desc) )
+
+    # Add key terms and phrases used *in* the 9 indicators (frequent in descriptions, breakdowns, and regional/nation text)
+    indicator_subterms = [
+        ("Arbitrary Detention", "Core protection against state overreach (RTLP indicator #4); failure contributes directly to attributable lost GDP in regions with weak rule of law."),
+        ("Torture and Inhumane Treatment", "RTLP indicator #5; one of the largest contributors to global lost GDP, highlighting physical integrity failures."),
+        ("Independent Judiciary", "RTLP indicator #2; essential for enforcing all other protections and a frequent point of regional failure."),
+        ("Socioeconomic Conditions", "RTLP indicator #9; combines World Bank undernourishment and poverty data; measures structural ability to sustain life."),
+        ("Freedom of Expression and Whistleblower Protections", "RTLP indicator #8; critical for exposing violations and one of the lower-loss (stronger) areas globally."),
+        ("Civilian Protection in Conflict Zones", "RTLP indicator #6; focuses on mechanisms during armed conflict or high-violence periods."),
+        ("Law Enforcement Accountability", "RTLP indicator #3; addresses whether agencies and leaders are held responsible for unlawful killings."),
+        ("Access to Justice", "RTLP indicator #7; ensures individuals can seek remedies for rights violations."),
+        ("Existence of Legal Protections", "RTLP indicator #1; the foundational de-jure and de-facto right to life."),
+        ("Right to Life", "The overarching protected interest; the nine indicators operationalize equal and effective protection against arbitrary interruption."),
+    ]
+    terms.extend(indicator_subterms)
+
+    # Remove any accidental duplicates by term name (case-insensitive)
+    seen = set()
+    unique = []
+    for t in terms:
+        key = t[0].lower()
+        if key not in seen:
+            seen.add(key)
+            unique.append(t)
+    terms = unique
+
+    # Sort alphabetically (case-insensitive, with light normalization for Greek/symbols)
+    terms = sorted(terms, key=lambda x: x[0].lower()
+                   .replace("δ", "d")
+                   .replace("η", "eta")
+                   .replace("₀", "0")
+                   .replace("g₀", "g0"))
+
     pdf.set_font(FONT_NAME, "", 8)
     for term, definition in terms:
         pdf.set_font(FONT_NAME, "", 8)
