@@ -64,26 +64,28 @@ python3 -m src.generate_enclosure_map --year 2026
 ```
 Outputs land in `outputs/figures/` (PNG at print resolution, PDF vector, interactive HTML with full hover details + vintage labels).
 
-You can also (re)build the print PDF ebook. The generator now produces three separate parts so you can iterate quickly on front matter or back matter without regenerating the 193 nation profile pages:
+You can also (re)build the print PDF ebook. The generator now produces **four** separate parts (front / regions / nations / back) so you can iterate quickly on any section without regenerating the others:
 ```bash
-# Build everything and concatenate the release (same as before)
+# Build everything and concatenate the release
 python3 -m src.generate_atlas_ebook
 
-# Fast iteration (recommended when polishing descriptions, methodology, cartography, or index)
-python3 -m src.generate_atlas_ebook --front     # title, exec, method, diagnostic, map page, global table, regional summaries
-python3 -m src.generate_atlas_ebook --back      # attribution, alphabetical index of terms, credits
-python3 -m src.generate_atlas_ebook --concat-only   # final release step: combine existing parts into the full ebook
+# Fast iteration examples
+python3 -m src.generate_atlas_ebook --front      # title, exec, method, diagnostic, carto+map+global lost table, TOC, 193 summary table
+python3 -m src.generate_atlas_ebook --regions    # the 22 UN Regional Summaries (maps, descriptions, tables, breakdowns)
+python3 -m src.generate_atlas_ebook --back       # attribution, alphabetical index of terms, credits
+python3 -m src.generate_atlas_ebook --concat-only   # final release step: combine the four current parts into the full ebook
 
-# Heavy step (only when the per-country data or nation-page layout actually changes)
+# Heavy step (only when per-country data or nation-page layout changes)
 python3 -m src.generate_atlas_ebook --nations
 ```
 Outputs (always the most current of each):
 - `outputs/atlas/RTLDI_ATLAS_2026_front.pdf`
+- `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf`
 - `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf`
 - `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (concatenated release — this is the one you publish / attach to a GitHub release)
+- `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (concatenated release — front + regions + nations + back — this is the one you publish / attach to a GitHub release)
 
-The final step before tagging a release is the concatenation of the three parts.
+The final step before tagging a release is the concatenation of the four parts. This structure prevents any repetition/duplication during generation and lets you iterate on front matter, regional analysis, nation profiles, or back matter completely independently.
 
 ### Getting the V-Dem Data (one-time, ~few hundred MB)
 1. Go to https://www.v-dem.net/data/the-v-dem-dataset/

@@ -2,16 +2,19 @@
 """
 Generate a print-ready PDF ebook for the RTLDI ATLAS 2026 (modular parts + concatenated release).
 
-Structure (three separately-generated parts for fast iteration):
+Structure (four separately-generated parts for fast iteration; no duplication):
   FRONT MATTER
   - Title / cover page
   - Executive description / foreword
   - Methodology (condensed)
   - Diagnostic Guide
-  - Cartographic Approach + global choropleth + global lost-GDP by 9 indicators
+  - Cartographic Approach + global choropleth + global lost-GDP by 9 indicators + world description + total
   - Table of Contents
   - Summary Table of All 193 UN Member Nations (paginated, sorted by total loss)
-  - UN Regional Summaries (22 regions with maps, aggregates, member tables, 9-ind breakdowns)
+
+  REGIONS (22 UN regional summary pages)
+  - One page per region: choropleth, aggregates, best/worst, two-para cumulative description,
+    member-nations table with REGIONAL TOTAL, 9-indicator breakdown + universal-fail callout if applicable
 
   NATIONS (individual country pages — the 193-page section)
   - Detailed profiles: one page per nation (A-Z order), with GDP loss projections + full 9-indicator
@@ -23,19 +26,22 @@ Structure (three separately-generated parts for fast iteration):
   - Credits and Acknowledgments
 
 Usage (recommended for fast iteration):
-  python -m src.generate_atlas_ebook                 # build all three parts + concatenate release
-  python -m src.generate_atlas_ebook --front         # only front matter (quick design tweaks)
-  python -m src.generate_atlas_ebook --nations       # only the 193 nation pages (rare; heavy)
+  python -m src.generate_atlas_ebook                 # build all four parts + concatenate release
+  python -m src.generate_atlas_ebook --front         # only front matter (title through 193 summary table)
+  python -m src.generate_atlas_ebook --regions       # only the 22 region summary pages
+  python -m src.generate_atlas_ebook --nations       # only the 193 nation pages (heavy; rare)
   python -m src.generate_atlas_ebook --back          # only attribution/index/credits
-  python -m src.generate_atlas_ebook --concat-only   # combine existing parts into release (final step)
+  python -m src.generate_atlas_ebook --concat-only   # combine existing parts (front+regions+nations+back) into release (final step)
 
 Outputs (always the most current of each):
   outputs/atlas/RTLDI_ATLAS_2026_front.pdf
+  outputs/atlas/RTLDI_ATLAS_2026_regions.pdf
   outputs/atlas/RTLDI_ATLAS_2026_nations.pdf
   outputs/atlas/RTLDI_ATLAS_2026_back.pdf
-  outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf   # concatenated release (front + nations + back)
+  outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf   # concatenated release (front + regions + nations + back)
 
-The final step before tagging a GitHub release is the concatenation of the three parts.
+The final step before tagging a GitHub release is the concatenation of the four parts.
+This split prevents re-generating heavy sections when iterating on front matter or regions.
 """
 
 from fpdf import FPDF
@@ -90,6 +96,7 @@ BLACK = (0, 0, 0)
 
 # Modular PDF part filenames (outputs/atlas always holds the most current of each)
 FRONT_PDF = "outputs/atlas/RTLDI_ATLAS_2026_front.pdf"
+REGIONS_PDF = "outputs/atlas/RTLDI_ATLAS_2026_regions.pdf"
 NATIONS_PDF = "outputs/atlas/RTLDI_ATLAS_2026_nations.pdf"
 BACK_PDF = "outputs/atlas/RTLDI_ATLAS_2026_back.pdf"
 RELEASE_PDF = "outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf"
@@ -489,26 +496,29 @@ def prepare_atlas_data():
 
 
 def create_pdf():
-    """Backward-compatible entry point: builds all three modular parts then concatenates the release PDF.
+    """Backward-compatible entry point: builds all four modular parts then concatenates the release PDF.
     This is what `python -m src.generate_atlas_ebook` (no args) has always done.
     """
     data = prepare_atlas_data()
     front = build_front_matter(data)
+    regions = build_regions(data)
     nations = build_nations(data)
     back = build_back_matter(data)
-    out = concat_pdfs(front, nations, back, Path(RELEASE_PDF))
+    out = concat_pdfs(front, regions, nations, back, Path(RELEASE_PDF))
     print(f"Release PDF (concatenated): {out}")
     return out
 
 
 def build_front_matter(data: dict) -> Path:
-    """Build the front matter PDF (title through regional summaries).
-    This is the part you iterate on most for descriptions, methodology, cartography, global table, and regional views.
+    """Build the front matter PDF (title, exec, method, diagnostic, carto+global indicator lost table+world total,
+    TOC, and the paginated Summary Table of all 193 nations).
+    Regions are now a completely separate part (see build_regions) so they can be iterated independently
+    without regenerating front matter or the 193 nation pages. This split also eliminates any risk of
+    accidental repeated page emission across sections.
     """
     pdf = RTLDIAtlasPDF()
     detailed_all = data["detailed_all"]
     detailed_by_loss = data["detailed_by_loss"]
-    sorted_regions = data["sorted_regions"]
     global_indicator_losts = data["global_indicator_losts"]
     global_total_lost = data["global_total_lost"]
     indicator_names = data["indicator_names"]
@@ -792,8 +802,8 @@ def build_front_matter(data: dict) -> Path:
         ("Diagnostic Guide: Using RTLDI for Reform", "4"),
         ("Cartographic Approach and the Nested Map", "5"),
         ("Summary Table of All 193 UN Member Nations", "6"),
-        ("UN Regional Summaries (22 regions)", "8"),
-        ("Detailed Nation Profiles (A–Z)", "~30"),
+        ("UN Regional Summaries (22 regions)", "12"),
+        ("Detailed Nation Profiles (A–Z)", "~35"),
         ("Data Attribution and Sources", "~210"),
         ("Index of Terms", "~211"),
         ("Credits and Acknowledgments", "~212"),
@@ -882,7 +892,27 @@ def build_front_matter(data: dict) -> Path:
         pdf.cell(col_widths[5], 4.2, total_str, border=1, align="R", fill=zebra_fill)
         pdf.cell(col_widths[6], 4.2, pop_str, border=1, align="R", fill=zebra_fill, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
-    # ========== UN REGIONAL SUMMARIES ==========
+    # End of front matter (global 193-nation summary table). Regions are now in their own independent PDF
+    # for fast iteration without re-generating front or the heavy nations section.
+    out_path = Path(FRONT_PDF)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    pdf.output(out_path)
+    print(f"Front matter PDF written to: {out_path}  ({pdf.page_no()} pages)")
+    return out_path
+
+
+def build_regions(data: dict) -> Path:
+    """Build the UN Regional Summaries PDF as its own independent part (22 regions).
+    One page per region with choropleth, stats, cumulative description (best/worst for n>3),
+    member table + REGIONAL TOTAL, 9-indicator breakdown, and universal-fail callout where applicable.
+    This is now separate so front matter changes and nation page changes do not force re-generation
+    of the region pages (and vice-versa). Included in the final concat after front, before nations.
+    """
+    pdf = RTLDIAtlasPDF()
+    detailed_all = data["detailed_all"]
+    sorted_regions = data["sorted_regions"]
+
+    # Intro page for the regions section
     pdf.add_page()
     pdf.chapter_title("UN Regional Summaries")
     pdf.body_text(
@@ -1083,10 +1113,10 @@ def build_front_matter(data: dict) -> Path:
             "See individual nation profiles for country-level detail and 3-year trends. Full global choropleth appears in the front matter / outputs/figures/."
         )
 
-    out_path = Path(FRONT_PDF)
+    out_path = Path(REGIONS_PDF)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     pdf.output(out_path)
-    print(f"Front matter PDF written to: {out_path}  ({pdf.page_no()} pages)")
+    print(f"Regions PDF written to: {out_path}  ({pdf.page_no()} pages)")
     return out_path
 
 
@@ -1359,8 +1389,8 @@ def build_back_matter(data: dict) -> Path:
     return out_path
 
 
-def concat_pdfs(front: Optional[Path], nations: Optional[Path], back: Optional[Path], out: Path) -> Path:
-    """Concatenate the three modular PDFs into the final release PDF.
+def concat_pdfs(front: Optional[Path], regions: Optional[Path], nations: Optional[Path], back: Optional[Path], out: Path) -> Path:
+    """Concatenate the four modular PDFs (front + regions + nations + back) into the final release PDF.
     This is the final step before creating a GitHub release asset.
     Requires PyPDF2 (already present in the environment).
     """
@@ -1370,7 +1400,7 @@ def concat_pdfs(front: Optional[Path], nations: Optional[Path], back: Optional[P
 
     writer = PdfWriter()
     total_pages = 0
-    for label, p in [("front", front), ("nations", nations), ("back", back)]:
+    for label, p in [("front", front), ("regions", regions), ("nations", nations), ("back", back)]:
         if p is None:
             continue
         p = Path(p)
@@ -1392,48 +1422,52 @@ def concat_pdfs(front: Optional[Path], nations: Optional[Path], back: Optional[P
 
 def main(argv: Optional[List[str]] = None):
     parser = argparse.ArgumentParser(
-        description="Generate RTLDI ATLAS 2026 PDF parts (front / nations / back) and concatenate for release."
+        description="Generate RTLDI ATLAS 2026 PDF parts (front / regions / nations / back) and concatenate for release."
     )
-    parser.add_argument("--front", action="store_true", help="Build only front matter PDF")
+    parser.add_argument("--front", action="store_true", help="Build only front matter PDF (title through 193 summary table)")
+    parser.add_argument("--regions", action="store_true", help="Build only the 22 UN Regional Summaries pages")
     parser.add_argument("--nations", action="store_true", help="Build only the 193 nation profile pages")
     parser.add_argument("--back", action="store_true", help="Build only back matter (attribution + index + credits)")
     parser.add_argument("--concat-only", action="store_true", help="Concatenate existing part PDFs into release (no rebuild)")
     parser.add_argument("--release", "--all", dest="release", action="store_true",
-                        help="Build all three parts then concatenate (default behavior when no flags)")
+                        help="Build all four parts then concatenate (default behavior when no flags)")
 
     args = parser.parse_args(argv)
 
-    do_all = not (args.front or args.nations or args.back or args.concat_only)
+    do_all = not (args.front or args.regions or args.nations or args.back or args.concat_only)
 
     front_p = Path(FRONT_PDF)
+    regions_p = Path(REGIONS_PDF)
     nations_p = Path(NATIONS_PDF)
     back_p = Path(BACK_PDF)
     release_p = Path(RELEASE_PDF)
 
     if args.concat_only:
-        if not (front_p.exists() and nations_p.exists() and back_p.exists()):
+        if not (front_p.exists() and regions_p.exists() and nations_p.exists() and back_p.exists()):
             print("concat-only requested but one or more part PDFs are missing. Run without --concat-only first.")
             return 1
-        concat_pdfs(front_p, nations_p, back_p, release_p)
+        concat_pdfs(front_p, regions_p, nations_p, back_p, release_p)
         return 0
 
     data = None
-    if args.front or args.nations or args.back or do_all:
+    if args.front or args.regions or args.nations or args.back or do_all:
         data = prepare_atlas_data()
 
-    f = n = b = None
+    f = r = n = b = None
     if args.front or do_all:
         f = build_front_matter(data)
+    if args.regions or do_all:
+        r = build_regions(data)
     if args.nations or do_all:
         n = build_nations(data)
     if args.back or do_all:
         b = build_back_matter(data)
 
     if do_all or args.release:
-        concat_pdfs(f or front_p, n or nations_p, b or back_p, release_p)
+        concat_pdfs(f or front_p, r or regions_p, n or nations_p, b or back_p, release_p)
 
     print("\nOutputs (most current versions):")
-    for p in [front_p, nations_p, back_p, release_p]:
+    for p in [front_p, regions_p, nations_p, back_p, release_p]:
         if p.exists():
             print(f"  {p}")
     return 0
