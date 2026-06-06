@@ -7,18 +7,31 @@
 
 The ATLAS operationalizes the 9-indicator RTLP score and the RTLDI equation (ΔG = η(1−R)·G₀, η≈0.05) with real-world data, primarily **V-Dem** (Varieties of Democracy) and **World Bank** WDI datasets.
 
-## Latest Release (v2026.2)
+## Releases
 
-**RTLDI ATLAS 2026 v2** is now available via the [GitHub releases page](https://github.com/SJAH9/rtldi-atlas/releases/tag/v2026.2).
+All releases (including the full PDF ebook as an asset) are available on the [GitHub Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
 
-- Modular 4-part PDF generation (front / regions / nations / back) with concatenation for the full ebook.
-- Improvements to region summary pages: enlarged text, text flowed around regional choropleth graphics (right-aligned map with descriptive text on left), fixed image presentation/distortion by preserving aspect ratio in embedding, and re-positioned the member-nations table beneath the text+map area and above the RTLP indicator breakdown.
-- Fixed anomalies in regional maps: cleared stale cached choropleths for Eastern Europe, Western Europe, Melanesia, Polynesia, and Micronesia; re-generated with current data to ensure proper zoomed regional views (no full-world maps or incorrect country inclusions, e.g. no Central American nations in Western Europe).
-- The full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (233 pages) is the primary release asset.
+### v2026.2 (Latest)
 
-**Note**: Improvements made to the region pages (text sizing, layout flowing around graphics, table positioning) will be replicated on the individual nation pages in the next release, along with other fixes and refinements.
+**RTLDI ATLAS 2026 v2** — [Download PDF](https://github.com/SJAH9/rtldi-atlas/releases/download/v2026.2/RTLDI_ATLAS_2026_ebook.pdf) | [View tag](https://github.com/SJAH9/rtldi-atlas/releases/tag/v2026.2)
 
-See the `outputs/atlas/` directory for the latest of each part (always current versions for fast iteration without re-generating everything).
+- 4-part modular PDF system (front matter / regions / nations / back matter) — the final step for a release is concatenating the four parts.
+- Improvements to region summary pages: enlarged text for readability, text flowed around the regional choropleth graphics (map right-aligned with descriptions on the left), fixed image presentation by preserving aspect ratio (no more distorted/full-world maps), and the member-nations table moved beneath the text+map area and above the RTLP breakdown.
+- Fixed map anomalies in several regions (Eastern Europe, Western Europe, and the last three Pacific regions: Melanesia, Polynesia, Micronesia) by clearing stale cached choropleths and re-generating with current data. Western Europe no longer includes extraneous nations.
+- Full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (233 pages).
+
+**Note for next release**: The region-page improvements (text sizing, flowing text around graphics, table layout) will be replicated on the individual nation pages, along with other fixes and refinements.
+
+The `outputs/atlas/` directory always contains the most current version of each part for fast local iteration.
+
+### v2026.1
+
+**RTLDI ATLAS 2026 Release 1** — [View on GitHub](https://github.com/SJAH9/rtldi-atlas/releases/tag/v2026.1)
+
+- Initial full PDF ebook with all 193 nation profiles, UN Regional Summaries, global/regional choropleths (Mollweide), 3-year trend plots, and diagnostic guide.
+- First public release of the 4-part generation pipeline and reproducible build.
+
+See the full history of releases on the [Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
 
 ## Goals
 - Transparent, data-driven computation of RTLP (R) and RTLDI (ΔG per capita + aggregate) for every UN member.
