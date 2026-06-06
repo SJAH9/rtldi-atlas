@@ -684,13 +684,28 @@ def create_pdf():
         pop = d["population"]
         pop_str = f"{pop/1e6:.1f} m" if pop is not None else "N/A"
 
-        pdf.cell(col_widths[0], 4.2, str(rank), border=1, align="C")
-        pdf.cell(col_widths[1], 4.2, country, border=1)
-        pdf.cell(col_widths[2], 4.2, region, border=1)
-        pdf.cell(col_widths[3], 4.2, r_str, border=1, align="C")
-        pdf.cell(col_widths[4], 4.2, per_cap_str, border=1, align="R")
-        pdf.cell(col_widths[5], 4.2, total_str, border=1, align="R")
-        pdf.cell(col_widths[6], 4.2, pop_str, border=1, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        zebra_fill = (idx % 2 == 0)
+        pdf.set_fill_color(248, 248, 250) if zebra_fill else (255, 255, 255)
+
+        # color R for quick scan
+        if r_val is not None:
+            if r_val >= 0.6:
+                pdf.set_text_color(0, 128, 0)
+            elif r_val <= 0.2:
+                pdf.set_text_color(180, 0, 0)
+            else:
+                pdf.set_text_color(*BLACK)
+        else:
+            pdf.set_text_color(*BLACK)
+
+        pdf.cell(col_widths[0], 4.2, str(rank), border=1, align="C", fill=zebra_fill)
+        pdf.cell(col_widths[1], 4.2, country, border=1, fill=zebra_fill)
+        pdf.cell(col_widths[2], 4.2, region, border=1, fill=zebra_fill)
+        pdf.cell(col_widths[3], 4.2, r_str, border=1, align="C", fill=zebra_fill)
+        pdf.set_text_color(*BLACK)
+        pdf.cell(col_widths[4], 4.2, per_cap_str, border=1, align="R", fill=zebra_fill)
+        pdf.cell(col_widths[5], 4.2, total_str, border=1, align="R", fill=zebra_fill)
+        pdf.cell(col_widths[6], 4.2, pop_str, border=1, align="R", fill=zebra_fill, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     # ========== UN REGIONAL SUMMARIES ==========
     pdf.add_page()
@@ -724,9 +739,18 @@ def create_pdf():
         pdf.cell(0, 4, stats, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(1)
 
+        # Compute best/worst for table and paras (n>3)
+        members = reg_sum.get("members", [])
+        n = reg_sum['n_countries']
+        best = worst = None
+        if n > 3 and members:
+            valid = [m for m in members if m.get("r") is not None]
+            if valid:
+                best = max(valid, key=lambda x: x["r"])
+                worst = min(valid, key=lambda x: x["r"])
+
         # Two-paragraph description of cumulative RTLP scores, strengths, and growth potential
         inds = reg_sum.get("indicators", [])
-        n = reg_sum['n_countries']
         if inds:
             sorted_inds = sorted(inds, key=lambda x: x.get("frac_yes", 0), reverse=True)
             strong_names = [i["name"].split(" (")[0] for i in sorted_inds[:2] if i.get("frac_yes", 0) > 0.4]
@@ -740,18 +764,13 @@ def create_pdf():
                 f"The region demonstrates particular strength in {', '.join(strong_names) if strong_names else 'several key areas'}, "
                 f"where a substantial share of countries satisfy the binarization thresholds for those indicators."
             )
-            if n > 3:
-                members = reg_sum.get("members", [])
-                valid = [m for m in members if m.get("r") is not None]
-                if valid:
-                    best = max(valid, key=lambda x: x["r"])
-                    worst = min(valid, key=lambda x: x["r"])
-                    best_name = best.get("country", best.get("iso3", ""))
-                    worst_name = worst.get("country", worst.get("iso3", ""))
-                    para1 += (
-                        f" The highest-scoring nation is {best_name} (R={best['r']:.2f}), "
-                        f"while the lowest is {worst_name} (R={worst['r']:.2f})."
-                    )
+            if best and worst:
+                best_name = best.get("country", best.get("iso3", ""))
+                worst_name = worst.get("country", worst.get("iso3", ""))
+                para1 += (
+                    f" The highest-scoring nation is {best_name} (R={best['r']:.2f}), "
+                    f"while the lowest is {worst_name} (R={worst['r']:.2f})."
+                )
             para2 = (
                 f"Addressing the weaker indicators—especially {', '.join(weak_names) if weak_names else 'priority areas'}—"
                 f"offers significant growth potential. Improving these failing protections across the region could "
@@ -785,12 +804,12 @@ def create_pdf():
             )
             pdf.ln(0.5)
 
-        # Table of nations in the region + totals row
-        members = reg_sum.get("members", [])
+        # Table of nations in the region + totals row (improved: sorted by R desc for scannability, colored R, bold best/worst)
+        members = sorted(reg_sum.get("members", []), key=lambda x: x.get("r", 0) or 0, reverse=True)
         if members:
             pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_text_color(*HEADER_COLOR)
-            pdf.cell(0, 3, "Member Nations (RTLP R, G0 per capita, Population, RTLD I total lost)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.cell(0, 3, "Member Nations (RTLP R, G0 per capita, Population, RTLD I total lost) — sorted by R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             pdf.ln(0.3)
             tcols = [36, 9, 15, 16, 20]  # ~96mm wide, compact for 1-page fit
             thdrs = ["Country", "R", "G0 ($)", "Pop", "Lost ($)"]
@@ -814,9 +833,26 @@ def create_pdf():
                     lstr = f"${ll/1e9:.2f}b" if ll >= 1e9 else f"${ll/1e6:.0f}m"
                 else:
                     lstr = "N/A"
-                pdf.set_font(FONT_NAME, "", 4.2)
+
+                is_best = best and m.get("iso3") == best.get("iso3")
+                is_worst = worst and m.get("iso3") == worst.get("iso3")
+                font = "B" if (is_best or is_worst) else ""
+                pdf.set_font(FONT_NAME, font, 4.2)
+
+                # color R
+                if rr is not None:
+                    if rr >= 0.6:
+                        pdf.set_text_color(0, 128, 0)
+                    elif rr <= 0.2:
+                        pdf.set_text_color(180, 0, 0)
+                    else:
+                        pdf.set_text_color(*BLACK)
+                else:
+                    pdf.set_text_color(*BLACK)
+
                 pdf.cell(tcols[0], 2.4, cname, border=1)
                 pdf.cell(tcols[1], 2.4, rstr, border=1, align="C")
+                pdf.set_text_color(*BLACK)
                 pdf.cell(tcols[2], 2.4, gstr, border=1, align="R")
                 pdf.cell(tcols[3], 2.4, pstr, border=1, align="R")
                 pdf.cell(tcols[4], 2.4, lstr, border=1, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
@@ -916,67 +952,81 @@ def create_pdf():
         )
         pdf.set_y(y_start + 22)
 
-        # ========== 3-YEAR RTLDI (GDP) TREND PLOT ==========
-        # Inserted per request: small plot of RTLDI deficit using 3 years of G0 (R fixed from 2024 components)
+        # Side-by-side plots (trend + regional context) to save vertical space, enable direct comparison, and improve readability/flow.
+        # Smaller combined height frees room for slightly larger indicator text and breathing room.
         plot_path = get_trend_plot_path(
             d["iso3"], d["country"], d.get("r"), d.get("population"),
             g0_series.get(d["iso3"], {})
         )
-        if plot_path and plot_path.exists():
-            pdf.ln(1)
-            pdf.set_font(FONT_NAME, "", 7)
-            pdf.set_text_color(*HEADER_COLOR)
-            pdf.cell(0, 3.5, "Three-Year RTLDI Trend (based on 3 years of GDP data)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            y_plot = pdf.get_y()
-            img_w = CONTENT_WIDTH - 8
-            # Fixed height ~24-25mm keeps most profiles on 1 page; aspect preserved by generator
-            pdf.image(str(plot_path), x=MARGIN + 4, w=img_w, h=24)
-            pdf.set_y(y_plot + 25)
-            pdf.set_font(FONT_NAME, "", 5.5)
-            pdf.set_text_color(95, 95, 95)
-            pdf.multi_cell(0, 2.6,
-                "R fixed from 2024 V-Dem crosswalk + latest socio #9 (see breakdown); G₀ varies (WB NY.GDP.PCAP.CD); pop fixed at latest. "
-                "ΔG = 0.05 × (1 − R) × G₀; total = ΔG × pop. Years: 2023/2024/2025 (data availability in source bulk/API)."
-            )
-            pdf.ln(1)
-
-        # Regional focus choropleth: this nation + others in its UN region (practical proxy for bordering/neighboring states)
         focus_p = get_nation_focus_map(d["iso3"], d["country"], d.get("un_region"), detailed_all)
-        if focus_p and focus_p.exists():
+        if plot_path and focus_p and plot_path.exists() and focus_p.exists():
             pdf.ln(0.5)
-            pdf.set_font(FONT_NAME, "", 6.5)
+            plot_w = (CONTENT_WIDTH - 10) / 2
+            y0 = pdf.get_y()
+            pdf.set_font(FONT_NAME, "", 6)
             pdf.set_text_color(*HEADER_COLOR)
-            pdf.cell(0, 3, "Regional Zoom — Enclosure Strength (R): this nation + region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            yf = pdf.get_y()
-            pdf.image(str(focus_p), x=MARGIN + 8, w=CONTENT_WIDTH - 16, h=17)
-            pdf.set_y(yf + 18)
+            pdf.set_xy(MARGIN + 2, y0)
+            pdf.cell(plot_w, 3, "3-Year Trend (R fixed, G0 varies)", align="C")
+            pdf.set_xy(MARGIN + 2 + plot_w + 4, y0)
+            pdf.cell(plot_w, 3, "Regional Zoom (R, Mollweide)", align="C")
+            y1 = y0 + 3.5
+            pdf.image(str(plot_path), x=MARGIN + 2, y=y1, w=plot_w, h=16)
+            pdf.image(str(focus_p), x=MARGIN + 2 + plot_w + 4, y=y1, w=plot_w, h=16)
+            pdf.set_y(y1 + 17)
             pdf.set_font(FONT_NAME, "", 5)
-            pdf.set_text_color(95, 95, 95)
-            pdf.multi_cell(0, 2.3,
-                "Zoomed view using the same global choropleth data (Mollweide projection, Viridis R scale). ★ = this nation. Region used as practical stand-in for immediate geographic neighbors."
+            pdf.set_text_color(90, 90, 90)
+            pdf.multi_cell(0, 2.2,
+                "Left: 3yr GDP-driven RTLDI trend. Right: region context (★ = this nation). Both use consistent scales with global map. See full choropleth earlier."
             )
             pdf.ln(0.5)
+        else:
+            # Fallback (rare)
+            if plot_path and plot_path.exists():
+                pdf.ln(1)
+                pdf.set_font(FONT_NAME, "", 7)
+                pdf.set_text_color(*HEADER_COLOR)
+                pdf.cell(0, 3.5, "Three-Year RTLDI Trend (based on 3 years of GDP data)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+                y_plot = pdf.get_y()
+                img_w = CONTENT_WIDTH - 8
+                pdf.image(str(plot_path), x=MARGIN + 4, w=img_w, h=16)
+                pdf.set_y(y_plot + 17)
+                pdf.set_font(FONT_NAME, "", 5.5)
+                pdf.set_text_color(95, 95, 95)
+                pdf.multi_cell(0, 2.4, "R fixed 2024; G₀ varies. ΔG = 0.05 × (1 − R) × G₀.")
+                pdf.ln(0.5)
+            if focus_p and focus_p.exists():
+                pdf.ln(0.5)
+                pdf.set_font(FONT_NAME, "", 6.5)
+                pdf.set_text_color(*HEADER_COLOR)
+                pdf.cell(0, 3, "Regional Zoom — Enclosure Strength (R): this nation + region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+                yf = pdf.get_y()
+                pdf.image(str(focus_p), x=MARGIN + 8, w=CONTENT_WIDTH - 16, h=14)
+                pdf.set_y(yf + 15)
+                pdf.set_font(FONT_NAME, "", 5)
+                pdf.set_text_color(95, 95, 95)
+                pdf.multi_cell(0, 2.2, "Zoomed regional view (Mollweide). ★ = this nation.")
+                pdf.ln(0.5)
 
-        pdf.ln(1.5)
+        pdf.ln(1)
         pdf.set_font(FONT_NAME, "", 8)
         pdf.set_text_color(*HEADER_COLOR)
         pdf.cell(0, 4, "RTLP Score Breakdown — 9 Indicators", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(0.5)
 
-        # 9 indicators - clean block layout (compacted to fit + 3yr plot on one page)
+        # 9 indicators - slightly larger fonts + tighter but with better separation for scanability (side-by-side plots freed vertical space)
         for c in d['components']:
             yes = c['yes']
             color = YES_COLOR if yes == "Yes" else NO_COLOR
             raw_str = str(c['raw'])[:50] if c['raw'] is not None else "N/A"
             pdf.set_text_color(*BLACK)
-            pdf.set_font(FONT_NAME, "", 6)
+            pdf.set_font(FONT_NAME, "", 6.5)
             status = f"[{yes}]"
             pdf.set_text_color(*color)
-            pdf.cell(0, 2.9, f"{c['num']}. {c['name']} {status}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.cell(0, 3.1, f"{c['num']}. {c['name']} {status}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             pdf.set_text_color(80,80,80)
-            pdf.set_font(FONT_NAME, "", 5.2)
+            pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_x(MARGIN + 3)
-            pdf.multi_cell(0, 2.5, f"raw: {raw_str} — {c['desc']}")
+            pdf.multi_cell(0, 2.6, f"raw: {raw_str} — {c['desc']}")
             pdf.set_x(MARGIN)
 
         pdf.ln(0.5)
