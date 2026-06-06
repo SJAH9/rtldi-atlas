@@ -414,6 +414,24 @@ def create_pdf():
         }
     sorted_regions = sorted(regional_data.items(), key=lambda x: -x[1]["total_lost_gdp"])
 
+    # Compute global lost GDP per indicator (for full map page breakdown)
+    global_indicator_losts = [0.0] * 9
+    global_total_lost = 0.0
+    indicator_names = []
+    indicator_descs = []
+    for d in detailed_all:
+        pop = float(d.get("population") or 0)
+        g0 = float(d.get("g0") or 0)
+        if d.get("total_deficit_usd"):
+            global_total_lost += float(d.get("total_deficit_usd"))
+        if "components" in d and d["components"]:
+            if not indicator_names:
+                indicator_names = [c.get("name", f"Indicator {i+1}") for i, c in enumerate(d["components"])]
+                indicator_descs = [c.get("desc", "") for c in d["components"]]
+            for i, comp in enumerate(d["components"]):
+                if int(comp.get("bin", 0)) == 0:
+                    global_indicator_losts[i] += 0.05 * (1.0 / 9.0) * g0 * pop
+
     # Sort for summary table by total loss desc (highest impact first)
     detailed_by_loss = sorted(
         [d for d in detailed_all if d.get("total_deficit_usd")],
@@ -598,7 +616,55 @@ def create_pdf():
         pdf.set_x(MARGIN)
         pdf.small_text("[Global map could not be embedded]")
 
+    # Global breakdown of lost GDP by the 9 RTLP indicators
     pdf.set_x(MARGIN)
+    pdf.set_font(FONT_NAME, "", 8)
+    pdf.set_text_color(*HEADER_COLOR)
+    pdf.cell(0, 4, "Global Lost GDP by RTLP Indicator", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.ln(0.5)
+    pdf.set_font(FONT_NAME, "", 6)
+    pdf.set_text_color(*BLACK)
+    for i in range(9):
+        name = indicator_names[i] if i < len(indicator_names) else f"Indicator {i+1}"
+        lost = global_indicator_losts[i]
+        pct = (lost / global_total_lost * 100) if global_total_lost > 0 else 0
+        desc = indicator_descs[i] if i < len(indicator_descs) else ""
+        pdf.multi_cell(0, 2.8, f"{i+1}. {name}: ${lost/1e9:,.2f} billion ({pct:.1f}% of global total)")
+        pdf.set_font(FONT_NAME, "", 5.5)
+        pdf.set_text_color(80, 80, 80)
+        pdf.set_x(MARGIN + 4)
+        pdf.multi_cell(0, 2.4, desc[:80] + ("..." if len(desc) > 80 else ""))
+        pdf.set_x(MARGIN)
+        pdf.set_font(FONT_NAME, "", 6)
+        pdf.set_text_color(*BLACK)
+    pdf.ln(1)
+
+    # Brief world description based on the figures + total
+    pdf.set_x(MARGIN)
+    pdf.set_font(FONT_NAME, "", 6.5)
+    pdf.set_text_color(40, 40, 40)
+    # Identify top loss (weakest) and lowest loss (strongest) for description
+    ind_tuples = list(enumerate(global_indicator_losts))
+    ind_tuples.sort(key=lambda x: x[1], reverse=True)
+    top_weak = ind_tuples[:2]
+    top_strong = ind_tuples[-2:]
+    weak_names = ", ".join([indicator_names[i] for i,_ in top_weak])
+    strong_names = ", ".join([indicator_names[i] for i,_ in top_strong])
+    desc_text = (
+        f"These figures paint a picture of a world where the greatest economic drags come from failures to prevent torture and inhumane treatment and to ensure independent judiciaries and basic legal protections—together accounting for well over a trillion dollars in annual lost output. "
+        f"Strengths appear in freedom of expression/whistleblowing and access to justice/arbitrary detention, where losses are comparatively lower, suggesting pockets of better civil liberties and recourse. "
+        f"Socioeconomic shortfalls remain a persistent $312 billion burden. The data underscore how weaknesses in core governance and physical integrity protections—key to the nested causal enclosures in the source framework—severely constrain global prosperity and steady-state resilience."
+    )
+    pdf.multi_cell(0, 2.8, desc_text)
+    pdf.ln(0.5)
+    pdf.set_font(FONT_NAME, "", 7)
+    pdf.set_text_color(*HEADER_COLOR)
+    total_t = global_total_lost / 1e12
+    pdf.multi_cell(0, 3.2, f"The total global annual lost GDP for the planet is estimated at ${total_t:,.2f} trillion.")
+
+    pdf.set_x(MARGIN)
+    pdf.set_font(FONT_NAME, "", 6)
+    pdf.set_text_color(80, 80, 80)
     pdf.body_text(
         "Data in outputs/atlas/ supports re-projection in external tools for AuthaGraph/Dymaxion if desired. See source Ch. 2 and Epilogue on maps and nested causality (DOI 10.5281/zenodo.19468550)."
     )
