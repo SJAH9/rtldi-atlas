@@ -1,23 +1,41 @@
 #!/usr/bin/env python3
 """
-Generate a print-ready PDF ebook for the RTLDI ATLAS 2026.
+Generate a print-ready PDF ebook for the RTLDI ATLAS 2026 (modular parts + concatenated release).
 
-Structure:
-- Title / cover page
-- Executive description / foreword
-- Methodology (condensed)
-- Table of Contents
-- Summary Table of All 193 UN Member Nations (paginated, sorted by total loss)
-- Detailed profiles: one page per nation (A-Z order), with GDP loss projections + full 9-indicator RTLP breakdown + three-year RTLDI trend plot (varying G0, R fixed)
-- Data Attribution & Sources
-- Index of Terms
-- Credits
+Structure (three separately-generated parts for fast iteration):
+  FRONT MATTER
+  - Title / cover page
+  - Executive description / foreword
+  - Methodology (condensed)
+  - Diagnostic Guide
+  - Cartographic Approach + global choropleth + global lost-GDP by 9 indicators
+  - Table of Contents
+  - Summary Table of All 193 UN Member Nations (paginated, sorted by total loss)
+  - UN Regional Summaries (22 regions with maps, aggregates, member tables, 9-ind breakdowns)
 
-Usage:
-  python3 -m src.generate_atlas_ebook
-  # or python src/generate_atlas_ebook.py
+  NATIONS (individual country pages — the 193-page section)
+  - Detailed profiles: one page per nation (A-Z order), with GDP loss projections + full 9-indicator
+    RTLP breakdown + three-year RTLDI trend plot (varying G0, R fixed) + regional zoom map
 
-Outputs: outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf
+  BACK MATTER
+  - Data Attribution & Sources
+  - Index of Terms (alphabetical, includes the 9 indicators + key sub-terms)
+  - Credits and Acknowledgments
+
+Usage (recommended for fast iteration):
+  python -m src.generate_atlas_ebook                 # build all three parts + concatenate release
+  python -m src.generate_atlas_ebook --front         # only front matter (quick design tweaks)
+  python -m src.generate_atlas_ebook --nations       # only the 193 nation pages (rare; heavy)
+  python -m src.generate_atlas_ebook --back          # only attribution/index/credits
+  python -m src.generate_atlas_ebook --concat-only   # combine existing parts into release (final step)
+
+Outputs (always the most current of each):
+  outputs/atlas/RTLDI_ATLAS_2026_front.pdf
+  outputs/atlas/RTLDI_ATLAS_2026_nations.pdf
+  outputs/atlas/RTLDI_ATLAS_2026_back.pdf
+  outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf   # concatenated release (front + nations + back)
+
+The final step before tagging a GitHub release is the concatenation of the three parts.
 """
 
 from fpdf import FPDF
@@ -27,7 +45,16 @@ from pathlib import Path
 import math
 import numpy as np
 import pandas as pd
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
+import argparse
+import sys
+
+# PDF concatenation (PyPDF2 is already available in the env; pypdf is a modern alternative)
+try:
+    from PyPDF2 import PdfReader, PdfWriter
+    HAS_PYPDF = True
+except Exception:
+    HAS_PYPDF = False
 
 # Optional matplotlib for the per-nation 3-year RTLDI (GDP) trend plots
 try:
@@ -60,6 +87,12 @@ YES_COLOR = (0, 128, 0)
 NO_COLOR = (180, 0, 0)
 LIGHT_GRAY = (240, 240, 240)
 BLACK = (0, 0, 0)
+
+# Modular PDF part filenames (outputs/atlas always holds the most current of each)
+FRONT_PDF = "outputs/atlas/RTLDI_ATLAS_2026_front.pdf"
+NATIONS_PDF = "outputs/atlas/RTLDI_ATLAS_2026_nations.pdf"
+BACK_PDF = "outputs/atlas/RTLDI_ATLAS_2026_back.pdf"
+RELEASE_PDF = "outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf"
 
 class RTLDIAtlasPDF(FPDF):
     def __init__(self):
@@ -335,17 +368,20 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
     return p
 
 
-def create_pdf():
-    pdf = RTLDIAtlasPDF()
+def prepare_atlas_data():
+    """Load breakdown JSON + 3yr G0 series, compute regional aggregates, global indicator losses,
+    and the sorted-by-loss summary table. Returns a dict consumed by the three part builders.
+    This is the single place where expensive data prep happens so nations can be skipped
+    when only iterating on front or back matter.
+    """
     detailed_all, detailed_alpha = load_detailed_data()
 
-    # Load 3 years G0 series for the per-nation RTLDI trend plots (GDP-driven, R fixed)
     print("Loading 3-year G0 series for nation trend plots...")
     all_isos = [d["iso3"] for d in detailed_all]
     g0_series = load_g0_series(all_isos)
 
-    # Compute regional aggregates for UN Regional Summaries section (one page per UN region)
-    print("Computing regional summaries for UN Regional Summaries (aggregates + 9-indicator breakdowns)...")
+    # Regional aggregates (used by front matter)
+    print("Computing regional summaries for UN Regional Summaries...")
     from collections import defaultdict
     region_countries = defaultdict(list)
     for d in detailed_all:
@@ -384,7 +420,6 @@ def create_pdf():
                         except (ValueError, TypeError):
                             pass
                 avg_raw = sum(valid_raws) / len(valid_raws) if valid_raws else 0
-                # attributable: for bin==0 countries, add (0.05/9 * g0 * pop)
                 attr_lost = 0.0
                 for c in cs:
                     if "components" in c and len(c.get("components", [])) > i:
@@ -410,11 +445,11 @@ def create_pdf():
             "total_lost_gdp": total_lost,
             "mean_g0": mean_g0,
             "indicators": inds,
-            "members": cs,  # full per-country dicts for the nations table on the region page
+            "members": cs,
         }
     sorted_regions = sorted(regional_data.items(), key=lambda x: -x[1]["total_lost_gdp"])
 
-    # Compute global lost GDP per indicator (for full map page breakdown)
+    # Global lost GDP per indicator (for the full map page in front matter)
     global_indicator_losts = [0.0] * 9
     global_total_lost = 0.0
     indicator_names = []
@@ -432,12 +467,52 @@ def create_pdf():
                 if int(comp.get("bin", 0)) == 0:
                     global_indicator_losts[i] += 0.05 * (1.0 / 9.0) * g0 * pop
 
-    # Sort for summary table by total loss desc (highest impact first)
+    # Summary table sorted by total loss desc
     detailed_by_loss = sorted(
         [d for d in detailed_all if d.get("total_deficit_usd")],
         key=lambda x: x["total_deficit_usd"],
         reverse=True
     )
+
+    return {
+        "detailed_all": detailed_all,
+        "detailed_alpha": detailed_alpha,
+        "g0_series": g0_series,
+        "regional_data": regional_data,
+        "sorted_regions": sorted_regions,
+        "global_indicator_losts": global_indicator_losts,
+        "global_total_lost": global_total_lost,
+        "indicator_names": indicator_names,
+        "indicator_descs": indicator_descs,
+        "detailed_by_loss": detailed_by_loss,
+    }
+
+
+def create_pdf():
+    """Backward-compatible entry point: builds all three modular parts then concatenates the release PDF.
+    This is what `python -m src.generate_atlas_ebook` (no args) has always done.
+    """
+    data = prepare_atlas_data()
+    front = build_front_matter(data)
+    nations = build_nations(data)
+    back = build_back_matter(data)
+    out = concat_pdfs(front, nations, back, Path(RELEASE_PDF))
+    print(f"Release PDF (concatenated): {out}")
+    return out
+
+
+def build_front_matter(data: dict) -> Path:
+    """Build the front matter PDF (title through regional summaries).
+    This is the part you iterate on most for descriptions, methodology, cartography, global table, and regional views.
+    """
+    pdf = RTLDIAtlasPDF()
+    detailed_all = data["detailed_all"]
+    detailed_by_loss = data["detailed_by_loss"]
+    sorted_regions = data["sorted_regions"]
+    global_indicator_losts = data["global_indicator_losts"]
+    global_total_lost = data["global_total_lost"]
+    indicator_names = data["indicator_names"]
+    indicator_descs = data["indicator_descs"]
 
     # ========== TITLE PAGE ==========
     pdf.add_page()
@@ -451,7 +526,7 @@ def create_pdf():
     pdf.cell(0, 8, "for United Nations Member States", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.ln(8)
     pdf.set_font(FONT_NAME, "", 11)
-    pdf.set_text_color(60,60,60)
+    pdf.set_text_color(60, 60, 60)
     pdf.multi_cell(0, 6, "Projected Annual GDP Losses from Incomplete Protection\nof the Right to Life\n\n2026 Edition", align="C")
     pdf.ln(15)
     pdf.set_font(FONT_NAME, "", 9)
@@ -582,90 +657,128 @@ def create_pdf():
     pdf.add_page()
     pdf.chapter_title("Cartographic Approach and the Nested Map")
 
+    # Enlarged lead-in text for front-matter readability
     pdf.set_x(MARGIN)
     pdf.body_text(
-        "The source document (Causality and Attraction, Hubbard 2026V3) critiques the insufficiency of flat maps and praises the low-distortion Fuller-inspired butterfly map. It treats representation as a structural act that must honor nested causal enclosures."
+        "The source document (Causality and Attraction, Hubbard 2026V3) critiques the insufficiency of flat maps and praises the low-distortion Fuller-inspired butterfly map. It treats representation as a structural act that must honor nested causal enclosures.",
+        size=11
     )
 
     pdf.set_x(MARGIN)
     pdf.body_text(
-        "Hybrid model: All generated choropleths (global, 22 regional, 193 nation zooms) use Mollweide (equal-area) via Plotly. This ensures accurate area representation, full reproducibility with standard tools (no heavy GIS required), and accessibility for NGOs using their own data. Mollweide is the practical default."
+        "Hybrid model: All generated choropleths (global, 22 regional, 193 nation zooms) use Mollweide (equal-area) via Plotly. This ensures accurate area representation, full reproducibility with standard tools (no heavy GIS required), and accessibility for NGOs using their own data. Mollweide is the practical default.",
+        size=11
     )
 
-    pdf.set_x(MARGIN)
-    pdf.body_text(
-        "Canonical whole-earth view: The image below serves as the primary visual anchor, embodying the source's call for structurally faithful, low-distortion mapping of the global human enclosure."
-    )
-
-    # Embed the canonical global map
+    # Embed the canonical global map with text flowed beside it on the left
     global_map_path = "outputs/figures/rtl_di_enclosure_strength_2026_choropleth.png"
     try:
-        pdf.ln(2)
-        pdf.set_font(FONT_NAME, "", 7)
+        pdf.ln(1)
+        pdf.set_font(FONT_NAME, "", 8)
         pdf.set_text_color(*HEADER_COLOR)
-        pdf.cell(0, 3, "Canonical Global Choropleth - Enclosure Strength (R)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.cell(0, 4, "Canonical Global Choropleth — Enclosure Strength (R)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+        map_h = 58
+        map_w = 95
+        map_x = PAGE_WIDTH - MARGIN - map_w
         y_map = pdf.get_y()
-        pdf.image(global_map_path, x=MARGIN + 5, w=CONTENT_WIDTH - 10, h=70)
-        pdf.set_y(y_map + 71)
-        pdf.set_font(FONT_NAME, "", 5.5)
-        pdf.set_text_color(80, 80, 80)
-        pdf.multi_cell(0, 2.5,
-            "Primary anchor for the RTLDI ATLAS (Mollweide). Enacts commitment to accuracy and structural wholeness per the source framework. See regional and nation pages for localized views using the same projection."
+
+        pdf.image(global_map_path, x=map_x, w=map_w, h=map_h)
+
+        # Flow body text to the left of the map (the "canonical whole-earth" point lives here for visual integration)
+        left_w = CONTENT_WIDTH - map_w - 6
+        pdf.set_xy(MARGIN, y_map)
+        pdf.set_font(FONT_NAME, "", 9.5)
+        pdf.set_text_color(35, 35, 35)
+        pdf.multi_cell(left_w, 4.3,
+            "Canonical whole-earth view: the image serves as the primary visual anchor, embodying the source's call for structurally faithful, low-distortion mapping of the global human enclosure."
         )
+
+        # Small technical note under the flowed text / beside lower map
+        pdf.set_xy(MARGIN, y_map + 22)
+        pdf.set_font(FONT_NAME, "", 6.5)
+        pdf.set_text_color(85, 85, 85)
+        pdf.multi_cell(left_w, 3.2,
+            "Mollweide equal-area projection. Primary anchor for accuracy and nested wholeness (source Ch. 2). Regional and nation views throughout the atlas use the identical projection and Viridis R scale."
+        )
+
+        # Advance past the full map height
+        pdf.set_y(y_map + map_h + 4)
     except Exception:
         pdf.set_x(MARGIN)
         pdf.small_text("[Global map could not be embedded]")
 
-    # Global breakdown of lost GDP by the 9 RTLP indicators
+    # Global Lost GDP table — placed after the body text / graphic area and before the interpretive world description
     pdf.set_x(MARGIN)
-    pdf.set_font(FONT_NAME, "", 8)
+    pdf.set_font(FONT_NAME, "", 10)
     pdf.set_text_color(*HEADER_COLOR)
-    pdf.cell(0, 4, "Global Lost GDP by RTLP Indicator", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 5, "Global Lost GDP by RTLP Indicator", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.ln(0.5)
-    pdf.set_font(FONT_NAME, "", 6)
-    pdf.set_text_color(*BLACK)
-    for i in range(9):
-        name = indicator_names[i] if i < len(indicator_names) else f"Indicator {i+1}"
-        lost = global_indicator_losts[i]
-        pct = (lost / global_total_lost * 100) if global_total_lost > 0 else 0
-        desc = indicator_descs[i] if i < len(indicator_descs) else ""
-        pdf.multi_cell(0, 2.8, f"{i+1}. {name}: ${lost/1e9:,.2f} billion ({pct:.1f}% of global total)")
-        pdf.set_font(FONT_NAME, "", 5.5)
-        pdf.set_text_color(80, 80, 80)
-        pdf.set_x(MARGIN + 4)
-        pdf.multi_cell(0, 2.4, desc[:80] + ("..." if len(desc) > 80 else ""))
-        pdf.set_x(MARGIN)
-        pdf.set_font(FONT_NAME, "", 6)
-        pdf.set_text_color(*BLACK)
-    pdf.ln(1)
 
-    # Brief world description based on the figures + total
-    pdf.set_x(MARGIN)
-    pdf.set_font(FONT_NAME, "", 6.5)
-    pdf.set_text_color(40, 40, 40)
-    # Identify top loss (weakest) and lowest loss (strongest) for description
+    # Clean table header
+    tcol = [7, 68, 32, 16]  # #, name, lost, pct
+    headers = ["#", "Indicator (RTLP)", "Annual Lost GDP", "% total"]
+    pdf.set_font(FONT_NAME, "", 7.5)
+    pdf.set_fill_color(*HEADER_COLOR)
+    pdf.set_text_color(255, 255, 255)
+    for i, h in enumerate(headers):
+        pdf.cell(tcol[i], 4.2, h, border=1, fill=True, align="C" if i != 1 else "L")
+    pdf.ln()
+    pdf.set_text_color(*BLACK)
+
     ind_tuples = list(enumerate(global_indicator_losts))
     ind_tuples.sort(key=lambda x: x[1], reverse=True)
-    top_weak = ind_tuples[:2]
-    top_strong = ind_tuples[-2:]
-    weak_names = ", ".join([indicator_names[i] for i,_ in top_weak])
-    strong_names = ", ".join([indicator_names[i] for i,_ in top_strong])
+
+    for rank, (i, lost) in enumerate(ind_tuples):
+        name = indicator_names[i] if i < len(indicator_names) else f"Indicator {i+1}"
+        pct = (lost / global_total_lost * 100) if global_total_lost > 0 else 0
+        desc = indicator_descs[i] if i < len(indicator_descs) else ""
+
+        zebra = (rank % 2 == 0)
+        pdf.set_fill_color(247, 248, 250) if zebra else (255, 255, 255)
+
+        pdf.set_font(FONT_NAME, "", 7.5)
+        pdf.set_text_color(*BLACK)
+        pdf.cell(tcol[0], 4, str(i + 1), border=1, align="C", fill=zebra)
+        pdf.cell(tcol[1], 4, name[:38], border=1, fill=zebra)
+        lost_str = f"${lost/1e9:,.1f} bn"
+        pdf.cell(tcol[2], 4, lost_str, border=1, align="R", fill=zebra)
+        pdf.cell(tcol[3], 4, f"{pct:.1f}%", border=1, align="C", fill=zebra, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+        # Description under the row (still inside the table visual block for scannability)
+        if desc:
+            pdf.set_font(FONT_NAME, "", 6.5)
+            pdf.set_text_color(70, 70, 70)
+            pdf.set_x(MARGIN + tcol[0] + 1)
+            pdf.multi_cell(CONTENT_WIDTH - tcol[0] - 2, 2.9, desc)
+            pdf.set_x(MARGIN)
+
+    pdf.ln(1.5)
+
+    # Interpretive world description (the "RTLP breakdown" narrative) — now after the table, enlarged for readability
+    pdf.set_x(MARGIN)
+    pdf.set_font(FONT_NAME, "", 9)
+    pdf.set_text_color(30, 30, 30)
     desc_text = (
         f"These figures paint a picture of a world where the greatest economic drags come from failures to prevent torture and inhumane treatment and to ensure independent judiciaries and basic legal protections—together accounting for well over a trillion dollars in annual lost output. "
         f"Strengths appear in freedom of expression/whistleblowing and access to justice/arbitrary detention, where losses are comparatively lower, suggesting pockets of better civil liberties and recourse. "
-        f"Socioeconomic shortfalls remain a persistent $312 billion burden. The data underscore how weaknesses in core governance and physical integrity protections—key to the nested causal enclosures in the source framework—severely constrain global prosperity and steady-state resilience."
+        f"Socioeconomic shortfalls remain a persistent burden. The data underscore how weaknesses in core governance and physical integrity protections—key to the nested causal enclosures in the source framework—severely constrain global prosperity and steady-state resilience."
     )
-    pdf.multi_cell(0, 2.8, desc_text)
-    pdf.ln(0.5)
-    pdf.set_font(FONT_NAME, "", 7)
+    pdf.multi_cell(0, 3.6, desc_text)
+    pdf.ln(0.8)
+
+    # Prominent planet total
+    pdf.set_x(MARGIN)
+    pdf.set_font(FONT_NAME, "", 9)
     pdf.set_text_color(*HEADER_COLOR)
     total_t = global_total_lost / 1e12
-    pdf.multi_cell(0, 3.2, f"The total global annual lost GDP for the planet is estimated at ${total_t:,.2f} trillion.")
+    pdf.multi_cell(0, 4, f"The total global annual lost GDP for the planet is estimated at ${total_t:,.2f} trillion.")
 
+    pdf.ln(0.5)
     pdf.set_x(MARGIN)
-    pdf.set_font(FONT_NAME, "", 6)
-    pdf.set_text_color(80, 80, 80)
-    pdf.body_text(
+    pdf.set_font(FONT_NAME, "", 6.5)
+    pdf.set_text_color(85, 85, 85)
+    pdf.multi_cell(0, 2.8,
         "Data in outputs/atlas/ supports re-projection in external tools for AuthaGraph/Dymaxion if desired. See source Ch. 2 and Epilogue on maps and nested causality (DOI 10.5281/zenodo.19468550)."
     )
 
@@ -705,8 +818,7 @@ def create_pdf():
     )
     pdf.ln(2)
 
-    # Table header
-    col_widths = [8, 38, 22, 18, 22, 28, 28]  # rank, name, region, r, percap, total, pop
+    col_widths = [8, 38, 22, 18, 22, 28, 28]
     headers = ["#", "Country", "Region", "R", "Per Capita Loss", "Total Loss (USD)", "Population"]
     pdf.set_font(FONT_NAME, "", 7)
     pdf.set_fill_color(*HEADER_COLOR)
@@ -717,12 +829,10 @@ def create_pdf():
     pdf.set_text_color(*BLACK)
     pdf.set_font(FONT_NAME, "", 6.5)
 
-    # Paginated table rows (simple, ~35 rows per page)
     rows_per_page = 38
     for idx, d in enumerate(detailed_by_loss):
         if idx > 0 and idx % rows_per_page == 0:
             pdf.add_page()
-            # repeat header
             pdf.set_font(FONT_NAME, "", 7)
             pdf.set_fill_color(*HEADER_COLOR)
             pdf.set_text_color(255, 255, 255)
@@ -732,7 +842,7 @@ def create_pdf():
             pdf.set_text_color(*BLACK)
             pdf.set_font(FONT_NAME, "", 6.5)
 
-        rank = int(d.get("rank_by_total_deficit", idx+1)) if d.get("rank_by_total_deficit") else idx+1
+        rank = int(d.get("rank_by_total_deficit", idx + 1)) if d.get("rank_by_total_deficit") else idx + 1
         country = d["country"][:28]
         region = d["un_region"][:18] if d.get("un_region") else ""
         r_val = d["r"]
@@ -753,7 +863,6 @@ def create_pdf():
         zebra_fill = (idx % 2 == 0)
         pdf.set_fill_color(248, 248, 250) if zebra_fill else (255, 255, 255)
 
-        # color R for quick scan
         if r_val is not None:
             if r_val >= 0.6:
                 pdf.set_text_color(0, 128, 0)
@@ -790,7 +899,6 @@ def create_pdf():
 
     for reg_name, reg_sum in sorted_regions:
         pdf.add_page()
-        # Region header + stats
         pdf.set_font(FONT_NAME, "", 11)
         pdf.set_text_color(*HEADER_COLOR)
         pdf.cell(0, 5, f"{reg_name} Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
@@ -805,7 +913,6 @@ def create_pdf():
         pdf.cell(0, 4, stats, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(1)
 
-        # Compute best/worst for table and paras (n>3)
         members = reg_sum.get("members", [])
         n = reg_sum['n_countries']
         best = worst = None
@@ -815,7 +922,6 @@ def create_pdf():
                 best = max(valid, key=lambda x: x["r"])
                 worst = min(valid, key=lambda x: x["r"])
 
-        # Two-paragraph description of cumulative RTLP scores, strengths, and growth potential
         inds = reg_sum.get("indicators", [])
         if inds:
             sorted_inds = sorted(inds, key=lambda x: x.get("frac_yes", 0), reverse=True)
@@ -853,7 +959,6 @@ def create_pdf():
             pdf.set_font(FONT_NAME, "", 7)
             pdf.set_text_color(70, 70, 70)
 
-        # Choropleth for the region
         map_p = get_regional_choropleth(reg_name, detailed_all)
         if map_p and map_p.exists():
             pdf.set_font(FONT_NAME, "", 6.5)
@@ -870,14 +975,13 @@ def create_pdf():
             )
             pdf.ln(0.5)
 
-        # Table of nations in the region + totals row (improved: sorted by R desc for scannability, colored R, bold best/worst)
-        members = sorted(reg_sum.get("members", []), key=lambda x: x.get("r", 0) or 0, reverse=True)
-        if members:
+        members_sorted = sorted(reg_sum.get("members", []), key=lambda x: x.get("r", 0) or 0, reverse=True)
+        if members_sorted:
             pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_text_color(*HEADER_COLOR)
             pdf.cell(0, 3, "Member Nations (RTLP R, G0 per capita, Population, RTLD I total lost) — sorted by R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             pdf.ln(0.3)
-            tcols = [36, 9, 15, 16, 20]  # ~96mm wide, compact for 1-page fit
+            tcols = [36, 9, 15, 16, 20]
             thdrs = ["Country", "R", "G0 ($)", "Pop", "Lost ($)"]
             pdf.set_font(FONT_NAME, "", 4.5)
             pdf.set_fill_color(*HEADER_COLOR)
@@ -886,7 +990,7 @@ def create_pdf():
                 pdf.cell(tcols[ii], 2.6, hh, border=1, fill=True, align="C")
             pdf.ln()
             pdf.set_text_color(*BLACK)
-            for m in members:
+            for m in members_sorted:
                 cname = str(m.get("country") or m.get("iso3", ""))[:20]
                 rr = m.get("r")
                 rstr = f"{rr:.2f}" if rr is not None else "N/A"
@@ -905,7 +1009,6 @@ def create_pdf():
                 font = "B" if (is_best or is_worst) else ""
                 pdf.set_font(FONT_NAME, font, 4.2)
 
-                # color R
                 if rr is not None:
                     if rr >= 0.6:
                         pdf.set_text_color(0, 128, 0)
@@ -922,7 +1025,7 @@ def create_pdf():
                 pdf.cell(tcols[2], 2.4, gstr, border=1, align="R")
                 pdf.cell(tcols[3], 2.4, pstr, border=1, align="R")
                 pdf.cell(tcols[4], 2.4, lstr, border=1, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            # Totals row
+
             pdf.set_font(FONT_NAME, "", 4.5)
             pdf.set_fill_color(200, 200, 200)
             pdf.set_text_color(*BLACK)
@@ -939,7 +1042,6 @@ def create_pdf():
             pdf.set_fill_color(240, 240, 240)
             pdf.ln(0.8)
 
-        # 9 indicators breakdown for region
         pdf.set_font(FONT_NAME, "", 6.5)
         pdf.set_text_color(*HEADER_COLOR)
         pdf.cell(0, 3.5, "RTLP Indicator Breakdown for the Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
@@ -981,23 +1083,36 @@ def create_pdf():
             "See individual nation profiles for country-level detail and 3-year trends. Full global choropleth appears in the front matter / outputs/figures/."
         )
 
-    # ========== DETAILED PROFILES (A-Z) ==========
+    out_path = Path(FRONT_PDF)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    pdf.output(out_path)
+    print(f"Front matter PDF written to: {out_path}  ({pdf.page_no()} pages)")
+    return out_path
+
+
+def build_nations(data: dict) -> Path:
+    """Build the nations (individual country profiles) PDF — the 193-page section.
+    Regenerating this is the expensive step; changes to front/back should not require it.
+    """
+    pdf = RTLDIAtlasPDF()
+    detailed_alpha = data["detailed_alpha"]
+    detailed_all = data["detailed_all"]
+    g0_series = data["g0_series"]
+
     pdf.add_page()
     pdf.chapter_title("Detailed Nation Profiles (Alphabetical)")
 
     for d in detailed_alpha:
         pdf.add_page()
 
-        # Header block
         pdf.set_font(FONT_NAME, "", 13)
         pdf.set_text_color(*HEADER_COLOR)
         pdf.cell(0, 7, f"{d['country']} ({d['iso3']})", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.set_font(FONT_NAME, "", 9)
-        pdf.set_text_color(80,80,80)
+        pdf.set_text_color(80, 80, 80)
         pdf.cell(0, 5, f"UN Region: {d.get('un_region', 'N/A')}  |  RTLP R = {d['r']:.3f} ({sum(c['bin'] for c in d['components'])}/9)  |  V-Dem year: {d['vdem_year']}  |  G0 year: {d['g0_year']}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(2)
 
-        # Economic impact box
         pdf.set_fill_color(245, 245, 245)
         pdf.set_draw_color(*HEADER_COLOR)
         pdf.rect(MARGIN, pdf.get_y(), CONTENT_WIDTH, 22, style="DF")
@@ -1018,8 +1133,6 @@ def create_pdf():
         )
         pdf.set_y(y_start + 22)
 
-        # Side-by-side plots (trend + regional context) to save vertical space, enable direct comparison, and improve readability/flow.
-        # Smaller combined height frees room for slightly larger indicator text and breathing room.
         plot_path = get_trend_plot_path(
             d["iso3"], d["country"], d.get("r"), d.get("population"),
             g0_series.get(d["iso3"], {})
@@ -1046,7 +1159,6 @@ def create_pdf():
             )
             pdf.ln(0.5)
         else:
-            # Fallback (rare)
             if plot_path and plot_path.exists():
                 pdf.ln(1)
                 pdf.set_font(FONT_NAME, "", 7)
@@ -1079,7 +1191,6 @@ def create_pdf():
         pdf.cell(0, 4, "RTLP Score Breakdown — 9 Indicators", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(0.5)
 
-        # 9 indicators - slightly larger fonts + tighter but with better separation for scanability (side-by-side plots freed vertical space)
         for c in d['components']:
             yes = c['yes']
             color = YES_COLOR if yes == "Yes" else NO_COLOR
@@ -1089,7 +1200,7 @@ def create_pdf():
             status = f"[{yes}]"
             pdf.set_text_color(*color)
             pdf.cell(0, 3.1, f"{c['num']}. {c['name']} {status}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            pdf.set_text_color(80,80,80)
+            pdf.set_text_color(80, 80, 80)
             pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_x(MARGIN + 3)
             pdf.multi_cell(0, 2.6, f"raw: {raw_str} — {c['desc']}")
@@ -1097,11 +1208,25 @@ def create_pdf():
 
         pdf.ln(0.5)
         pdf.set_font(FONT_NAME, "", 5.5)
-        pdf.set_text_color(100,100,100)
+        pdf.set_text_color(100, 100, 100)
         pdf.multi_cell(0, 2.8,
             "Note: [Yes] = contributes +1 to R. Raw = V-Dem/WB value (higher=stronger protection). Thresholds in Methodology. Partial coverage possible for some nations. "
             "See the Diagnostic Guide section for how to use your R and component scores as a reform diagnostic tool."
         )
+
+    out_path = Path(NATIONS_PDF)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    pdf.output(out_path)
+    print(f"Nations PDF written to: {out_path}  ({pdf.page_no()} pages)")
+    return out_path
+
+
+def build_back_matter(data: dict) -> Path:
+    """Build the back matter PDF (attribution, alphabetical index of terms, credits).
+    Safe to iterate on without touching the 193 nation pages.
+    """
+    pdf = RTLDIAtlasPDF()
+    detailed_all = data["detailed_all"]
 
     # ========== DATA ATTRIBUTION ==========
     pdf.add_page()
@@ -1129,7 +1254,6 @@ def create_pdf():
     pdf.add_page()
     pdf.chapter_title("Index of Terms")
 
-    # Base terms (core concepts)
     terms = [
         ("ΔG (delta G)", "Annual GDP per capita loss due to incomplete right-to-life protection. Core output of the RTLDI equation."),
         ("G₀ (G-zero)", "Baseline GDP per capita (World Bank, current US$). The 'current' economic size against which the deficit is measured."),
@@ -1155,15 +1279,13 @@ def create_pdf():
         ("Fitbounds / regional zoom", "The per-nation choropleth view that automatically zooms to the target country plus the rest of its UN region, using the same Mollweide projection and Viridis scale as the global map."),
     ]
 
-    # Add the 9 indicators themselves (loaded from breakdown data for exact wording)
     if detailed_all and "components" in detailed_all[0]:
         for comp in detailed_all[0]["components"]:
             name = comp.get("name", "")
             desc = comp.get("desc", "One of the nine binary RTLP indicators averaged to produce the RTLP score R.")
             if name:
-                terms.append( (name, desc) )
+                terms.append((name, desc))
 
-    # Add key terms and phrases used *in* the 9 indicators (frequent in descriptions, breakdowns, and regional/nation text)
     indicator_subterms = [
         ("Arbitrary Detention", "Core protection against state overreach (RTLP indicator #4); failure contributes directly to attributable lost GDP in regions with weak rule of law."),
         ("Torture and Inhumane Treatment", "RTLP indicator #5; one of the largest contributors to global lost GDP, highlighting physical integrity failures."),
@@ -1178,7 +1300,6 @@ def create_pdf():
     ]
     terms.extend(indicator_subterms)
 
-    # Remove any accidental duplicates by term name (case-insensitive)
     seen = set()
     unique = []
     for t in terms:
@@ -1188,7 +1309,6 @@ def create_pdf():
             unique.append(t)
     terms = unique
 
-    # Sort alphabetically (case-insensitive, with light normalization for Greek/symbols)
     terms = sorted(terms, key=lambda x: x[0].lower()
                    .replace("δ", "d")
                    .replace("η", "eta")
@@ -1226,18 +1346,98 @@ def create_pdf():
     )
     pdf.ln(5)
     pdf.set_font(FONT_NAME, "", 8)
-    pdf.set_text_color(100,100,100)
+    pdf.set_text_color(100, 100, 100)
     pdf.multi_cell(0, 4,
         "For the full source code, 2026 data tables, and previous editions (2023, 2024), see the project repository. "
         "Users are encouraged to download the latest V-Dem and World Bank releases and re-run the pipeline for updated figures."
     )
 
-    # Save
-    out_path = Path("outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf")
+    out_path = Path(BACK_PDF)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     pdf.output(out_path)
-    print(f"PDF ebook written to: {out_path}")
-    print(f"Total pages: {pdf.page_no()}")
+    print(f"Back matter PDF written to: {out_path}  ({pdf.page_no()} pages)")
+    return out_path
+
+
+def concat_pdfs(front: Optional[Path], nations: Optional[Path], back: Optional[Path], out: Path) -> Path:
+    """Concatenate the three modular PDFs into the final release PDF.
+    This is the final step before creating a GitHub release asset.
+    Requires PyPDF2 (already present in the environment).
+    """
+    if not HAS_PYPDF:
+        print("WARNING: PyPDF2 not available; cannot concatenate. Returning None.")
+        return None
+
+    writer = PdfWriter()
+    total_pages = 0
+    for label, p in [("front", front), ("nations", nations), ("back", back)]:
+        if p is None:
+            continue
+        p = Path(p)
+        if not p.exists():
+            print(f"  Skipping {label} (not found: {p})")
+            continue
+        reader = PdfReader(str(p))
+        for page in reader.pages:
+            writer.add_page(page)
+        total_pages += len(reader.pages)
+        print(f"  Added {label}: {len(reader.pages)} pages")
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with open(out, "wb") as f:
+        writer.write(f)
+    print(f"Concatenated release PDF written to: {out}  (total {total_pages} pages)")
+    return out
+
+
+def main(argv: Optional[List[str]] = None):
+    parser = argparse.ArgumentParser(
+        description="Generate RTLDI ATLAS 2026 PDF parts (front / nations / back) and concatenate for release."
+    )
+    parser.add_argument("--front", action="store_true", help="Build only front matter PDF")
+    parser.add_argument("--nations", action="store_true", help="Build only the 193 nation profile pages")
+    parser.add_argument("--back", action="store_true", help="Build only back matter (attribution + index + credits)")
+    parser.add_argument("--concat-only", action="store_true", help="Concatenate existing part PDFs into release (no rebuild)")
+    parser.add_argument("--release", "--all", dest="release", action="store_true",
+                        help="Build all three parts then concatenate (default behavior when no flags)")
+
+    args = parser.parse_args(argv)
+
+    do_all = not (args.front or args.nations or args.back or args.concat_only)
+
+    front_p = Path(FRONT_PDF)
+    nations_p = Path(NATIONS_PDF)
+    back_p = Path(BACK_PDF)
+    release_p = Path(RELEASE_PDF)
+
+    if args.concat_only:
+        if not (front_p.exists() and nations_p.exists() and back_p.exists()):
+            print("concat-only requested but one or more part PDFs are missing. Run without --concat-only first.")
+            return 1
+        concat_pdfs(front_p, nations_p, back_p, release_p)
+        return 0
+
+    data = None
+    if args.front or args.nations or args.back or do_all:
+        data = prepare_atlas_data()
+
+    f = n = b = None
+    if args.front or do_all:
+        f = build_front_matter(data)
+    if args.nations or do_all:
+        n = build_nations(data)
+    if args.back or do_all:
+        b = build_back_matter(data)
+
+    if do_all or args.release:
+        concat_pdfs(f or front_p, n or nations_p, b or back_p, release_p)
+
+    print("\nOutputs (most current versions):")
+    for p in [front_p, nations_p, back_p, release_p]:
+        if p.exists():
+            print(f"  {p}")
+    return 0
+
 
 if __name__ == "__main__":
-    create_pdf()
+    sys.exit(main())

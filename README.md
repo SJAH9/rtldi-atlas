@@ -64,11 +64,26 @@ python3 -m src.generate_enclosure_map --year 2026
 ```
 Outputs land in `outputs/figures/` (PNG at print resolution, PDF vector, interactive HTML with full hover details + vintage labels).
 
-You can also (re)build the full print PDF ebook, which now includes a compact 3-year RTLDI trend plot (based on 3 years of GDP data, R fixed) on every nation's profile page:
+You can also (re)build the print PDF ebook. The generator now produces three separate parts so you can iterate quickly on front matter or back matter without regenerating the 193 nation profile pages:
 ```bash
+# Build everything and concatenate the release (same as before)
 python3 -m src.generate_atlas_ebook
+
+# Fast iteration (recommended when polishing descriptions, methodology, cartography, or index)
+python3 -m src.generate_atlas_ebook --front     # title, exec, method, diagnostic, map page, global table, regional summaries
+python3 -m src.generate_atlas_ebook --back      # attribution, alphabetical index of terms, credits
+python3 -m src.generate_atlas_ebook --concat-only   # final release step: combine existing parts into the full ebook
+
+# Heavy step (only when the per-country data or nation-page layout actually changes)
+python3 -m src.generate_atlas_ebook --nations
 ```
-The ebook is at `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (206 pages). Nation pages still fit on a single A4 page each.
+Outputs (always the most current of each):
+- `outputs/atlas/RTLDI_ATLAS_2026_front.pdf`
+- `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf`
+- `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
+- `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (concatenated release — this is the one you publish / attach to a GitHub release)
+
+The final step before tagging a release is the concatenation of the three parts.
 
 ### Getting the V-Dem Data (one-time, ~few hundred MB)
 1. Go to https://www.v-dem.net/data/the-v-dem-dataset/
