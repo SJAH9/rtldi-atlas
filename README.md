@@ -11,18 +11,35 @@ The ATLAS operationalizes the 9-indicator RTLP score and the RTLDI equation (ΔG
 
 All releases (including the full PDF ebook as an asset) are available on the [GitHub Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
 
-### v2026.2 (Latest)
+### v2026.4 (Current — Malthus falsification, geodesic population model, and back-matter expansion)
 
-**RTLDI ATLAS 2026 v2** — [Download PDF](https://github.com/SJAH9/rtldi-atlas/releases/download/v2026.2/RTLDI_ATLAS_2026_ebook.pdf) | [View tag](https://github.com/SJAH9/rtldi-atlas/releases/tag/v2026.2)
+**RTLDI ATLAS 2026 v4** — full ebook 241 pages (back matter now 7 pages).
 
-- 4-part modular PDF system (front matter / regions / nations / back matter) — the final step for a release is concatenating the four parts.
-- Improvements to region summary pages: enlarged text for readability, text flowed around the regional choropleth graphics (map right-aligned with descriptions on the left), fixed image presentation by preserving aspect ratio (no more distorted/full-world maps), and the member-nations table moved beneath the text+map area and above the RTLP breakdown.
-- Fixed map anomalies in several regions (Eastern Europe, Western Europe, and the last three Pacific regions: Melanesia, Polynesia, Micronesia) by clearing stale cached choropleths and re-generating with current data. Western Europe no longer includes extraneous nations.
-- Full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (233 pages).
+- Added a new dedicated back-matter appendix: **"Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection of Life"** (streamlined directly from the source book's Malthus appendix and geometric sections).
+  - Summarizes the source's geometric counter to Malthus using Buckminster Fuller’s geodesic/tensegrity principles and the f³ frequency scaling law.
+  - Human populations are modeled as nodes in a geodesic structure: adding people increases overall strength, resilience, and capability disproportionately (f³) **provided there is equal protection of the right to life** (high RTLP frequency via the nine indicators / consistent human enclosure).
+  - Includes direct evidence of the opposite relationship to Malthus's prediction: historical population explosion (1B → 8B+) coincided with massive rises in real per capita GDP in societies that strengthened rights protections and enclosures; cross-sectional patterns in the 2026 data show large/growing populations sustaining high and rising per-person output where R is stronger.
+- This appendix supplies important background for the potential causal relationship in the nested causal model: the RTLDI linear drag term measures immediate costs of weak enclosures; the geodesic view explains the non-linear upside when frequency (equal protection) increases.
+- Updates to README Releases section, improved back-matter structure, and minor refinements to documentation for clarity.
+- Full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (241 pages). Modular parts also updated in `outputs/atlas/`.
 
-**Note for next release**: The region-page improvements (text sizing, flowing text around graphics, table layout) will be replicated on the individual nation pages, along with other fixes and refinements.
+**Note**: The `outputs/atlas/` directory always holds the most current of each part. Run `--front --regions --concat-only` after descriptive or back-matter changes; `--nations` only when the underlying per-country data or profile layout changes.
 
-The `outputs/atlas/` directory always contains the most current version of each part for fast local iteration.
+### v2026.3 (Previous — equation refinement + contextual bounding)
+
+**RTLDI ATLAS 2026 v3** — modular parts in `outputs/atlas/`, full ebook via concat.
+
+- Added explicit **contextual bounding** (25% institutional share cap) to answer the baseline/omitted-factors critique.
+- Bounded equation: `ΔG = min( η × (1 − R) × G₀ , 0.25 × G₀ )` with η = 0.30.
+- New front-matter "Contextual Bounding" section with archetypal nation studies (Qatar, South Korea, Singapore, Botswana, etc.) and the 25% cap rationale.
+- All figures, descriptions, and index updated to use bounded values (raw global ~18.76T → ~17.49T after cap).
+- 4-part system and 2026 data rule unchanged.
+
+See prior notes for full details on v2026.3.
+
+### v2026.2
+
+**RTLDI ATLAS 2026 v2** — 4-part modular system + region-page UX and map fixes (see prior release notes). Full concatenated ebook was 233–236 pages depending on exact front-matter length. Improvements to region pages (text flow, table positioning, aspect-corrected choropleths) noted for replication on nation pages.
 
 ### v2026.1
 
@@ -43,8 +60,12 @@ See the full history of releases on the [Releases page](https://github.com/SJAH9
 ## Core RTLDI (from source)
 See [docs/RTLDI_SPEC.md](docs/RTLDI_SPEC.md) for the verbatim 9 indicators, equation, examples, and notes.
 
-ΔG (per capita loss) = 0.05 × (1 − R) × G0  
-Total deficit ≈ ΔG × population
+Bounded: ΔG = min( η × (1 − R) × G0 , 0.25 × G0 )
+(with η ≈ 0.30 from population-weighted 2026 cross-section;
+the 25% cap is the template-derived limit so the nine indicators are never credited
+with more than one-quarter of observed G0 once industry, resources, history, location
+and human capital are given due weight — see the "Contextual Bounding" section in the atlas)
+Total bounded disparity ≈ ΔG × population
 
 ## Project Layout
 ```
@@ -72,7 +93,7 @@ This toolkit is designed so NGOs and analysts can run their own RTLDI ATLAS usin
 git clone https://github.com/SJAH9/rtldi-atlas.git
 cd rtldi-atlas
 python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter
-python3 -m src.build_atlas --year 2026 --eta 0.05
+python3 -m src.build_atlas --year 2026 --eta 0.30
 # Optional (for choropleth maps of enclosure strength / other figures):
 python3 -m pip install plotly kaleido
 python3 -m src.generate_enclosure_map --year 2026
@@ -167,7 +188,7 @@ Large V-Dem CSVs, WB bulk downloads, and generated 202x atlases are intentionall
 ## Core RTLDI (from source)
 See `docs/RTLDI_SPEC.md`.
 
-ΔG (per capita) = 0.05 × (1 − R) × G0  
+ΔG (per capita) = η × (1 − R) × G0  (η≈0.30 from population-weighted current UN data) 
 Total = ΔG × population
 
 R is computed from the exact 9 binary RTLP questions mapped to V-Dem + WB variables (see `docs/indicator_crosswalk.md`).
@@ -194,7 +215,7 @@ This repo was initialized privately and will be made public at launch.
 - **Binarization**: How to turn V-Dem continuous/ordinal scores into the 9 "yes/no". Default proposal: literature- or distribution-based cutoffs (e.g. ≥ median of democracies or ≥0.5 on 0-1 scales). Fully documented + sensitivity analysis.
 - **Missing data**: Conservative rules (e.g. treat missing component as 0 for protection, or use multiple imputation / last-observation; flag heavily).
 - **Year**: Primary "ATLAS snapshot" = most recent year with good coverage (e.g. 2023 or 2024 depending on V-Dem v14+). Also produce multi-year panel.
-- **η**: Base = 0.05; variants for 0.03 / 0.07 etc. in scenarios.
+- **η**: Base = 0.30 (population-weighted empirical from 2026 data: ~30.5% higher g0 per RTLP indicator in weighted log regression across 187 nations); the original 0.05 was a conservative structural parameter from source analysis. Use --eta to override for scenarios.
 - **Output units**: USD (current or constant as per WB series chosen). Document choice.
 - **Sovereignty filter**: Strictly the 193 UN members (excludes observers, disputed territories unless matching UN list).
 
