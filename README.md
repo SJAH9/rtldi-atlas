@@ -11,20 +11,24 @@ The ATLAS operationalizes the 9-indicator RTLP score and the RTLDI equation (ΔG
 
 All releases (including the full PDF ebook as an asset) are available on the [GitHub Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
 
-### v2026.4 (Current — Malthus falsification, geodesic population model, and back-matter expansion)
+### v2026.5 (Current — branch merge + expanded Malthus falsification with full choice framing)
 
-**RTLDI ATLAS 2026 v4** — full ebook 241 pages (back matter now 7 pages).
+**RTLDI ATLAS 2026 v5** — full ebook 241 pages (back matter 7 pages).
 
-- Added a new dedicated back-matter appendix: **"Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection of Life"** (streamlined directly from the source book's Malthus appendix and geometric sections, now significantly expanded).
-  - Summarizes the source's geometric counter to Malthus using Buckminster Fuller’s geodesic/tensegrity principles and the f³ frequency scaling law.
-  - Human populations are modeled as nodes in a geodesic structure: adding people increases overall strength, resilience, and capability disproportionately (f³) **provided there is equal protection of the right to life** (high RTLP frequency via the nine indicators / consistent human enclosure).
-  - Explicitly incorporates the conditional framing: the Malthusian conditions (greater population equating only to greater drain on resources) are true but misleading when protections are absent — more people then equate to less available resource. When the right to life is equally protected, GDP rises (for multiple reasons) and rises exponentially via f³ scaling because societal stresses are distributed evenly among a more productive and more capable society.
-  - Details concrete mechanisms: the levers (freedom from torture, freedom from arbitrary detention, independent judiciary) make a nation "investible," attracting external capital and stimulating domestic startups because the risk of death or arbitrary imprisonment is no longer a barrier; whistleblower protections enable exposure of corruption and theft at previously unknown scales.
-  - Includes the crucial distinction that this falsification does **not** negate the efficacy of Malthusian regimes and regulations: a nation can still choose the Malthusian relationship to its population, receive the expected drain on resources, and plan for the expected disastrous trimming — or choose high RTLP for the f³ cubic exponential scaling of resilience, the conditions for capital investment, and entrepreneurship from the people themselves in an optimized enclosure.
-  - Emphasizes that nations can now see the cost of not caring for the lives of their people equally and have a real choice between the expansion of corruption or the stimulation of domestic industrial productivity.
-  - Supplies important background for the potential causal relationship in the nested causal model: the RTLDI linear drag term measures immediate costs of weak enclosures; the geodesic view explains the non-linear upside when frequency (equal protection) increases. Includes direct evidence of the opposite relationship to Malthus's prediction (historical population explosion coinciding with rising per capita GDP under stronger protections; cross-sectional patterns in the 2026 data).
-- Updates to README Releases section, improved back-matter structure, and minor refinements to documentation for clarity.
-- Full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (241 pages). Modular parts also updated in `outputs/atlas/`.
+- Merged `main` and `master` branches for a cleaner history (local work continues on `master`; remote default remains `main` — see prior discussion).
+- Significantly expanded the back-matter appendix **"Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection of Life"**:
+  - The Malthusian conditions (greater population equating only to a greater drain on resources) are true but misleading when protections are absent — more people then equate to less available resource per person.
+  - When the right to life is equally protected, GDP rises for multiple reasons and rises exponentially via the f³ scaling seen in geodesics, because societal stresses are distributed evenly among a more productive and more capable society.
+  - Details the concrete mechanisms: the core levers (freedom from torture, freedom from arbitrary detention, and an independent judiciary) together make a nation "investible" — attracting external businesses and stimulating domestic startups, since the risk of death or arbitrary imprisonment no longer stops capital from flowing in.
+  - Whistleblower protections, once in place, allow exposure of corruption and theft at scales previously unknown.
+  - Crucial distinction: this falsification does **not** negate the efficacy of Malthusian regimes and regulations. A nation can choose the Malthusian path (receive the expected drain on resources and plan for the expected disastrous "trimming" of the population) or choose to raise its RTLP score as high as possible and enjoy the f³ cubic exponential scaling of resilience, the conditions for capital investment, and entrepreneurship arising from the people themselves in an optimized enclosure capable of generating the resources needed to prosper under the protections of a highly organized and stable society.
+  - Nations can now clearly see the cost of not caring for the lives of their people equally and have a real choice between the expansion of corruption or the stimulation of domestic industrial productivity.
+- This provides important background for the potential causal relationship in the nested causal model.
+- Full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (241 pages). Modular parts updated in `outputs/atlas/`.
+
+**Note**: The `outputs/atlas/` directory always holds the most current of each part. Run `--front --regions --concat-only` after descriptive or back-matter changes; `--nations` only when the underlying per-country data or profile layout changes.
+
+### v2026.4 (Previous — Malthus falsification, geodesic population model, and back-matter expansion)
 
 **Note**: The `outputs/atlas/` directory always holds the most current of each part. Run `--front --regions --concat-only` after descriptive or back-matter changes; `--nations` only when the underlying per-country data or profile layout changes.
 
