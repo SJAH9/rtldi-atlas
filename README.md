@@ -95,53 +95,64 @@ Total bounded disparity ≈ ΔG × population
 ## For NGOs and Researchers (Recommended Use)
 This toolkit is designed so NGOs and analysts can run their own RTLDI ATLAS using the **latest official open data** from V-Dem and the World Bank — no need to bundle the (large) data files in the repo.
 
-### Quick Start (2026 data) — reproduces the release
-To reproduce the full public release (data tables + print PDF ebook with embedded choropleths, exactly as published):
+### Quick Start (2026 data) — reproduces the full released atlas from scratch
+To clone the repo, acquire the public data, and produce an atlas **identical in content and appearance** (including all choropleths) to the one attached to the latest release on this repo:
 
 ```bash
 git clone https://github.com/SJAH9/rtldi-atlas.git
 cd rtldi-atlas
+
+# Install all dependencies required for data processing + PDF generation + choropleth maps
 python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter plotly kaleido
+
+# 1. Build the core data (uses live World Bank API + your local V-Dem CSV)
 python3 -m src.build_atlas --year 2026 --eta 0.30
+
+# 2. Generate the choropleth maps (global + 22 regional) that get embedded in the PDF
+#    This step is REQUIRED to match the released atlas. It produces PNGs (for embedding),
+#    a vector PDF, and an interactive HTML version.
 python3 -m src.generate_enclosure_map --year 2026
+
+# 3. Generate the print-ready PDF ebook (four modular parts + concatenated release)
+#    Because the maps were generated in step 2, the PDFs will contain the actual choropleths
+#    (global map in front matter, per-region maps, per-nation regional zooms) instead of placeholders.
 python3 -m src.generate_atlas_ebook
 ```
 
-This sequence produces:
-- The master data tables in `outputs/atlas/`
-- The enclosure strength choropleths (global + 22 regional) in `outputs/figures/`
-- The complete print-ready PDF release:
-  - `outputs/atlas/RTLDI_ATLAS_2026_front.pdf` (includes global choropleth + 9-indicator lost-GDP table)
-  - `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf` (includes per-region choropleths)
-  - `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf` (includes per-nation regional focus maps)
-  - `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
-  - `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (concatenated full release)
+**Exact expected outputs for a successful full reproduction (matching the released v2026.5 asset):**
+- `outputs/atlas/rtl_di_atlas_un_members_2026.csv` and `.xlsx`
+- `outputs/atlas/rtl_di_atlas_summary_2026.json`
+- `data/processed/rtl_di_nation_breakdown_2026.json` (and .csv)
+- `outputs/figures/rtl_di_enclosure_strength_2026_choropleth.png` (and .pdf + .html)
+- `outputs/figures/regional_choropleths/*.png` (22 files)
+- `outputs/atlas/RTLDI_ATLAS_2026_front.pdf` (includes global choropleth)
+- `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf` (includes regional choropleths)
+- `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf` (includes per-nation regional focus maps)
+- `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
+- `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (full concatenated release, ~241 pages)
 
-The code will:
-- Fetch the required World Bank indicators live via the official API (always up-to-date).
-- Look for your V-Dem CSV in `data/raw/` (see "Getting the Data" below).
-- Compute the full 9-component RTLP score using the published crosswalk.
-- Generate choropleth maps (Mollweide projection) used inside the PDF pages.
-- Output the four modular PDFs + the concatenated ebook that matches the released asset.
+**Verification checklist** (run these after the commands above to confirm you have reproduced the release):
+- The four main PDFs exist and `RTLDI_ATLAS_2026_ebook.pdf` is the largest.
+- `outputs/figures/` contains the global choropleth PNG and the `regional_choropleths/` directory with 22 PNGs.
+- Open (or text-extract) the ebook and confirm it contains:
+  - The full expanded Malthus appendix with "choice framing", f³ scaling, "investible", whistleblower protections, "Malthusian path vs high-RTLP path", "expansion of corruption or the stimulation of domestic industrial productivity".
+  - Explicit references to the 25% institutional-share cap / contextual bounding.
+  - All 9 RTLP indicators with descriptions.
+  - Country profiles and regional summaries.
+- No placeholder text like "[Global map could not be embedded]" appears.
 
-You can also iterate quickly on individual sections (the generator produces four independent parts):
+If you skip the `generate_enclosure_map` step, the PDFs will still contain all text, tables, and the Malthus appendix, but the choropleth images will be missing or replaced by placeholders. This is why the map step is required to match the released version.
+
+You can also iterate on sections without a full rebuild:
 ```bash
-python3 -m src.generate_atlas_ebook --front      # title, exec, method, diagnostic, global choropleth + 9-indicator table, TOC, 193 summary table
-python3 -m src.generate_atlas_ebook --regions    # the 22 UN Regional Summaries (choropleths, descriptions, tables, breakdowns)
-python3 -m src.generate_atlas_ebook --nations    # the 193 nation profile pages (with regional focus maps)
-python3 -m src.generate_atlas_ebook --back       # attribution, alphabetical index of terms, credits
-python3 -m src.generate_atlas_ebook --concat-only   # final release step: combine the four current parts into the full ebook
+python3 -m src.generate_atlas_ebook --front
+python3 -m src.generate_atlas_ebook --regions
+python3 -m src.generate_atlas_ebook --nations
+python3 -m src.generate_atlas_ebook --back
+python3 -m src.generate_atlas_ebook --concat-only
 ```
 
-**Note**: Choropleth maps are required for the pages in the release ebook to match the published version. The `generate_enclosure_map` step above is what creates the images that get embedded. Running `generate_atlas_ebook` without first running the map generator will produce the text/tables but will show placeholders for the maps.
-Outputs (always the most current of each):
-- `outputs/atlas/RTLDI_ATLAS_2026_front.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (concatenated release — front + regions + nations + back — this is the one you publish / attach to a GitHub release)
-
-The final step before tagging a release is the concatenation of the four parts. This structure prevents any repetition/duplication during generation and lets you iterate on front matter, regional analysis, nation profiles, or back matter completely independently.
+The final concatenated `RTLDI_ATLAS_2026_ebook.pdf` (front + regions + nations + back) is the artifact attached to the GitHub release.
 
 ### Getting the V-Dem Data (one-time, ~few hundred MB)
 1. Go to https://www.v-dem.net/data/the-v-dem-dataset/
@@ -161,7 +172,9 @@ No manual download required for the core indicators. The code uses `wbgapi` to p
 
 If you prefer offline bulk, download the corresponding API_*.csv from data.worldbank.org and place in data/raw/ — the loaders will prefer local files.
 
-### Visualizations: Enclosure Strength Choropleth
+### Visualizations: Enclosure Strength Choropleth (part of the full release)
+The choropleth maps are an integral part of the released PDF (global map in front matter, regional maps on every region page, and per-nation regional focus maps on every nation page). They are generated by the command in the Quick Start above and are required to match the published release.
+
 "Enclosure strength" = the RTLP R score (0–1 average of the 9 binary indicators of right-to-life protection).
 
 ```bash
