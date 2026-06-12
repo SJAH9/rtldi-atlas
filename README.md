@@ -95,43 +95,45 @@ Total bounded disparity ≈ ΔG × population
 ## For NGOs and Researchers (Recommended Use)
 This toolkit is designed so NGOs and analysts can run their own RTLDI ATLAS using the **latest official open data** from V-Dem and the World Bank — no need to bundle the (large) data files in the repo.
 
-### Quick Start (2026 data)
+### Quick Start (2026 data) — reproduces the release
+To reproduce the full public release (data tables + print PDF ebook with embedded choropleths, exactly as published):
+
 ```bash
 git clone https://github.com/SJAH9/rtldi-atlas.git
 cd rtldi-atlas
-python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter
+python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter plotly kaleido
 python3 -m src.build_atlas --year 2026 --eta 0.30
-# Optional (for choropleth maps of enclosure strength / other figures):
-python3 -m pip install plotly kaleido
 python3 -m src.generate_enclosure_map --year 2026
+python3 -m src.generate_atlas_ebook
 ```
+
+This sequence produces:
+- The master data tables in `outputs/atlas/`
+- The enclosure strength choropleths (global + 22 regional) in `outputs/figures/`
+- The complete print-ready PDF release:
+  - `outputs/atlas/RTLDI_ATLAS_2026_front.pdf` (includes global choropleth + 9-indicator lost-GDP table)
+  - `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf` (includes per-region choropleths)
+  - `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf` (includes per-nation regional focus maps)
+  - `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
+  - `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (concatenated full release)
 
 The code will:
 - Fetch the required World Bank indicators live via the official API (always up-to-date).
 - Look for your V-Dem CSV in `data/raw/` (see "Getting the Data" below).
 - Compute the full 9-component RTLP score using the published crosswalk.
-- Output CSV + XLSX + summary in `outputs/atlas/`.
+- Generate choropleth maps (Mollweide projection) used inside the PDF pages.
+- Output the four modular PDFs + the concatenated ebook that matches the released asset.
 
-After the atlas is built you can generate the choropleth of enclosure strength (RTLP R):
+You can also iterate quickly on individual sections (the generator produces four independent parts):
 ```bash
-python3 -m src.generate_enclosure_map --year 2026
-```
-Outputs land in `outputs/figures/` (PNG at print resolution, PDF vector, interactive HTML with full hover details + vintage labels).
-
-You can also (re)build the print PDF ebook. The generator now produces **four** separate parts (front / regions / nations / back) so you can iterate quickly on any section without regenerating the others:
-```bash
-# Build everything and concatenate the release
-python3 -m src.generate_atlas_ebook
-
-# Fast iteration examples
-python3 -m src.generate_atlas_ebook --front      # title, exec, method, diagnostic, carto+map+global lost table, TOC, 193 summary table
-python3 -m src.generate_atlas_ebook --regions    # the 22 UN Regional Summaries (maps, descriptions, tables, breakdowns)
+python3 -m src.generate_atlas_ebook --front      # title, exec, method, diagnostic, global choropleth + 9-indicator table, TOC, 193 summary table
+python3 -m src.generate_atlas_ebook --regions    # the 22 UN Regional Summaries (choropleths, descriptions, tables, breakdowns)
+python3 -m src.generate_atlas_ebook --nations    # the 193 nation profile pages (with regional focus maps)
 python3 -m src.generate_atlas_ebook --back       # attribution, alphabetical index of terms, credits
 python3 -m src.generate_atlas_ebook --concat-only   # final release step: combine the four current parts into the full ebook
-
-# Heavy step (only when per-country data or nation-page layout changes)
-python3 -m src.generate_atlas_ebook --nations
 ```
+
+**Note**: Choropleth maps are required for the pages in the release ebook to match the published version. The `generate_enclosure_map` step above is what creates the images that get embedded. Running `generate_atlas_ebook` without first running the map generator will produce the text/tables but will show placeholders for the maps.
 Outputs (always the most current of each):
 - `outputs/atlas/RTLDI_ATLAS_2026_front.pdf`
 - `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf`
