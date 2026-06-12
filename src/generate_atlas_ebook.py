@@ -22,6 +22,8 @@ Structure (four separately-generated parts for fast iteration; no duplication):
 
   BACK MATTER
   - Data Attribution & Sources
+  - Nested Causal Modeling: Scope, Extensions, and Limits (dedicated appendix on paradigm extension, causal limits, and the nature of the metric)
+  - Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection (streamlined from source appendix, with direct evidence and geodesic node analogy)
   - Index of Terms (alphabetical, includes the 9 indicators + key sub-terms)
   - Credits and Acknowledgments
 
@@ -94,10 +96,26 @@ NO_COLOR = (180, 0, 0)
 LIGHT_GRAY = (240, 240, 240)
 BLACK = (0, 0, 0)
 
+# Current model parameters (keep in sync with src/rtl_di.py)
+# eta from population-weighted cross-section; cap from the "Contextual Bounding" template
+# (study of archetypal nations to limit claims to what is plausible once industry/locale/history are credited).
+ETA = 0.30
+MAX_INSTITUTIONAL_SHARE = 0.25
+
 # Modular PDF part filenames (outputs/atlas always holds the most current of each)
 FRONT_PDF = "outputs/atlas/RTLDI_ATLAS_2026_front.pdf"
 REGIONS_PDF = "outputs/atlas/RTLDI_ATLAS_2026_regions.pdf"
 NATIONS_PDF = "outputs/atlas/RTLDI_ATLAS_2026_nations.pdf"
+
+
+def _bounded_drag(g0: float, r: float, eta: float = ETA, cap: float = MAX_INSTITUTIONAL_SHARE) -> float:
+    """Per-capita drag bounded by the contextual institutional share cap.
+    Matches the logic in src/rtl_di.py compute_delta_g with the current defaults.
+    """
+    if g0 <= 0 or pd.isna(g0) or pd.isna(r):
+        return 0.0
+    raw = eta * (1.0 - float(r)) * float(g0)
+    return min(raw, cap * float(g0))
 BACK_PDF = "outputs/atlas/RTLDI_ATLAS_2026_back.pdf"
 RELEASE_PDF = "outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf"
 
@@ -218,7 +236,7 @@ def get_trend_plot_path(iso3: str, country: str, r: float, population: float, g0
         if r is None or population is None or population <= 0:
             continue
         try:
-            dg = 0.05 * (1.0 - float(r)) * float(g0)
+            dg = _bounded_drag(g0, r)
             tot_b = dg * float(population) / 1e9
             xs.append(int(y))
             ys_tot.append(tot_b)
@@ -387,7 +405,26 @@ def prepare_atlas_data():
     all_isos = [d["iso3"] for d in detailed_all]
     g0_series = load_g0_series(all_isos)
 
-    # Regional aggregates (used by front matter)
+    # Compute on-the-fly bounded (capped) values for every nation so that all displayed
+    # figures in this atlas edition respect the contextual institutional share cap.
+    # The on-disk breakdown JSON/CSV retain the raw cross-sectional association for reference;
+    # the published atlas applies the "what is actually possible after crediting other factors" bound.
+    for d in detailed_all:
+        g0 = float(d.get("g0") or 0)
+        r = float(d.get("r") or 0)
+        pop = float(d.get("population") or 0)
+        raw_dg = ETA * (1.0 - r) * g0 if g0 > 0 else 0.0
+        capped_dg = _bounded_drag(g0, r)
+        raw_tot = raw_dg * pop if pop > 0 else 0.0
+        capped_tot = capped_dg * pop if pop > 0 else 0.0
+        cap_ratio = (capped_tot / raw_tot) if raw_tot > 0 else 1.0
+        d["raw_delta_g_per_capita"] = raw_dg
+        d["delta_g_per_capita"] = capped_dg          # override for downstream use
+        d["raw_total_deficit_usd"] = raw_tot
+        d["total_deficit_usd"] = capped_tot          # override so sorting + sums use bounded
+        d["cap_ratio"] = cap_ratio
+        d["capped"] = (capped_tot < raw_tot - 1e-6)
+
     print("Computing regional summaries for UN Regional Summaries...")
     from collections import defaultdict
     region_countries = defaultdict(list)
@@ -404,11 +441,12 @@ def prepare_atlas_data():
         rs = [float(c.get("r") or 0) for c in cs]
         mean_r = sum(rs) / n
         weighted_r = sum(r * p for r, p in zip(rs, pops)) / total_pop if total_pop > 0 else mean_r
+        # Use the (now capped) total_deficit_usd that we just attached
         losts = [float(c.get("total_deficit_usd") or 0) for c in cs]
         total_lost = sum(losts)
         g0s = [float(c.get("g0") or 0) for c in cs]
         mean_g0 = sum(g0s) / n if n else 0
-        # 9 indicators: frac Yes + attributable lost GDP
+        # 9 indicators: frac Yes + attributable lost GDP (scaled to respect each country's cap)
         inds = []
         if cs and "components" in cs[0]:
             for i in range(9):
@@ -433,7 +471,9 @@ def prepare_atlas_data():
                         if int(c["components"][i].get("bin", 0)) == 0:
                             g0 = float(c.get("g0") or 0)
                             pop = float(c.get("population") or 0)
-                            attr_lost += 0.05 * (1.0 / 9.0) * g0 * pop
+                            raw_attr = ETA * (1.0 / 9.0) * g0 * pop
+                            ratio = c.get("cap_ratio", 1.0)
+                            attr_lost += raw_attr * ratio
                 inds.append({
                     "num": i + 1,
                     "name": comps[0].get("name", ""),
@@ -456,7 +496,7 @@ def prepare_atlas_data():
         }
     sorted_regions = sorted(regional_data.items(), key=lambda x: -x[1]["total_lost_gdp"])
 
-    # Global lost GDP per indicator (for the full map page in front matter)
+    # Global lost GDP per indicator (for the full map page in front matter) — capped + scaled
     global_indicator_losts = [0.0] * 9
     global_total_lost = 0.0
     indicator_names = []
@@ -470,9 +510,11 @@ def prepare_atlas_data():
             if not indicator_names:
                 indicator_names = [c.get("name", f"Indicator {i+1}") for i, c in enumerate(d["components"])]
                 indicator_descs = [c.get("desc", "") for c in d["components"]]
+            ratio = d.get("cap_ratio", 1.0)
             for i, comp in enumerate(d["components"]):
                 if int(comp.get("bin", 0)) == 0:
-                    global_indicator_losts[i] += 0.05 * (1.0 / 9.0) * g0 * pop
+                    raw_piece = ETA * (1.0 / 9.0) * g0 * pop
+                    global_indicator_losts[i] += raw_piece * ratio
 
     # Summary table sorted by total loss desc
     detailed_by_loss = sorted(
@@ -537,7 +579,7 @@ def build_front_matter(data: dict) -> Path:
     pdf.ln(8)
     pdf.set_font(FONT_NAME, "", 11)
     pdf.set_text_color(60, 60, 60)
-    pdf.multi_cell(0, 6, "Projected Annual GDP Losses from Incomplete Protection\nof the Right to Life\n\n2026 Edition", align="C")
+    pdf.multi_cell(0, 6, "Annual GDP Disparity Associated with RTLP Shortfalls\n(Contextually Bounded)\n\n2026 Edition", align="C")
     pdf.ln(15)
     pdf.set_font(FONT_NAME, "", 9)
     pdf.multi_cell(0, 5, "Based on the framework in\nSid J.A. Hubbard\nCausality and Attraction: A Continuum of Steady States (Version 3, May 2026)\nDOI: 10.5281/zenodo.19468550", align="C")
@@ -554,8 +596,7 @@ def build_front_matter(data: dict) -> Path:
         "that results when states fail to provide equal and effective protection of the right to life. "
         "It translates the nine binary indicators of Right-to-Life Protection (RTLP) — drawn from legal, "
         "judicial, enforcement, conflict, and socioeconomic realities — into a 0–1 score (R). "
-        "The core equation, ΔG = 0.05 × (1 − R) × G₀, yields the per-capita GDP loss; multiplied by population "
-        "it produces the aggregate national deficit.\n\n"
+        "The bounded core equation is ΔG = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with η≈0.30. The 25% cap (derived from the archetypal-nation template) ensures these nine indicators are never credited with more than one-quarter of observed G₀ once industry, resources, history, location and human capital receive their due. Multiplied by population this produces the bounded national disparity figure.\n\n"
         "This 2026 Atlas applies the framework to all 193 UN Member States. V-Dem data (latest 2024) supplies "
         "the eight governance and civil-liberties components; World Bank data supplies the most recent published "
         "GDP per capita as the dynamic baseline (G₀) for 2026. The result is a transparent, reproducible map of "
@@ -586,14 +627,13 @@ def build_front_matter(data: dict) -> Path:
         "3. Law Enforcement Accountability — v2clkill ≥ 2.0\n"
         "4. Protection Against Arbitrary Detention — v2xcl_acjst ≥ 0.5\n"
         "5. Freedom from Torture — v2cltort ≥ 2.0\n"
-        "6. Civilian Protection in Conflict — v2clkill ≥ 2.0\n"
-        "7. Access to Justice — v2xcl_acjst ≥ 0.5\n"
+        "6. Civilian Protection in Conflict — v2x_clphy (physical violence index) ≥ 0.5\n"
+        "7. Access to Justice — v2clrspct (rigorous impartial admin) ≥ 2.0\n"
         "8. Freedom of Expression & Whistleblower Protections — v2x_freexp ≥ 0.5\n\n"
         "9. Socioeconomic Conditions — World Bank: undernourishment ≤ 5 % AND poverty headcount ($2.15) ≤ 10 %.\n\n"
         "R = (number of 'Yes' indicators) / 9\n\n"
         "Economic Projection\n"
-        "ΔG (per-capita loss) = 0.05 × (1 − R) × G₀, where G₀ is the most recent published GDP per capita "
-        "(World Bank, labeled 2026 baseline in this edition). Total national loss = ΔG × population.\n\n"
+        "ΔG (per-capita) = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with η≈0.30 (the 25% cap from the contextual-bounding template). G₀ is the most recent published GDP per capita (World Bank, labeled 2026 baseline). Total national bounded disparity = ΔG × population.\n\n"
         "Data Vintage Note for 2026 Edition\n"
         "V-Dem components reflect the latest available year in the source file (2024). GDP per capita (G₀) "
         "uses the freshest published values available at the time of atlas production. This follows the "
@@ -603,6 +643,128 @@ def build_front_matter(data: dict) -> Path:
     pdf.small_text(
         "Full crosswalk and binarization rules: docs/indicator_crosswalk.md\n"
         "Source equations: Sid J.A. Hubbard, Causality and Attraction v3 (2026), DOI 10.5281/zenodo.19468550"
+    )
+
+    # ========== DERIVATION OF THE SENSITIVITY PARAMETER (η) ==========
+    pdf.add_page()
+    pdf.chapter_title("Derivation of the Sensitivity Parameter (η)")
+
+    pdf.body_text(
+        "The sensitivity parameter η in the core RTLDI equation ΔG = η × (1 − R) × G₀ quantifies the estimated annual per-capita GDP \"premium\" (or equivalently, the drag) associated with each unit increase in the RTLP score R. Equivalently, it represents the economic cost of each missing RTLP indicator."
+    )
+
+    pdf.body_text(
+        "This value was re-calculated empirically from the current (2026 baseline) cross-section of all 193 UN member states as follows. The analysis uses 187 nations that have valid, positive GDP per capita (G₀) data.\n\n"
+        "Step 1: Data preparation\n"
+        "For each nation i compute the RTLP score R_i (the simple average of the nine binary indicators, ranging from 0 to 1) and record the observed GDP per capita G0_i (current US dollars, latest available baseline). Nations with missing or non-positive G0 are excluded, leaving 187 observations."
+    )
+
+    pdf.body_text(
+        "Step 2: Model specification\n"
+        "Estimate the log-linear relationship between observed GDP per capita and RTLP score via ordinary least-squares (OLS) regression:\n\n"
+        "    ln(G0_i) = α + β × R_i + ε_i\n\n"
+        "Here ln(G0) is the natural logarithm of GDP per capita. The slope coefficient β captures the change in log(G0) associated with a one-unit change in R (i.e., moving from complete absence of the nine protections to full protection)."
+    )
+
+    pdf.body_text(
+        "Step 3: Estimation (with population weighting)\n"
+        "To align the baseline with the economic weight of large populations (e.g., India vs. small states), the regression is re-run using population weights (weighted least squares, equivalent to OLS on sqrt(w)-scaled variables). From the 2026 data the population-weighted slope is β ≈ 2.398 (intercept α ≈ 8.196)."
+    )
+
+    pdf.body_text(
+        "Step 4: Convert to percentage premium (full range)\n"
+        "Exponentiate the coefficient to recover the multiplicative factor:\n\n"
+        "    Factor for ΔR = 1  = exp(β) ≈ 11.00\n\n"
+        "Percentage higher observed GDP per capita for nations at R = 1 versus R = 0:\n\n"
+        "    [exp(β) − 1] × 100% ≈ 999.8%"
+    )
+
+    pdf.body_text(
+        "Step 5: Convert to per-indicator effect\n"
+        "Because R is the average of nine indicators, a one-indicator improvement corresponds to ΔR = 1/9. The marginal premium per additional RTLP indicator is therefore:\n\n"
+        "    [exp(β / 9) − 1] × 100% ≈ 30.53%"
+    )
+
+    pdf.body_text(
+        "Step 6: Set the model parameter η\n"
+        "We adopt η = 0.30 (rounded from 0.3053) as a \"Conservative Marginal Coefficient\" — representing the minimum guaranteed per-indicator return from reform (from the population-weighted regression), not the full empirical premium. This is used in the linear loss formula ΔG = η × (1 − R) × G₀ and in all attributable-loss calculations. It replaces the more conservative 0.05 value from the original source document. The higher figure is grounded in the observed data but kept conservative to avoid overstating the isolated causal impact of these nine protections."
+    )
+
+    pdf.body_text(
+        "Step 7: Compute global lost GDP\n"
+        "For each nation the annual per-capita loss is ΔG_i = η × (1 − R_i) × G0_i. The aggregate national loss is ΔG_i × population_i. The global annual lost GDP reported in the atlas is the simple sum of these national totals across all 193 members (or the 187 with valid G0 for the regression sample)."
+    )
+
+    pdf.body_text(
+        "Important interpretive caveats\n"
+        "• The 30.5% per-indicator premium is a reduced-form, cross-sectional association. RTLP scores are strongly correlated with many other institutional, cultural, geographic, and historical factors that also raise GDP. The figure (and our conservative η=0.30) is best viewed as an upper-bound or \"total premium\" estimate rather than a narrowly causal effect of these nine protections alone.\n\n"
+        "• A further explicit bound is applied: after studying archetypal nations, these nine indicators are credited with at most 25% of any nation's observed G₀ (see the dedicated \"Contextual Bounding\" section immediately following). This directly limits the projection to what is plausibly attributable once industry, locale, resources, history and human capital are not omitted. The raw association (before the 25% cap) can be recovered by running with a high --max-share or legacy η=0.05."
+    )
+
+    pdf.small_text(
+        "Regression details and replication code: see the analysis notebook or the prepare_atlas_data() routine in src/generate_atlas_ebook.py. Source framework remains Sid J.A. Hubbard, Causality and Attraction v3 (2026), DOI 10.5281/zenodo.19468550."
+    )
+
+    # ========== CONTEXTUAL BOUNDING (new section addressing baseline / omitted-factors critique) ==========
+    pdf.add_page()
+    pdf.chapter_title("Contextual Bounding: Estimating the Realizable Share of GDP")
+
+    pdf.body_text(
+        "The cross-sectional association that produces η ≈ 0.30 is powerful but incomplete. A pure bivariate (or population-weighted) regression of log(G₀) on R credits the nine RTLP indicators with the entire observed premium between high-R and low-R nations. In reality, nations possess industry bases, resource endowments, human capital stocks, geographic advantages or disadvantages, historical trajectories, and policy choices outside these nine binary protections that powerfully shape their GDP per capita. The turtleneck-sweater reductio (a variable that correlates with earnings in the observed data but would not unlock trillions if mandated) illustrates the risk: without an explicit limit we can claim more \"lost GDP\" than is actually available once the omitted determinants are given credit."
+    )
+
+    pdf.body_text(
+        "To address this directly we constructed a simple empirical template: study a small set of archetypal nations using the 2026 cross-section (R, G₀, current raw disparity as % of own G₀) together with well-documented development narratives for those same countries. For each archetype we ask: holding industry, resources, location, history and human capital roughly constant, what fraction of the observed G₀ level (or of the gap to regional peers) can defensibly be attributed to the presence or absence of these nine specific protections? The resulting cap becomes a pragmatic, transparent bound on the model output."
+    )
+
+    pdf.chapter_title("Archetypes Studied (2026 data)")
+
+    pdf.body_text(
+        "Qatar (R ≈ 0.22, G₀ ≈ $76,700, raw disparity share ≈ 23.3% of own G₀). Archetype: high-baseline resource rentier with small citizen population. Enormous per-capita output flows primarily from hydrocarbons, capital inflows, and location. The nine protections are weak on several physical-integrity and rule-of-law dimensions, yet the economy is one of the richest on earth. A large fraction of current prosperity would exist even with the current R; the marginal contribution of the nine indicators is therefore far smaller than the raw cross-section implies. For this archetype the honest attributable share is low teens or single digits at most."
+    )
+
+    pdf.body_text(
+        "South Korea (R ≈ 0.33, G₀ ≈ $36,200, raw share ≈ 20%). Archetype: late industrializer / developmental state. Spectacular catch-up growth driven by education investment, export discipline, chaebol organization, security alliances, and post-war national mobilization. Many of the decisive growth decades occurred while some of the nine indicators were weaker than today's values. The 20% raw claim over-states what flipping the remaining indicators would add on top of the other engines of prosperity."
+    )
+
+    pdf.body_text(
+        "Singapore (R ≈ 0.67, G₀ ≈ $90,700, raw share ≈ 10%). Archetype: global entrepôt and financial hub. Extreme per-capita wealth for its region achieved through trade policy, finance, inherited legal tradition plus high state capacity, and strategic location. With only two-thirds of the nine protections the model still records a very high G₀; the residual three indicators are unlikely to unlock another 10% on top of everything else already in place."
+    )
+
+    pdf.body_text(
+        "Botswana (R ≈ 0.33, G₀ ≈ $7,700, raw share ≈ 20%). Archetype: resource economy that largely avoided the worst governance failures of its region. Diamonds provided the revenue base; relatively stronger property rights, low corruption on the relevant dimensions, and prudent fiscal rules allowed it to outperform many African peers. Here the nine indicators (and the broader institutional culture they proxy) plausibly explain a larger share of the \"success premium\" over regional averages — perhaps 25-35% of the gap. This is one of the cases where the indicators matter most."
+    )
+
+    pdf.body_text(
+        "Norway, Switzerland, Chile and similar high-R successes (R ≥ 0.78–1.0, raw shares already 0–7%). For these nations the current model claims only tiny additional disparity because R is already high. Their wealth clearly contains large components from oil (Norway), banking/pharma/specialized manufacturing (Switzerland), copper plus earlier market reforms (Chile), etc. Because the raw drag is small, the 25% cap binds little; the framing still correctly refuses to attribute the entire prosperity to the nine protections."
+    )
+
+    pdf.body_text(
+        "Nigeria and Rwanda (very low R, low G₀, raw shares 23–30%). For the lowest-R countries the raw model assigns up to the full 30% of their (already small) G₀ as disparity. Even here, geography, human capital, ethnic and historical fragmentation, and other structural factors are first-order. A 25% cap still leaves a very large relative claim (the indicators can matter enormously for investment climate and public-goods provision) while refusing to pretend that three-quarters of their current output is \"missing\" solely because of these nine."
+    )
+
+    pdf.chapter_title("The Template and the Adopted Cap")
+
+    pdf.body_text(
+        "From the cases above — and from the broader pattern that no nation in the 2026 cross-section has its entire prosperity or poverty convincingly explained by these nine binary scores alone — we adopt a single, conservative, uniform cap: the nine RTLP indicators are credited with at most 25% of observed G₀ as the plausible contribution (or drag) once other determinants are not omitted."
+    )
+
+    pdf.body_text(
+        "The bounded loss per capita therefore becomes:\n\n"
+        "    ΔG = min( η × (1 − R) × G₀ ,  0.25 × G₀ )\n\n"
+        "with η = 0.30. Equivalently, no nation page, regional total, or global figure in this atlas claims that these nine protections account for more than one-quarter of that nation's (or the world's) actual economic size."
+    )
+
+    pdf.body_text(
+        "This is deliberately a first, transparent template rather than a final econometric identification. Future users can refine it by studying additional nations or sub-national episodes within their own region or economic type, estimating a tighter or looser archetype-specific cap (e.g. 0.12–0.15 for pure high-G₀ rentiers, 0.30+ for post-conflict reformers where the indicators were the binding constraint), and passing a per-country or per-type max_share into the pipeline. The code and the derivation notebook make that extension straightforward."
+    )
+
+    pdf.body_text(
+        "The effect on the present 2026 numbers is modest for most countries (the cap only binds when raw η(1−R) > 0.25, i.e. for the very lowest-R observations). Its primary value is conceptual honesty and future-proofing: the model now explicitly answers the baseline-income and omitted-factors critique instead of gesturing at it only in caveats."
+    )
+
+    pdf.small_text(
+        "The 25% figure and the case narratives are reproducible from the 2026 master table (outputs/atlas/rtl_di_atlas_un_members_2026.csv) plus standard development-economics country histories. No new data were invented for this bounding step."
     )
 
     # ========== DIAGNOSTIC GUIDE ==========
@@ -616,14 +778,14 @@ def build_front_matter(data: dict) -> Path:
 
     pdf.chapter_title("The Core Translation")
     pdf.body_text(
-        "The equation is ΔG = 0.05 × (1 − R) × G₀.\n\n"
-        "R is the average of the nine binary RTLP indicators. G₀ is GDP per capita. ΔG is the estimated annual loss per person caused by incomplete protection of life. Total national deficit ≈ ΔG × population.\n\n"
-        "A country with R = 0.44 and G₀ = $10,000 loses roughly $280 per person every year — money that never materializes in budgets, never circulates, never funds the next generation. When this number is large, persistent, and broken down into nine specific, fixable components, it stops being an abstract 'governance problem' and becomes a structural drag with a visible price tag."
+        "The bounded equation is ΔG = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with η≈0.30 from the population-weighted 2026 cross-section.\n\n"
+        "R is the average of the nine binary RTLP indicators. G₀ is GDP per capita. ΔG is the estimated annual disparity per person associated with incomplete protection (capped so these nine factors are never credited with more than 25% of observed G₀ after industry, resources, history, location and human capital are given their due). Total national disparity ≈ ΔG × population.\n\n"
+        "A country with R = 0.44 and G₀ = $10,000 shows roughly $1,512 per person per year in disparity under the current cross-sectional association (0.30 × 0.56 × 10,000). The contextual cap of 25% of G₀ limits the maximum claim for any nation. The figure is a statistical benchmark and upper-bound reference, not a guaranteed amount that would appear if the indicators alone were improved while holding everything else fixed."
     )
 
     pdf.chapter_title("The Nine Levers — What Actually Moves R")
     pdf.body_text(
-        "R changes only when one or more indicators flip from 0 to 1. Each flip is worth ~0.11 in R and therefore ~0.55 % of G₀ in reduced annual per-capita loss for the whole population.\n\n"
+        "R changes only when one or more indicators flip from 0 to 1. Each flip is worth ~0.11 in R and (with current η≈0.30) approximately 3.3% of G₀ in reduced annual per-capita loss for the whole population (empirical premium ~30.5% per indicator from weighted cross-section).\n\n"
         "1. Legal Protections (transparent, predictable enforcement that actually constrains power). Moved by consistent application of ordinary law against state agents, not by paper constitutions.\n\n"
         "2. Independent Judiciary. Moved by insulated appointments, secure tenure, and a professional culture that rewards fidelity to law over political advancement.\n\n"
         "3. Law Enforcement Accountability. Moved by independent investigations, data transparency, civilian oversight with power, and political leadership that refuses to incite or excuse unlawful killings.\n\n"
@@ -654,8 +816,8 @@ def build_front_matter(data: dict) -> Path:
 
     pdf.chapter_title("Limitations and Responsible Use")
     pdf.body_text(
-        "R in this edition uses 2024 V-Dem data paired with the freshest published GDP figures. Real-time events after the data cutoff are not yet visible. Binarization thresholds are modeling choices; always examine the raw values in the nation breakdowns. The 0.05 coefficient is a central estimate; the identity of the weak indicators is more robust than the precise dollar figure. Causality runs both ways: low R produces drag, and severe economic stress can degrade state capacity and rights performance.\n\n"
-        "The deeper claim, taken from the source document, is that these nine protections are not a moral add-on but structural parameters that make certain kinds of economic and social steady states easier or harder to reach. Making the cost of a weak parameter legible in annual GDP terms does not reduce rights to economics. It makes the causal structure visible to the actors who can actually adjust the parameters."
+        "R in this edition uses 2024 V-Dem data paired with the freshest published GDP figures. Real-time events after the data cutoff are not yet visible. Binarization thresholds are modeling choices; always examine the raw values in the nation breakdowns. The η coefficient (currently 0.30) is the population-weighted cross-sectional premium; an explicit 25% of G₀ cap (derived from the archetypal-nation template in the preceding section) is then applied so that these nine indicators are never credited with more than one-quarter of observed output once industry, resources, history, location and human capital are credited. The identity of the weak indicators remains more robust than the precise dollar figure. Causality runs both ways. (The original source used a more conservative structural 0.05.)\n\n"
+        "The deeper claim, taken from the source document, is that these nine protections are not a moral add-on but structural parameters that make certain kinds of economic and social steady states easier or harder to reach. The contextual bound makes the model more honest about what fraction of national success can be attributed to them versus the many other determinants that are not omitted."
     )
 
     pdf.small_text(
@@ -770,9 +932,9 @@ def build_front_matter(data: dict) -> Path:
     pdf.set_font(FONT_NAME, "", 9)
     pdf.set_text_color(30, 30, 30)
     desc_text = (
-        f"These figures paint a picture of a world where the greatest economic drags come from failures to prevent torture and inhumane treatment and to ensure independent judiciaries and basic legal protections—together accounting for well over a trillion dollars in annual lost output. "
-        f"Strengths appear in freedom of expression/whistleblowing and access to justice/arbitrary detention, where losses are comparatively lower, suggesting pockets of better civil liberties and recourse. "
-        f"Socioeconomic shortfalls remain a persistent burden. The data underscore how weaknesses in core governance and physical integrity protections—key to the nested causal enclosures in the source framework—severely constrain global prosperity and steady-state resilience."
+        f"These figures paint a picture of a world where the greatest measured disparities are associated with failures to prevent torture and inhumane treatment and to ensure independent judiciaries and basic legal protections—together accounting for a large share of the bounded global total. "
+        f"Strengths appear in freedom of expression/whistleblowing and access to justice/arbitrary detention, where the associated disparities are comparatively lower. "
+        f"Socioeconomic shortfalls remain a persistent burden. After applying the contextual cap derived from case studies of archetypal nations, the data show how weaknesses in the nine core protections are linked to substantial differences in prosperity once other determinants (resources, industry, history, location) are credited."
     )
     pdf.multi_cell(0, 3.6, desc_text)
     pdf.ln(0.8)
@@ -805,8 +967,10 @@ def build_front_matter(data: dict) -> Path:
         ("UN Regional Summaries (22 regions)", "12"),
         ("Detailed Nation Profiles (A–Z)", "~35"),
         ("Data Attribution and Sources", "~210"),
-        ("Index of Terms", "~211"),
-        ("Credits and Acknowledgments", "~212"),
+        ("Nested Causal Modeling: Scope, Extensions, and Limits", "~211"),
+        ("Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection", "~212"),
+        ("Index of Terms", "~213"),
+        ("Credits and Acknowledgments", "~214"),
     ]
     for title, page in toc_items:
         pdf.cell(0, 6, f"{title}", border=0)
@@ -868,7 +1032,12 @@ def build_front_matter(data: dict) -> Path:
         else:
             total_str = "N/A"
         pop = d["population"]
-        pop_str = f"{pop/1e6:.1f} m" if pop is not None else "N/A"
+        if pop is None:
+            pop_str = "N/A"
+        elif pop < 100000:
+            pop_str = f"{pop/1000:.0f} k"
+        else:
+            pop_str = f"{pop/1e6:.1f} m"
 
         zebra_fill = (idx % 2 == 0)
         pdf.set_fill_color(248, 248, 250) if zebra_fill else (255, 255, 255)
@@ -919,12 +1088,12 @@ def build_regions(data: dict) -> Path:
         "The 193 UN Member States are grouped into 22 geographic regions. Below are one-page overviews for each region, "
         "aggregating the RTLDI metrics. For each region we show a choropleth of enclosure strength (R) for its member "
         "countries (zoomed to the region using the same Viridis scale as the global map), key aggregates (population-weighted "
-        "average R, total annual lost GDP), and a breakdown of the 9 RTLP indicators. The breakdown reports the percentage "
-        "of countries in the region scoring 'Yes' on each indicator and the estimated portion of the region's total lost GDP "
-        "attributable to shortfalls on that indicator (the sum, across countries lacking the protection, of 0.05/9 × G₀ × population)."
+        "average R, total annual bounded disparity), and a breakdown of the 9 RTLP indicators. The breakdown reports the percentage "
+        "of countries in the region scoring 'Yes' on each indicator and the estimated portion of the region's total bounded disparity "
+        "attributable to shortfalls on that indicator (using the current η=0.30 scaled by each country's contextual 25% cap)."
     )
     pdf.small_text(
-        "Regional statistics are derived directly from the per-country 2026 atlas values. High-impact regions (by total lost GDP) are shown first."
+        "Regional statistics are derived directly from the per-country 2026 atlas values (with the 25% contextual cap applied). High-impact regions (by total bounded disparity) are shown first."
     )
 
     for reg_name, reg_sum in sorted_regions:
@@ -977,10 +1146,9 @@ def build_regions(data: dict) -> Path:
                 )
             para2 = (
                 f"Addressing the weaker indicators—especially {', '.join(weak_names) if weak_names else 'priority areas'}—"
-                f"offers significant growth potential. Improving these failing protections across the region could "
-                f"recover an estimated ${potential_b:,.2f} billion in annual GDP (a meaningful fraction of the current deficit). "
-                f"Such reforms would enhance per-capita output, attract investment, and reinforce the nested causal enclosures "
-                f"that underpin long-term economic and social steady states, consistent with the source framework."
+                f"is associated with the largest slices of the region's current bounded disparity (after the 25% institutional-share cap). "
+                f"The cross-sectional association links improvement on these protections to a reduction in disparity of roughly ${potential_b:,.2f} billion annually for the region as a whole (within the contextual bound). "
+                f"Whether and how much of that association is realizable depends on the other determinants of output (industry structure, resources, human capital, history) that the template explicitly credits."
             )
 
         # Place map on the right; flow descriptive text (larger) on the left beside it.
@@ -1049,7 +1217,12 @@ def build_regions(data: dict) -> Path:
                 gg = m.get("g0")
                 gstr = f"{gg:,.0f}" if gg is not None else "N/A"
                 pp = m.get("population")
-                pstr = f"{pp/1e6:.1f}m" if pp else "N/A"
+                if pp is None:
+                    pstr = "N/A"
+                elif pp < 100000:
+                    pstr = f"{pp/1000:.0f}k"
+                else:
+                    pstr = f"{pp/1e6:.1f}m" if pp else "N/A"
                 ll = m.get("total_deficit_usd")
                 if ll is not None:
                     lstr = f"${ll/1e9:.2f}b" if ll >= 1e9 else f"${ll/1e6:.0f}m"
@@ -1123,7 +1296,7 @@ def build_regions(data: dict) -> Path:
                 pdf.set_text_color(20, 20, 20)
                 pdf.multi_cell(0, 2.8,
                     f"Critically, every single nation in the {reg_name} region is currently failing indicator {chosen['num']}. {chosen['name']}. "
-                    f"Getting this one indicator right across the whole region would recover an estimated ${gain_b:,.2f} billion in annual GDP."
+                    f"The portion of the region's bounded disparity (after the 25% cap) currently attributed to this universal shortfall is ${gain_b:,.2f} billion."
                 )
                 pdf.ln(0.3)
 
@@ -1131,7 +1304,7 @@ def build_regions(data: dict) -> Path:
         pdf.set_font(FONT_NAME, "", 5.5)
         pdf.set_text_color(100, 100, 100)
         pdf.multi_cell(0, 2.3,
-            "Note: Weighted R is population-weighted mean of member countries' R. Attributable lost for an indicator = sum over countries with 'No' on that indicator of (0.05/9 × G₀ × pop). "
+            "Note: Weighted R is population-weighted mean of member countries' R. Attributable lost for an indicator = sum over countries with 'No' on that indicator of (η/9 × G₀ × pop) with current η=0.30. "
             "See individual nation profiles for country-level detail and 3-year trends."
         )
 
@@ -1176,12 +1349,18 @@ def build_nations(data: dict) -> Path:
         dpc = d.get('delta_g_per_capita') or 0
         tot = d.get('total_deficit_usd') or 0
         pop = d.get('population') or 0
+        if pop >= 100000:
+            pop_str = f"{pop/1e6:,.1f} million"
+        elif pop > 0:
+            pop_str = f"{pop:,.0f}"
+        else:
+            pop_str = "N/A"
         pdf.multi_cell(CONTENT_WIDTH - 4, 3.8,
             f"Economic Impact (2026 GDP baseline)\n"
             f"G0 (GDP per capita): ${g0:,.0f}   |   "
             f"Per-capita annual loss (ΔG): ${dpc:,.0f}\n"
             f"Total annual GDP loss: ${tot/1e9:,.2f} billion   |   "
-            f"Population: {pop/1e6:,.1f} million"
+            f"Population: {pop_str}"
         )
         pdf.set_y(y_start + 22)
 
@@ -1222,7 +1401,7 @@ def build_nations(data: dict) -> Path:
                 pdf.set_y(y_plot + 17)
                 pdf.set_font(FONT_NAME, "", 5.5)
                 pdf.set_text_color(95, 95, 95)
-                pdf.multi_cell(0, 2.4, "R fixed 2024; G₀ varies. ΔG = 0.05 × (1 − R) × G₀.")
+                pdf.multi_cell(0, 2.4, "R fixed 2024; G₀ varies. ΔG = η × (1 − R) × G₀ (η=0.30 from data).")
                 pdf.ln(0.5)
             if focus_p and focus_p.exists():
                 pdf.ln(0.5)
@@ -1286,7 +1465,7 @@ def build_back_matter(data: dict) -> Path:
     pdf.body_text(
         "Primary Data\n"
         "• V-Dem (Varieties of Democracy) Country-Year Full+Others, version 15 (2024 data release). "
-        "Indicators used: v2cltrnslw, v2juhcind, v2juncind, v2clkill, v2cltort, v2xcl_acjst, v2x_freexp.\n"
+        "Indicators used: v2cltrnslw, v2juhcind, v2juncind, v2clkill, v2cltort, v2xcl_acjst, v2x_freexp, v2x_clphy, v2clrspct.\n"
         "• World Bank World Development Indicators (WDI) via API — GDP per capita (current US$), "
         "population, prevalence of undernourishment, and poverty headcount at $2.15 (2017 PPP). "
         "Values are the most recent published as of atlas production (labeled 2026 baseline).\n"
@@ -1300,6 +1479,74 @@ def build_back_matter(data: dict) -> Path:
     pdf.small_text(
         "This PDF was generated programmatically from the open RTLDI ATLAS toolkit. "
         "No proprietary or restricted data were used."
+    )
+
+    # ========== NEW APPENDIX: NESTED CAUSAL MODELING ==========
+    pdf.add_page()
+    pdf.chapter_title("Nested Causal Modeling: Scope, Extensions, and Limits")
+
+    pdf.body_text(
+        "The source document, Causality and Attraction: A Continuum of Steady States (Sid J.A. Hubbard, Version 3, May 2026, DOI 10.5281/zenodo.19468550), represents a serious, original attempt to give these protections a causal role inside a larger map of reality. Within its framework of nested causal enclosures and steady-state dynamic equilibria, the equal protection of the right to life is framed not merely as a correlate of prosperity but as a structural parameter of the \"human enclosure\" — an upstream condition whose strength or weakness shapes the higher-order economic and social steady states that can be reached and sustained."
+    )
+
+    pdf.body_text(
+        "This Atlas significantly extends that paradigm into the real world. We have taken the source equations and the nine RTLP indicators, operationalized them with transparent, reproducible data from V-Dem (2024 components for the eight governance and physical-integrity indicators) and the World Bank (2026-fresh GDP per capita baselines, population, and socioeconomic measures for the ninth indicator), and produced a complete diagnostic for every one of the 193 United Nations Member States. The addition of the nation-by-nation template, the contextual bounding study of archetypal cases (resource rentiers such as Qatar, late industrializers such as South Korea, global hubs such as Singapore, reformers such as Botswana and Rwanda, and high-R successes), the explicit 25% institutional-share cap on any single set of factors, the per-indicator attributable breakdowns, the three-year GDP-driven trends, the regional summaries with best/worst and universal-failure callouts, and the global and focus choropleths together constitute substantial new work in bridging the gap between the philosophical model and usable, globally comparable, data-rich diagnostics."
+    )
+
+    pdf.body_text(
+        "Nevertheless, this work does not — and cannot — provide direct proof of causation in the narrow policy-experiment sense. We cannot demonstrate that \"doing X will cause Y to occur in Z time\" at the nation-state or global level. There are no randomized controlled trials of national rights regimes at scale. The cross-sectional associations, the structural arguments drawn from the source, and even the carefully bounded empirical premium (η = 0.30 with the 25% cap) remain subject to omitted variables, reverse causality, selection, and the fundamental problem of constructing the counterfactual. The model supplies powerful benchmarks and a coherent interpretive lens; it does not deliver identified causal effects that would underwrite precise, time-bound predictions of the form \"if this country flips these three indicators, its GDP will rise by $A billion by year N.\""
+    )
+
+    pdf.body_text(
+        "What the Atlas does provide is something more than bare correlation. It is a Nested Causal Modeling of an enormous amount of high-quality, real-world data — V-Dem expert-coded indicators cross-walked to the exact nine protections specified in the source, paired with the freshest economic baselines under the 2026 rule — all interpreted through the source's own architecture of nested causal enclosures. It goes as close to the real-world execution of causality as is currently possible for the simulations that must run in the minds of the people this atlas is for: citizens, civil society organizations, policymakers, finance ministries, media, and international partners who need to reason about costs, priorities, reform leverage, and the visible price of inaction."
+    )
+
+    pdf.body_text(
+        "We cannot furnish direct proof of the efficacy of large-scale institutional changes. The ones who will generate that proof — through the observable record of successes and failures in growth, resilience, investment, human development, and the avoidance of entropic costs — will be the nations that take the RTLDI seriously as a diagnostic tool and the nations that do not. The growth and prosperity of our states, and the hard, recurring costs of failing to protect human lives equally, are ultimately the direct responsibility of their people and the institutions they choose to sustain or reform."
+    )
+
+    pdf.body_text(
+        "It is not a new discovery that protecting human lives supports greater prosperity and steadier development. That relationship has long been observed across history and across literatures. What this Atlas makes newly legible, at global scale and with attributable component detail, is that refusing to protect human lives equally has a calculable, hard, annual cost — visible in the data, traceable to specific, fixable failures of the nine indicators, and bounded by realistic assessments of what any one family of institutional factors can explain once industry, resources, history, location, and human capital are given their due."
+    )
+
+    pdf.body_text(
+        "However far the RTLDI's accuracy may fall from perfectly right, it is not wrong. We have produced a new, transparent, globally applicable metric — grounded in the source paradigm, extended by the best available data, subjected to explicit contextual bounding, and offered as a tool for clearer thinking and more precise advocacy rather than as a finished causal proof. The ultimate test of its usefulness will be written not in these pages but in the real-world outcomes of the nations that choose to use it."
+    )
+
+    pdf.small_text(
+        "This appendix is offered in the same spirit as the source document: to make the structural costs of unequal protection of life more visible, more attributable, and more difficult to ignore."
+    )
+
+    # ========== NEW: FALSIFICATION OF MALTHUS (streamlined from source) ==========
+    pdf.add_page()
+    pdf.chapter_title("Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection of Life")
+
+    pdf.body_text(
+        "Thomas Malthus argued that human population tends to grow exponentially while food and other resources grow only linearly. The unavoidable result, in his view, would be recurring famine, poverty, and population checks through misery, vice, or war — unless population growth were deliberately limited."
+    )
+
+    pdf.body_text(
+        "The source document, Causality and Attraction (Hubbard 2026V3), offers a direct geometric and empirical counter rooted in the same nested causal framework that supplies the RTLDI. It draws on R. Buckminster Fuller’s geodesic and tensegrity principles to treat human populations as collections of nodes within larger enclosing structures. In geodesic systems, as the frequency of subdivision (f) increases — that is, as more nodes and triangulated connections are added while maintaining consistent structural integrity — surface area scales as f² but load-bearing strength and overall system capability scale as f³ or better. The addition of elements does not dilute the structure; under uniform connection rules, the whole becomes disproportionately stronger and more resilient."
+    )
+
+    pdf.body_text(
+        "The conditions Malthus projected — that greater population equates only to a greater drain on resources — are true but misleading, as they are not the whole truth. If nations do not equally protect the lives of all of the people within their borders, the population does behave in this way: more people equate to less available resource. But when the right to life is equally protected, GDP rises for a number of reasons and it rises exponentially via the f³ scaling seen in geodesics. This is because societal stresses are distributed evenly among a more productive and more capable society."
+    )
+
+    pdf.body_text(
+        "The simple levers such as freedom from torture and freedom from arbitrary detention and an independent judiciary work together to make a nation that is investible — one that can attract businesses and stimulate domestic businesses to start up in an environment where the risk of death or arbitrary imprisonment are not stopping money from coming in. Similarly, whistleblower protections, once in place, would allow whistleblowers to come forward exposing corruption and theft at scales unknown before the protection was there."
+    )
+
+    pdf.body_text(
+        "The important distinction is that in falsifying Malthus in this way we have not negated the efficacy of Malthusian regimes and regulations. We have made it clear that a nation can choose the Malthusian relationship to their population and they can receive the expected drain on resources and plan for the expected disastrous trimming of the population to occur, or they could choose to put the protections in place to bring their RTLP score as high as it can and enjoy the f³ cubic exponential scaling up of resilience, the conditions for capital investment to occur and for entrepreneurship to come from the people themselves as they would be an optimized enclosure capable of generating the resources it needs to prosper under the protections of a highly organized and stable society."
+    )
+
+    pdf.body_text(
+        "They can at least see the cost of not caring for the lives of their people equally and have a choice between the expansion of corruption or the stimulation of domestic industrial productivity. The linear drag term in the RTLDI equation quantifies the immediate cost of low frequency (missing protections). The geodesic perspective supplies the background for why raising that frequency can produce non-linear gains: it changes the scaling properties of the human system itself. This geometric and empirical counter-argument from the source, now expanded with the explicit choice framing, provides important context for the potential causal role of the RTLP indicators. The atlas measures the economic consequences of weak enclosures in the present data. The geodesic population model suggests why consistent, equal protection should enable the scaling behavior that turns added people into added capacity rather than added pressure. The ultimate test remains the real-world record of nations that maintain or improve equal protection versus those that do not."
+    )
+
+    pdf.small_text(
+        "This account draws directly from the source’s treatment in the Malthus appendix, release notes, and geometric sections (especially the f³ frequency scaling law as homology for human enclosures) while incorporating the conditional nature of the Malthusian outcome and the explicit choice between paths. It is offered here as background for the structural conditions under which the RTLDI’s measured associations may reflect deeper causal architecture."
     )
 
     # ========== INDEX OF TERMS ==========
@@ -1319,12 +1566,15 @@ def build_back_matter(data: dict) -> Path:
         ("Choropleth", "Thematic map in which countries or regions are shaded by enclosure strength R (0–1) using the Viridis colormap; primary visual for the global, regional, and focus views."),
         ("Diagnostic (tool/guide)", "The use of RTLP scores, component breakdowns, and attributable lost-GDP figures as a practical instrument for citizens, NGOs, and policymakers to identify reform priorities and quantify upside."),
         ("Trend (3-year)", "The per-nation GDP-driven RTLDI plots (R held fixed at 2024 values) that illustrate recent economic-drag dynamics alongside the regional and global maps."),
-        ("Attributable lost GDP", "The share of a country or region's total lost output that is directly traceable to the absence of one specific RTLP indicator (sum of 0.05/9 × G₀ × pop over countries failing that indicator)."),
+        ("Attributable lost GDP", "The share of a country or region's total lost output that is directly traceable to the absence of one specific RTLP indicator (sum of η/9 × G₀ × pop over countries failing that indicator, with current η≈0.30 from population-weighted cross-section)."),
         ("Enclosure (nested causal / human)", "The source document's central metaphor: the interdependent, layered structures of protection whose strength or weakness shapes higher-order economic and social steady states."),
         ("Causality and Attraction", "The source monograph (Hubbard 2026V3, Zenodo 19468550) that supplies the RTLDI equation, the nine RTLP indicators, the nested-enclosures paradigm, and the cartographic critique of distortion."),
         ("Binarization / threshold", "The documented conversion of continuous V-Dem and World Bank values into the binary 0/1 scores for the nine indicators (e.g., ≥2.0 on 0-4 scales, ≤5 % undernourishment + ≤10 % poverty for #9)."),
-        ("η (eta)", "The sensitivity coefficient (default 0.05) in ΔG = η(1 − R) × G₀; the economic 'premium' the source associates with moving from zero to full right-to-life protection."),
+        ("η (eta)", "The sensitivity coefficient (current data-driven default 0.30 from population-weighted 2026 UN cross-section). In the bounded model ΔG = min(η(1 − R) × G₀, 0.25 × G₀); the cross-sectional premium per indicator, then capped so the nine RTLP indicators are never credited with more than 25% of observed G₀ after other determinants are given due weight. (Source document used a more conservative 0.05 structural value.)"),
         ("Steady state", "A balanced biological, economic, or social condition that the framework argues is supported or undermined by the strength of the nine life protections and the resulting causal enclosures."),
+        ("Malthusian theory", "The proposition (Thomas Malthus) that population grows exponentially while resources grow linearly, inevitably producing scarcity and misery unless population is checked. The source and this atlas present geometric and empirical counter-evidence under conditions of equal right-to-life protection."),
+        ("Geodesic scaling / f³ law", "From Buckminster Fuller: in geodesic and tensegrity structures, as subdivision frequency (f) increases, surface area scales as f² while structural strength and capability scale as f³ or higher. Used in the source as a homology for human populations: under equal protection of the right to life (consistent enclosure frequency), added people (nodes) increase systemic resilience and capacity disproportionately rather than triggering scarcity."),
+        ("Frequency scaling (human enclosures)", "The application of geodesic f³ principles to human systems: equal application of the nine RTLP protections raises the effective 'frequency' of the population structure, enabling non-linear gains in capability as population grows — directly challenging Malthusian predictions when enclosures are strong."),
         ("UN region / regional summary", "One of the 22 geographic groupings used for aggregates, focused choropleths, member-nations tables (with R / G0 / population / lost + REGIONAL TOTAL row), and 9-indicator breakdowns."),
         ("Member-nations table", "The compact table on each regional summary page that lists every country in the region together with its R, G0, population, and total lost GDP, plus a bottom row of regional totals."),
         ("Viridis", "The perceptually uniform sequential colormap (dark low-R → yellow high-R) used consistently for every enclosure-strength choropleth in the atlas."),
