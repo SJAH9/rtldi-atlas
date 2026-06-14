@@ -11,20 +11,24 @@ The ATLAS operationalizes the 9-indicator RTLP score and the RTLDI equation (ΔG
 
 All releases (including the full PDF ebook as an asset) are available on the [GitHub Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
 
-### v2026.4 (Current — Malthus falsification, geodesic population model, and back-matter expansion)
+### v2026.5 (Current — branch merge + expanded Malthus falsification with full choice framing)
 
-**RTLDI ATLAS 2026 v4** — full ebook 241 pages (back matter now 7 pages).
+**RTLDI ATLAS 2026 v5** — full ebook 241 pages (back matter 7 pages).
 
-- Added a new dedicated back-matter appendix: **"Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection of Life"** (streamlined directly from the source book's Malthus appendix and geometric sections, now significantly expanded).
-  - Summarizes the source's geometric counter to Malthus using Buckminster Fuller’s geodesic/tensegrity principles and the f³ frequency scaling law.
-  - Human populations are modeled as nodes in a geodesic structure: adding people increases overall strength, resilience, and capability disproportionately (f³) **provided there is equal protection of the right to life** (high RTLP frequency via the nine indicators / consistent human enclosure).
-  - Explicitly incorporates the conditional framing: the Malthusian conditions (greater population equating only to greater drain on resources) are true but misleading when protections are absent — more people then equate to less available resource. When the right to life is equally protected, GDP rises (for multiple reasons) and rises exponentially via f³ scaling because societal stresses are distributed evenly among a more productive and more capable society.
-  - Details concrete mechanisms: the levers (freedom from torture, freedom from arbitrary detention, independent judiciary) make a nation "investible," attracting external capital and stimulating domestic startups because the risk of death or arbitrary imprisonment is no longer a barrier; whistleblower protections enable exposure of corruption and theft at previously unknown scales.
-  - Includes the crucial distinction that this falsification does **not** negate the efficacy of Malthusian regimes and regulations: a nation can still choose the Malthusian relationship to its population, receive the expected drain on resources, and plan for the expected disastrous trimming — or choose high RTLP for the f³ cubic exponential scaling of resilience, the conditions for capital investment, and entrepreneurship from the people themselves in an optimized enclosure.
-  - Emphasizes that nations can now see the cost of not caring for the lives of their people equally and have a real choice between the expansion of corruption or the stimulation of domestic industrial productivity.
-  - Supplies important background for the potential causal relationship in the nested causal model: the RTLDI linear drag term measures immediate costs of weak enclosures; the geodesic view explains the non-linear upside when frequency (equal protection) increases. Includes direct evidence of the opposite relationship to Malthus's prediction (historical population explosion coinciding with rising per capita GDP under stronger protections; cross-sectional patterns in the 2026 data).
-- Updates to README Releases section, improved back-matter structure, and minor refinements to documentation for clarity.
-- Full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (241 pages). Modular parts also updated in `outputs/atlas/`.
+- Merged `main` and `master` branches for a cleaner history (local work continues on `master`; remote default remains `main` — see prior discussion).
+- Significantly expanded the back-matter appendix **"Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection of Life"**:
+  - The Malthusian conditions (greater population equating only to a greater drain on resources) are true but misleading when protections are absent — more people then equate to less available resource per person.
+  - When the right to life is equally protected, GDP rises for multiple reasons and rises exponentially via the f³ scaling seen in geodesics, because societal stresses are distributed evenly among a more productive and more capable society.
+  - Details the concrete mechanisms: the core levers (freedom from torture, freedom from arbitrary detention, and an independent judiciary) together make a nation "investible" — attracting external businesses and stimulating domestic startups, since the risk of death or arbitrary imprisonment no longer stops capital from flowing in.
+  - Whistleblower protections, once in place, allow exposure of corruption and theft at scales previously unknown.
+  - Crucial distinction: this falsification does **not** negate the efficacy of Malthusian regimes and regulations. A nation can choose the Malthusian path (receive the expected drain on resources and plan for the expected disastrous "trimming" of the population) or choose to raise its RTLP score as high as possible and enjoy the f³ cubic exponential scaling of resilience, the conditions for capital investment, and entrepreneurship arising from the people themselves in an optimized enclosure capable of generating the resources needed to prosper under the protections of a highly organized and stable society.
+  - Nations can now clearly see the cost of not caring for the lives of their people equally and have a real choice between the expansion of corruption or the stimulation of domestic industrial productivity.
+- This provides important background for the potential causal relationship in the nested causal model.
+- Full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (241 pages). Modular parts updated in `outputs/atlas/`.
+
+**Note**: The `outputs/atlas/` directory always holds the most current of each part. Run `--front --regions --concat-only` after descriptive or back-matter changes; `--nations` only when the underlying per-country data or profile layout changes.
+
+### v2026.4 (Previous — Malthus falsification, geodesic population model, and back-matter expansion)
 
 **Note**: The `outputs/atlas/` directory always holds the most current of each part. Run `--front --regions --concat-only` after descriptive or back-matter changes; `--nations` only when the underlying per-country data or profile layout changes.
 
@@ -91,51 +95,64 @@ Total bounded disparity ≈ ΔG × population
 ## For NGOs and Researchers (Recommended Use)
 This toolkit is designed so NGOs and analysts can run their own RTLDI ATLAS using the **latest official open data** from V-Dem and the World Bank — no need to bundle the (large) data files in the repo.
 
-### Quick Start (2026 data)
+### Quick Start (2026 data) — reproduces the full released atlas from scratch
+To clone the repo, acquire the public data, and produce an atlas **identical in content and appearance** (including all choropleths) to the one attached to the latest release on this repo:
+
 ```bash
 git clone https://github.com/SJAH9/rtldi-atlas.git
 cd rtldi-atlas
-python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter
+
+# Install all dependencies required for data processing + PDF generation + choropleth maps
+python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter plotly kaleido
+
+# 1. Build the core data (uses live World Bank API + your local V-Dem CSV)
 python3 -m src.build_atlas --year 2026 --eta 0.30
-# Optional (for choropleth maps of enclosure strength / other figures):
-python3 -m pip install plotly kaleido
+
+# 2. Generate the choropleth maps (global + 22 regional) that get embedded in the PDF
+#    This step is REQUIRED to match the released atlas. It produces PNGs (for embedding),
+#    a vector PDF, and an interactive HTML version.
 python3 -m src.generate_enclosure_map --year 2026
-```
 
-The code will:
-- Fetch the required World Bank indicators live via the official API (always up-to-date).
-- Look for your V-Dem CSV in `data/raw/` (see "Getting the Data" below).
-- Compute the full 9-component RTLP score using the published crosswalk.
-- Output CSV + XLSX + summary in `outputs/atlas/`.
-
-After the atlas is built you can generate the choropleth of enclosure strength (RTLP R):
-```bash
-python3 -m src.generate_enclosure_map --year 2026
-```
-Outputs land in `outputs/figures/` (PNG at print resolution, PDF vector, interactive HTML with full hover details + vintage labels).
-
-You can also (re)build the print PDF ebook. The generator now produces **four** separate parts (front / regions / nations / back) so you can iterate quickly on any section without regenerating the others:
-```bash
-# Build everything and concatenate the release
+# 3. Generate the print-ready PDF ebook (four modular parts + concatenated release)
+#    Because the maps were generated in step 2, the PDFs will contain the actual choropleths
+#    (global map in front matter, per-region maps, per-nation regional zooms) instead of placeholders.
 python3 -m src.generate_atlas_ebook
-
-# Fast iteration examples
-python3 -m src.generate_atlas_ebook --front      # title, exec, method, diagnostic, carto+map+global lost table, TOC, 193 summary table
-python3 -m src.generate_atlas_ebook --regions    # the 22 UN Regional Summaries (maps, descriptions, tables, breakdowns)
-python3 -m src.generate_atlas_ebook --back       # attribution, alphabetical index of terms, credits
-python3 -m src.generate_atlas_ebook --concat-only   # final release step: combine the four current parts into the full ebook
-
-# Heavy step (only when per-country data or nation-page layout changes)
-python3 -m src.generate_atlas_ebook --nations
 ```
-Outputs (always the most current of each):
-- `outputs/atlas/RTLDI_ATLAS_2026_front.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (concatenated release — front + regions + nations + back — this is the one you publish / attach to a GitHub release)
 
-The final step before tagging a release is the concatenation of the four parts. This structure prevents any repetition/duplication during generation and lets you iterate on front matter, regional analysis, nation profiles, or back matter completely independently.
+**Exact expected outputs for a successful full reproduction (matching the released v2026.5 asset):**
+- `outputs/atlas/rtl_di_atlas_un_members_2026.csv` and `.xlsx`
+- `outputs/atlas/rtl_di_atlas_summary_2026.json`
+- `data/processed/rtl_di_nation_breakdown_2026.json` (and .csv)
+- `outputs/figures/rtl_di_enclosure_strength_2026_choropleth.png` (and .pdf + .html)
+- `outputs/figures/regional_choropleths/*.png` (22 files)
+- `outputs/atlas/RTLDI_ATLAS_2026_front.pdf` (includes global choropleth)
+- `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf` (includes regional choropleths)
+- `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf` (includes per-nation regional focus maps)
+- `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
+- `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (full concatenated release, ~241 pages)
+
+**Verification checklist** (run these after the commands above to confirm you have reproduced the release):
+- The four main PDFs exist and `RTLDI_ATLAS_2026_ebook.pdf` is the largest.
+- `outputs/figures/` contains the global choropleth PNG and the `regional_choropleths/` directory with 22 PNGs.
+- Open (or text-extract) the ebook and confirm it contains:
+  - The full expanded Malthus appendix with "choice framing", f³ scaling, "investible", whistleblower protections, "Malthusian path vs high-RTLP path", "expansion of corruption or the stimulation of domestic industrial productivity".
+  - Explicit references to the 25% institutional-share cap / contextual bounding.
+  - All 9 RTLP indicators with descriptions.
+  - Country profiles and regional summaries.
+- No placeholder text like "[Global map could not be embedded]" appears.
+
+If you skip the `generate_enclosure_map` step, the PDFs will still contain all text, tables, and the Malthus appendix, but the choropleth images will be missing or replaced by placeholders. This is why the map step is required to match the released version.
+
+You can also iterate on sections without a full rebuild:
+```bash
+python3 -m src.generate_atlas_ebook --front
+python3 -m src.generate_atlas_ebook --regions
+python3 -m src.generate_atlas_ebook --nations
+python3 -m src.generate_atlas_ebook --back
+python3 -m src.generate_atlas_ebook --concat-only
+```
+
+The final concatenated `RTLDI_ATLAS_2026_ebook.pdf` (front + regions + nations + back) is the artifact attached to the GitHub release.
 
 ### Getting the V-Dem Data (one-time, ~few hundred MB)
 1. Go to https://www.v-dem.net/data/the-v-dem-dataset/
@@ -155,7 +172,9 @@ No manual download required for the core indicators. The code uses `wbgapi` to p
 
 If you prefer offline bulk, download the corresponding API_*.csv from data.worldbank.org and place in data/raw/ — the loaders will prefer local files.
 
-### Visualizations: Enclosure Strength Choropleth
+### Visualizations: Enclosure Strength Choropleth (part of the full release)
+The choropleth maps are an integral part of the released PDF (global map in front matter, regional maps on every region page, and per-nation regional focus maps on every nation page). They are generated by the command in the Quick Start above and are required to match the published release.
+
 "Enclosure strength" = the RTLP R score (0–1 average of the 9 binary indicators of right-to-life protection).
 
 ```bash
