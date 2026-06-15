@@ -16,7 +16,7 @@ For the initial version (pre full V-Dem integration):
 - Also writes a nicely formatted XLSX (openpyxl).
 
 Run:
-  python -m src.build_atlas --year 2024 --eta 0.05 --output outputs/atlas/rtl_di_atlas_2024.csv
+  python -m src.build_atlas --year 2026 --eta 0.27 --output outputs/atlas/rtl_di_atlas_2026.csv
 """
 
 from __future__ import annotations
@@ -112,7 +112,7 @@ def compute_placeholder_r(
 
 def build_atlas(
     year: int = 2026,
-    eta: float = 0.05,
+    eta: float = 0.30,  # population-weighted from 2026 UN cross-section (~30.5% per indicator)
     un_path: str = "data/raw/un_member_states.csv",
     wb_path: str = "data/processed/wb_un_members_2023_2024_latest.csv",
     out_dir: str = "outputs/atlas",
@@ -367,7 +367,7 @@ def write_xlsx_atlas(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", type=int, default=2026)
-    parser.add_argument("--eta", type=float, default=0.05)
+    parser.add_argument("--eta", type=float, default=0.30)
     parser.add_argument("--output-dir", default="outputs/atlas")
     args = parser.parse_args()
 

@@ -141,10 +141,12 @@ VDEM_R_VARS = [
     "country_text_id", "year",
     "v2cltrnslw",   # 1 legal
     "v2juhcind", "v2juncind",  # 2 judiciary
-    "v2clkill",     # 3+6 law_enforce + civilian
+    "v2clkill",     # 3 law_enforce accountability
     "v2cltort",     # 5 torture
-    "v2xcl_acjst",  # 4+7 arb + access (index)
+    "v2xcl_acjst",  # 4 arb detention (index proxy)
     "v2x_freexp",   # 8 expression
+    "v2x_clphy",    # 6 civilian protection (physical violence index, distinct from killings)
+    "v2clrspct",    # 7 access to justice (rigorous impartial admin proxy, distinct from acjst)
 ]
 
 def load_vdem_for_rtlp(year: int = 2026, vdem_csv: Optional[str] = None) -> pd.DataFrame:
@@ -181,10 +183,10 @@ def compute_rtlp_vdem_row(row: pd.Series, cfg: Optional["RTLDIConfig"] = None) -
     bins.append(binarize_vdem_index(row.get("v2xcl_acjst"), 0.5))
     # 5. Torture
     bins.append(binarize_vdem_component(row.get("v2cltort"), cfg.thresh_vdem_0_4))
-    # 6. Civilian protection in conflict (reuse killings)
-    bins.append(binarize_vdem_component(row.get("v2clkill"), cfg.thresh_vdem_0_4))
-    # 7. Access to justice
-    bins.append(binarize_vdem_index(row.get("v2xcl_acjst"), 0.5))
+    # 6. Civilian protection in conflict (use physical violence index, distinct from killings)
+    bins.append(binarize_vdem_index(row.get("v2x_clphy"), 0.5))
+    # 7. Access to justice (use rigorous impartial admin as distinct proxy)
+    bins.append(binarize_vdem_component(row.get("v2clrspct"), cfg.thresh_vdem_0_4))
     # 8. Expression + whistleblower
     bins.append(binarize_vdem_index(row.get("v2x_freexp"), 0.5))
     yes = sum(b for b in bins if pd.notna(b))

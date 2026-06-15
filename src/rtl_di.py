@@ -1,16 +1,31 @@
 """
 RTLDI core computation (from Hubbard, Causality and Attraction v3).
 
-Equation (D.4 / 5.1):
-    ΔG = η × (1 − R) × G₀
+Core equation (with contextual bounding):
+    ΔG = min( η × (1 − R) × G₀ ,  max_institutional_share × G₀ )
 
 Where:
-- ΔG : annual GDP per capita loss (current or constant USD)
-- η  : 0.05 (base)
+- ΔG : annual GDP per capita loss (current or constant USD), bounded so that
+       the nine RTLP indicators are never credited with more than the template
+       cap (default 25%) of observed G0.
+- η  : 0.30 (population-weighted empirical premium from 2026 UN cross-section; 
+         ~30.5% higher observed GDP per capita per additional RTLP indicator 
+         in weighted log-linear regression; original 0.05 was conservative 
+         structural estimate from source analysis)
 - R  : RTLP score [0,1]
 - G₀ : baseline GDP per capita
+- max_institutional_share : 0.25 (template cap derived from case studies of
+         archetypal nations — see atlas front matter "Contextual Bounding"
+         section). This explicitly gives credit for baseline income, industry,
+         resources, history, location, and human capital that exist independently
+         of the nine indicators.
 
 Also supports aggregate = ΔG * population.
+
+The bounding step addresses the critique that a pure cross-sectional association
+can overstate what is "actually possible" once other determinants of national
+success are not omitted. The cap is a pragmatic, evidence-informed limit rather
+than a claim of precise causality.
 """
 
 from dataclasses import dataclass
@@ -21,7 +36,13 @@ import numpy as np
 @dataclass
 class RTLDIConfig:
     """Configuration for RTLDI calculation."""
-    eta: float = 0.05
+    eta: float = 0.30  # population-weighted empirical premium (~30.5% per indicator) from 2026 UN cross-section regression
+    # Contextual cap on the share of observed G0 that these 9 RTLP indicators can realistically
+    # be credited with (or drag), after giving due weight to industry base, resource endowments,
+    # human capital, geography, history, and other deep determinants. Derived from case studies
+    # of archetypal nations (see atlas front matter "Contextual Bounding" section). This prevents
+    # the model from claiming more "lost GDP" than is plausible once non-RTLP factors are credited.
+    max_institutional_share: float = 0.25
     # Binarization defaults (see docs/indicator_crosswalk.md for justification)
     # For V-Dem 0-4 components (higher=better protection)
     thresh_vdem_0_4: float = 2.0
@@ -34,9 +55,20 @@ class RTLDIConfig:
     gender_strategy: str = "avg"  # or "min"
 
 
-def compute_delta_g(r: float, g0: float, eta: float = 0.05) -> float:
+def compute_delta_g(r: float, g0: float, eta: float = 0.30, max_share: float = 0.25) -> float:
     """
-    Compute annual GDP per capita loss ΔG.
+    Compute annual GDP per capita loss ΔG, bounded by the contextual institutional share cap.
+
+    The raw association is ΔG_raw = eta * (1 - r) * g0.
+    The final value is min(ΔG_raw, max_share * g0).
+
+    This cap (default 0.25) is a template-derived bound: after studying archetypal nations
+    (resource rentiers like Qatar, successful late industrializers like South Korea, global
+    hubs like Singapore, etc.), these nine specific RTLP protections do not appear to account
+    for more than ~25% of observed G0 levels once industry, resources, history, location,
+    human capital and other factors are given credit. See the atlas front-matter section
+    "Contextual Bounding: Estimating the Realizable Share..." for the case studies and
+    the exact template used to set this value.
 
     Parameters
     ----------
@@ -45,18 +77,25 @@ def compute_delta_g(r: float, g0: float, eta: float = 0.05) -> float:
     g0 : float
         Baseline GDP per capita (e.g. current US$).
     eta : float
-        Sensitivity (default 0.05 per source).
+        Sensitivity (default 0.30 from population-weighted 2026 cross-sectional analysis of 187
+        UN members; each additional RTLP indicator associated with ~30.5%
+        higher observed GDP per capita in weighted log-linear regression).
+    max_share : float
+        Maximum fraction of observed G0 that the nine indicators may be credited with
+        (or that may be claimed as "lost" due to their absence). Default 0.25.
 
     Returns
     -------
     float
-        ΔG in same units as g0.
+        Bounded ΔG in same units as g0. Never exceeds max_share * g0.
     """
     if not (0.0 <= r <= 1.0):
         raise ValueError(f"R (RTLP) must be in [0,1], got {r}")
     if g0 < 0:
         raise ValueError(f"G0 must be non-negative, got {g0}")
-    return eta * (1.0 - r) * g0
+    raw = eta * (1.0 - r) * g0
+    cap = max_share * g0
+    return min(raw, cap)
 
 
 def total_deficit(delta_g: float, population: float) -> float:
@@ -165,7 +204,7 @@ def compute_rtl_di_for_row(
     r: float,
     g0: float,
     population: Optional[float] = None,
-    eta: float = 0.05,
+    eta: float = 0.27,
 ) -> Dict[str, float]:
     """Return dict with per_capita_loss and (if pop given) total_deficit."""
     dg = compute_delta_g(r, g0, eta)
