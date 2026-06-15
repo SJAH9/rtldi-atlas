@@ -221,7 +221,7 @@ def main():
     fig.write_image(png_path, width=1380, height=820, scale=2)
     print(f"Saved PNG (scale=2): {png_path}  ({png_path.stat().st_size / 1024:.0f} KB)")
 
-    # Vector PDF (for high-quality inclusion in LaTeX, print docs)
+    # Vector PDF (high-quality for print docs, reports, and embedding)
     pdf_path = out_dir / f"{stem}.pdf"
     fig.write_image(pdf_path, width=1380, height=820)
     print(f"Saved PDF: {pdf_path}  ({pdf_path.stat().st_size / 1024:.0f} KB)")

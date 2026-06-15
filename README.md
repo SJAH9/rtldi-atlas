@@ -11,51 +11,37 @@ The ATLAS operationalizes the 9-indicator RTLP score and the RTLDI equation (ΔG
 
 All releases (including the full PDF ebook as an asset) are available on the [GitHub Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
 
-### v2026.5 (Current — branch merge + expanded Malthus falsification with full choice framing)
+### v2026.6 (Current — Public launch preparation, June 21 2026)
 
-**RTLDI ATLAS 2026 v5** — full ebook 241 pages (back matter 7 pages).
+**RTLDI ATLAS 2026** — clean, instantly accessible guide for every human. Full concatenated ebook (front + regions + nations + back). The parallel LaTeX version and `src/generate_atlas_latex.py` have been removed entirely; the only supported, reproducible path is the pure Python/fpdf2 modular generator.
 
-- Merged `main` and `master` branches for a cleaner history (local work continues on `master`; remote default remains `main` — see prior discussion).
-- Significantly expanded the back-matter appendix **"Falsification of Malthusian Scarcity: Geodesic Populations and Equal Protection of Life"**:
-  - The Malthusian conditions (greater population equating only to a greater drain on resources) are true but misleading when protections are absent — more people then equate to less available resource per person.
-  - When the right to life is equally protected, GDP rises for multiple reasons and rises exponentially via the f³ scaling seen in geodesics, because societal stresses are distributed evenly among a more productive and more capable society.
-  - Details the concrete mechanisms: the core levers (freedom from torture, freedom from arbitrary detention, and an independent judiciary) together make a nation "investible" — attracting external businesses and stimulating domestic startups, since the risk of death or arbitrary imprisonment no longer stops capital from flowing in.
-  - Whistleblower protections, once in place, allow exposure of corruption and theft at scales previously unknown.
-  - Crucial distinction: this falsification does **not** negate the efficacy of Malthusian regimes and regulations. A nation can choose the Malthusian path (receive the expected drain on resources and plan for the expected disastrous "trimming" of the population) or choose to raise its RTLP score as high as possible and enjoy the f³ cubic exponential scaling of resilience, the conditions for capital investment, and entrepreneurship arising from the people themselves in an optimized enclosure capable of generating the resources needed to prosper under the protections of a highly organized and stable society.
-  - Nations can now clearly see the cost of not caring for the lives of their people equally and have a real choice between the expansion of corruption or the stimulation of domestic industrial productivity.
-- This provides important background for the potential causal relationship in the nested causal model.
-- Full concatenated `RTLDI_ATLAS_2026_ebook.pdf` (241 pages). Modular parts updated in `outputs/atlas/`.
+- Front matter radically trimmed for 2-second attention: no philosophical prose, no rambling, no distracting references, no language that invites doubt. Everything is grounded in first principles, international best practices, data hygiene, and the bibliographic network (V-Dem + World Bank).
 
-**Note**: The `outputs/atlas/` directory always holds the most current of each part. Run `--front --regions --concat-only` after descriptive or back-matter changes; `--nations` only when the underlying per-country data or profile layout changes.
+- All justification for the atlas figures and the high global lost-GDP number now lives in one dedicated front-matter section: **"Nested Causal Modelling/Mapping"**.
+  - Explains the data-science discipline used: analysis of nested causal enclosures in highly correlated graph data to identify systems that provide causal support for a target condition (maximal GDP).
+  - The three laws of the continuum (always an enclosing system, a system is always enclosed, enclosures scale infinitely with an enclosure between any two).
+  - R (0.0–1.0) = enclosure strength = simple average of the 9 binary indicators.
+  - The 9 indicators were located by nested causal modelling of the full UN cross-section with target = maximal GDP (Sid).
+  - The 25% cap is explicitly a limiting factor placed on projections to control volatility; the regression on the data alone suggested a value closer to 0.33.
+  - Example for one lever: "most of the 9 levers dont carry a high annual cost, they are all force multipliers of economic velocity. ... though it may not be apparent why whistleblower protections would have a causal relationship with gdp, one must simply make their protection the law and listen for the whistles to blow and tell you where the corruption is in your government."
 
-### v2026.4 (Previous — Malthus falsification, geodesic population model, and back-matter expansion)
+- The nine levers themselves are described in the modelling section as simple binary conditions (present or absent). When present, each is a low-cost force multiplier for economic velocity. Full "why GDP grows" explanations are centralized here. A user can read the 9 levers once and immediately understand the value they are missing and what concrete action (pass and enforce the law) their society can take.
 
-**Note**: The `outputs/atlas/` directory always holds the most current of each part. Run `--front --regions --concat-only` after descriptive or back-matter changes; `--nations` only when the underlying per-country data or profile layout changes.
+- Every number in the atlas is a concrete dollar figure (RTLDI lost GDP). The main cartographic page shows the global 9-indicator lost-GDP breakdown + planet total. Nation pages and region summaries do the same.
 
-### v2026.3 (Previous — equation refinement + contextual bounding)
+- Back matter is minimal and useful: data attribution, short note on the conditional nature of Malthusian outcomes, alphabetical index of terms (includes the 9 indicators), credits.
 
-**RTLDI ATLAS 2026 v3** — modular parts in `outputs/atlas/`, full ebook via concat.
+- Anticipated adversarial responses ("turtleneck sweater" correlation objections, "RTLDI can exceed entire GDP", "no credit for baseline", methodology skepticism) are baked into the design via the 25% cap, the linear floor on the Conservative Marginal Coefficient (η=0.30), the transparent single-section derivation, and the first-principles lever language. Nothing distracts or loses gatekeepers.
 
-- Added explicit **contextual bounding** (25% institutional share cap) to answer the baseline/omitted-factors critique.
-- Bounded equation: `ΔG = min( η × (1 − R) × G₀ , 0.25 × G₀ )` with η = 0.30.
-- New front-matter "Contextual Bounding" section with archetypal nation studies (Qatar, South Korea, Singapore, Botswana, etc.) and the 25% cap rationale.
-- All figures, descriptions, and index updated to use bounded values (raw global ~18.76T → ~17.49T after cap).
-- 4-part system and 2026 data rule unchanged.
+- 4-part modular system (front / regions / nations / back) + `--concat-only` for the release ebook remains the fast-iteration and final-release workflow.
 
-See prior notes for full details on v2026.3.
+The Quick Start below (with the required choropleth step) reproduces the attached release ebook exactly.
 
-### v2026.2
+See the [full Releases page](https://github.com/SJAH9/rtldi-atlas/releases) for v2026.5 and earlier.
 
-**RTLDI ATLAS 2026 v2** — 4-part modular system + region-page UX and map fixes (see prior release notes). Full concatenated ebook was 233–236 pages depending on exact front-matter length. Improvements to region pages (text flow, table positioning, aspect-corrected choropleths) noted for replication on nation pages.
+### v2026.5 and earlier
 
-### v2026.1
-
-**RTLDI ATLAS 2026 Release 1** — [View on GitHub](https://github.com/SJAH9/rtldi-atlas/releases/tag/v2026.1)
-
-- Initial full PDF ebook with all 193 nation profiles, UN Regional Summaries, global/regional choropleths (Mollweide), 3-year trend plots, and diagnostic guide.
-- First public release of the 4-part generation pipeline and reproducible build.
-
-See the full history of releases on the [Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
+Previous releases contained longer back-matter appendices (expanded Malthus/geodesic framing) that have been trimmed for the public launch version. The 4-part system, 2026 data rule, core equation, and all per-nation/region data are continuous. The current version is the one prepared for broad accessibility.
 
 ## Goals
 - Transparent, data-driven computation of RTLP (R) and RTLDI (ΔG per capita + aggregate) for every UN member.
@@ -135,13 +121,15 @@ python3 -m src.generate_atlas_ebook
 - The four main PDFs exist and `RTLDI_ATLAS_2026_ebook.pdf` is the largest.
 - `outputs/figures/` contains the global choropleth PNG and the `regional_choropleths/` directory with 22 PNGs.
 - Open (or text-extract) the ebook and confirm it contains:
-  - The full expanded Malthus appendix with "choice framing", f³ scaling, "investible", whistleblower protections, "Malthusian path vs high-RTLP path", "expansion of corruption or the stimulation of domestic industrial productivity".
-  - Explicit references to the 25% institutional-share cap / contextual bounding.
-  - All 9 RTLP indicators with descriptions.
-  - Country profiles and regional summaries.
+  - The "Nested Causal Modelling/Mapping" section (discipline explanation, three laws of the continuum, R 0–1, Sid's modelling for maximal GDP, 25% cap described as volatility limiter with data ~0.33, whistleblower example "make their protection the law and listen for the whistles to blow and tell you where the corruption is").
+  - The nine levers described as simple present/absent binary conditions and low-cost force multipliers of economic velocity (all "why they grow GDP" justification centralized here).
+  - Concrete high-dollar RTLDI lost-GDP figures on the global cartographic page (with 9-indicator breakdown + planet total), every region summary, and every nation page.
+  - Short Malthus note in the back matter (no long geodesic, f³, or extended "choice framing" language).
+  - Alphabetical index of terms that includes the 9 indicators themselves.
+  - All 193 nation profiles and 22 regional summaries.
 - No placeholder text like "[Global map could not be embedded]" appears.
 
-If you skip the `generate_enclosure_map` step, the PDFs will still contain all text, tables, and the Malthus appendix, but the choropleth images will be missing or replaced by placeholders. This is why the map step is required to match the released version.
+If you skip the `generate_enclosure_map` step, the PDFs will still contain all text, tables, and the modelling section, but the choropleth images will be missing or replaced by placeholders. This is why the map step is required to match the released version.
 
 You can also iterate on sections without a full rebuild:
 ```bash
@@ -188,117 +176,5 @@ Produces:
 
 All outputs carry the exact 2026 rule footnote: V-Dem components 2024 + 2026 G₀ baseline. See the committed example in `outputs/figures/rtl_di_enclosure_strength_2026_choropleth.*`.
 
-## Current Status
-See the private repo history for the full development log. The public launch version will include the 2026 ATLAS (tables + 206-page print ebook), enclosure strength choropleth maps, improved NGO UX, and full documentation.
-
-## Project Layout (committed files only)
-```
-.
-├── .gitignore          # ensures no data sets are committed
-├── README.md
-├── data/raw/
-│   └── un_member_states.csv   # tiny canonical list (committed)
-├── src/                # the full pipeline
-├── docs/               # specs + crosswalk + methodology
-├── outputs/atlas/      # example 2023/2026 real ATLAS (committed as demo)
-├── outputs/figures/    # committed example choropleth of enclosure strength (R) for 2026
-└── ...
-```
-
-Large V-Dem CSVs, WB bulk downloads, and generated 202x atlases are intentionally **not** in the repo.
-
-## Core RTLDI (from source)
-See `docs/RTLDI_SPEC.md`.
-
-ΔG (per capita) = η × (1 − R) × G0  (η≈0.30 from population-weighted current UN data) 
-Total = ΔG × population
-
-R is computed from the exact 9 binary RTLP questions mapped to V-Dem + WB variables (see `docs/indicator_crosswalk.md`).
-
-## Updating to 2026+
-- Set `--year 2026` (or future).
-- Provide the latest V-Dem release CSV (when published).
-- WB data is live via API and will reflect the most recent releases.
-- The crosswalk and binarization thresholds are versioned in docs/ for transparency and sensitivity analysis.
-
-## License / Attribution
-- RTLDI equations, 9 indicators, paradigm: © Sid J.A. Hubbard (Zenodo 10.5281/zenodo.19468550)
-- Code: MIT (or similar — to be confirmed at public launch)
-- V-Dem & World Bank data: follow their respective terms (open for research / with attribution)
-
-This repo was initialized privately and will be made public at launch.
-
-## Data Sources (target)
-- **V-Dem Dataset** (Country-Year, latest release): https://www.v-dem.net/data/the-v-dem-dataset/ — rich indicators on rule of law, judicial independence, physical violence (killings, torture), freedom of expression, arbitrary power, etc.
-- **World Bank World Development Indicators (WDI)**: GDP per capita (current USD or constant), population, and socioeconomic proxies (poverty, health access, undernourishment, etc.) for indicator #9 and G0.
-- UN Member States: Official list (193) for filtering and canonical names/ISO3 codes.
-
-## Key Design Decisions (to be refined)
-- **Binarization**: How to turn V-Dem continuous/ordinal scores into the 9 "yes/no". Default proposal: literature- or distribution-based cutoffs (e.g. ≥ median of democracies or ≥0.5 on 0-1 scales). Fully documented + sensitivity analysis.
-- **Missing data**: Conservative rules (e.g. treat missing component as 0 for protection, or use multiple imputation / last-observation; flag heavily).
-- **Year**: Primary "ATLAS snapshot" = most recent year with good coverage (e.g. 2023 or 2024 depending on V-Dem v14+). Also produce multi-year panel.
-- **η**: Base = 0.30 (population-weighted empirical from 2026 data: ~30.5% higher g0 per RTLP indicator in weighted log regression across 187 nations); the original 0.05 was a conservative structural parameter from source analysis. Use --eta to override for scenarios.
-- **Output units**: USD (current or constant as per WB series chosen). Document choice.
-- **Sovereignty filter**: Strictly the 193 UN members (excludes observers, disputed territories unless matching UN list).
-
-## Getting Started / Running
-(Once implemented)
-```bash
-# e.g.
-python -m src.fetch_un_members
-python -m src.fetch_vdem --year 2023
-python -m src.fetch_wdi
-python -m src.build_rtl_di_atlas --year 2023 --output outputs/atlas/rtl_di_atlas_2023.csv
-```
-
-See notebooks/ for exploratory mapping.
-
-## Contributing to Indicator Mapping
-The heart of the project is a defensible, transparent crosswalk from the 9 questions → V-Dem (and WB) variables. See future `docs/indicator_crosswalk.md`.
-
-All decisions must be:
-- Justified with reference to V-Dem codebook / question wording.
-- Reversible / sensitivity-testable.
-- Aligned with the spirit of the source document (protection of life against arbitrary state or structural violence/interruption).
-
-## License / Attribution
-- The RTLDI equations, 9 indicators, and conceptual framework © Sid J.A. Hubbard (per the Zenodo deposit).
-- Code and data pipeline in this repo: to be decided (likely MIT or similar).
-- V-Dem data: see their license/terms (usually CC or academic use).
-- World Bank: open data, attribution required.
-
-## Contact / Notes
-This worktree (rtldi-3) is dedicated to the ATLAS. Related to the "Causality and Attraction" / RTLDI thread in the source.
-
-Initial work: 2026-06-03.
-
----
-
 *Built with the document as the north star. The map is the territory only when the data is honest.*
 
-## LaTeX Design Refinement (in progress)
-
-A parallel LaTeX-based version of the atlas is under active refinement in the `latex/` directory (generated by `src/generate_atlas_latex.py`).
-
-**Goals of the LaTeX path**:
-- Superior typography and micro-typographic control (booktabs tables, proper long tables for the 193-row summary, consistent spacing).
-- Better support for complex layouts (tcolorbox/tikz for economic impact callouts, side-by-side images for trend + regional zoom on nation pages, precise figure placement).
-- Explicit embodiment of the source document's cartographic philosophy (the new "Cartographic Approach and the Nested Map" section in the PDF, the hybrid Mollweide + canonical global view model).
-- Professional print quality while preserving 100% fidelity to the 2026 data rule, the 9 verbatim RTLP indicators, the ΔG equation, the per-country breakdowns, the regional aggregates + member tables with totals rows, the 3-year trends, and the Mollweide choropleths.
-
-**Current status (begin phase)**:
-- `latex/main.tex` is generated from the same 2026 data (CSV + breakdown JSON) used by the fpdf version.
-- Includes the full global summary table (longtable + booktabs), the hybrid cartographic section with the canonical global choropleth embedded, methodology, diagnostic guide content, and design stubs/examples for regional pages (with the nations table + RTLP/G0/Pop/RTLD I + totals row) and nation profiles.
-- Images are referenced from `../outputs/figures/` (global canonical copied into `latex/figures/` during generation; full set of per-nation/regional/trend PNGs can be copied for a self-contained build).
-
-**To compile (requires LaTeX — MacTeX / TeX Live recommended)**:
-```bash
-python -m src.generate_atlas_latex   # (re)generates latex/main.tex and copies key images
-cd latex
-lualatex -interaction=nonstopmode main.tex   # run 2–3 times for TOC, references, etc.
-# or pdflatex (core packages are standard)
-```
-
-The LaTeX source is intended to be the foundation for ongoing design refinement (better fonts, custom tikz elements for the 9 indicators or nested-enclosure diagrams, improved index, vector output options, etc.) while the Python/fpdf version remains for quick iteration and the "easy to regenerate with your own data" promise to NGOs.
-
-All core content, data vintage rules, equations, and the hybrid cartographic model are identical between the two versions.

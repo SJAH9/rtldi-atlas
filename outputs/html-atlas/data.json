@@ -1,0 +1,5016 @@
+{
+  "global": {
+    "total_lost": 15868290927502.209,
+    "indicator_losts": [
+      2782539395955.4893,
+      2827613877618.6475,
+      1359009631141.8037,
+      976672449550.0797,
+      2904415613365.513,
+      1359009631141.8037,
+      976672449550.0797,
+      965720916447.4655,
+      1716636962731.328
+    ],
+    "indicator_names": [
+      "Existence of Legal Protections",
+      "Independent Judiciary",
+      "Law Enforcement Accountability",
+      "Protection Against Arbitrary Detention",
+      "Freedom from Torture and Inhumane Treatment",
+      "Civilian Protection in Conflict Zones",
+      "Access to Justice",
+      "Freedom of Expression and Whistleblower Protections",
+      "Socioeconomic Conditions"
+    ],
+    "indicator_descs": [
+      "Provisions explicitly protecting the right to life",
+      "Independent judiciary capable of upholding right-to-life laws",
+      "Law enforcement agencies accountable for unlawful killings",
+      "Arbitrary detention prohibited with legal recourse",
+      "Measures in place to prevent torture",
+      "Mechanisms protecting civilians in conflict areas",
+      "Fair access to remedies for right-to-life violations",
+      "Expression and whistleblower rights upheld",
+      "Access to healthcare, food, and shelter adequate to sustain life"
+    ]
+  },
+  "regions": {
+    "Eastern Asia": {
+      "name": "Eastern Asia",
+      "slug": "eastern_asia",
+      "n": 5,
+      "total_pop": 1614725047.0,
+      "weighted_r": 0.0631,
+      "mean_r": 0.3111,
+      "total_lost": 5466960792279.805,
+      "best": {
+        "name": "Japan",
+        "r": 0.67
+      },
+      "worst": {
+        "name": "China",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.2,
+          "n_yes": 1,
+          "attributable": 583967290837.3534
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 718220541622.3727
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.4,
+          "n_yes": 2,
+          "attributable": 583174139503.203
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.6,
+          "n_yes": 3,
+          "attributable": 520661199189.6428
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 718220541622.3727
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.4,
+          "n_yes": 2,
+          "attributable": 583174139503.203
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.6,
+          "n_yes": 3,
+          "attributable": 520661199189.6428
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.6,
+          "n_yes": 3,
+          "attributable": 520661199189.6428
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 718220541622.3727
+        }
+      ],
+      "para1": "The Eastern Asia region has a population-weighted average RTLP score of 0.06. Across its 5 member countries, roughly 6% of the nine core protections are in place on average, resulting in an estimated $5,467.0 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Japan (R=0.67). Lowest: China (R=0.00).",
+      "para2": "Weaker indicators (especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $2,154.7 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "CHN",
+          "country": "China",
+          "r": 0.0,
+          "lost": 4685950792706.785
+        },
+        {
+          "iso3": "JPN",
+          "country": "Japan",
+          "r": 0.667,
+          "lost": 402759752355.05774
+        },
+        {
+          "iso3": "KOR",
+          "country": "South Korea",
+          "r": 0.333,
+          "lost": 375077641881.3608
+        },
+        {
+          "iso3": "MNG",
+          "country": "Mongolia",
+          "r": 0.556,
+          "lost": 3172605336.6017556
+        },
+        {
+          "iso3": "PRK",
+          "country": "North Korea",
+          "r": 0.0,
+          "lost": 0.0
+        }
+      ]
+    },
+    "Northern America": {
+      "name": "Northern America",
+      "slug": "northern_america",
+      "n": 2,
+      "total_pop": 381399587.0,
+      "weighted_r": 0.6787,
+      "mean_r": 0.7222,
+      "total_lost": 3024671401515.3687,
+      "best": null,
+      "worst": null,
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 1033153098578.8317
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.5,
+          "n_yes": 1,
+          "attributable": 958365204357.7062
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.5,
+          "n_yes": 1,
+          "attributable": 958365204357.7062
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.5,
+          "n_yes": 1,
+          "attributable": 74787894221.12544
+        }
+      ],
+      "para1": "The Northern America region has a population-weighted average RTLP score of 0.68. Across its 2 member countries, roughly 68% of the nine core protections are in place on average, resulting in an estimated $3,024.7 billion in annual lost GDP. The region shows strength in Law Enforcement Accountability, Protection Against Arbitrary Detention.",
+      "para2": "Weaker indicators (especially Socioeconomic Conditions, Existence of Legal Protections) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $2,066.3 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "USA",
+          "country": "United States",
+          "r": 0.667,
+          "lost": 2875095613073.1177
+        },
+        {
+          "iso3": "CAN",
+          "country": "Canada",
+          "r": 0.778,
+          "lost": 149575788442.25095
+        }
+      ]
+    },
+    "Southern Asia": {
+      "name": "Southern Asia",
+      "slug": "southern_asia",
+      "n": 9,
+      "total_pop": 2062868926.0,
+      "weighted_r": 0.0085,
+      "mean_r": 0.1481,
+      "total_lost": 1336514027548.7717,
+      "best": {
+        "name": "Sri Lanka",
+        "r": 0.33
+      },
+      "worst": {
+        "name": "India",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 150190132483.57315
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 150190132483.57315
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 150190132483.57315
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.444,
+          "n_yes": 4,
+          "attributable": 145124410882.44437
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 150190132483.57315
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 150190132483.57315
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.444,
+          "n_yes": 4,
+          "attributable": 145124410882.44437
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.444,
+          "n_yes": 4,
+          "attributable": 145124410882.44437
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 150190132483.57315
+        }
+      ],
+      "para1": "The Southern Asia region has a population-weighted average RTLP score of 0.01. Across its 9 member countries, roughly 1% of the nine core protections are in place on average, resulting in an estimated $1,336.5 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Sri Lanka (R=0.33). Lowest: India (R=0.00).",
+      "para2": "Weaker indicators (especially Civilian Protection in Conflict Zones, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $450.6 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "IND",
+          "country": "India",
+          "r": 0.0,
+          "lost": 977472883464.5205
+        },
+        {
+          "iso3": "IRN",
+          "country": "Iran",
+          "r": 0.0,
+          "lost": 118813022303.85385
+        },
+        {
+          "iso3": "BGD",
+          "country": "Bangladesh",
+          "r": 0.0,
+          "lost": 112529858017.21286
+        },
+        {
+          "iso3": "PAK",
+          "country": "Pakistan",
+          "r": 0.0,
+          "lost": 92892500030.31667
+        },
+        {
+          "iso3": "LKA",
+          "country": "Sri Lanka",
+          "r": 0.333,
+          "lost": 19792637101.92999
+        },
+        {
+          "iso3": "NPL",
+          "country": "Nepal",
+          "r": 0.333,
+          "lost": 8582853657.342179
+        },
+        {
+          "iso3": "AFG",
+          "country": "Afghanistan",
+          "r": 0.0,
+          "lost": 4411434126.095313
+        },
+        {
+          "iso3": "MDV",
+          "country": "Maldives",
+          "r": 0.333,
+          "lost": 1412321653.450905
+        },
+        {
+          "iso3": "BTN",
+          "country": "Bhutan",
+          "r": 0.333,
+          "lost": 606517194.0496699
+        }
+      ]
+    },
+    "Eastern Europe": {
+      "name": "Eastern Europe",
+      "slug": "eastern_europe",
+      "n": 10,
+      "total_pop": 280870627.0,
+      "weighted_r": 0.3057,
+      "mean_r": 0.5111,
+      "total_lost": 798941424145.675,
+      "best": {
+        "name": "Czechia",
+        "r": 0.89
+      },
+      "worst": {
+        "name": "Belarus",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.1,
+          "n_yes": 1,
+          "attributable": 135546360673.48935
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.1,
+          "n_yes": 1,
+          "attributable": 146507484742.65027
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.6,
+          "n_yes": 6,
+          "attributable": 79473411325.24615
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.8,
+          "n_yes": 8,
+          "attributable": 68893744655.06271
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.2,
+          "n_yes": 2,
+          "attributable": 128122269375.96799
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.6,
+          "n_yes": 6,
+          "attributable": 79473411325.24615
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.8,
+          "n_yes": 8,
+          "attributable": 68893744655.06271
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.7,
+          "n_yes": 7,
+          "attributable": 75695299465.91331
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.7,
+          "n_yes": 7,
+          "attributable": 16335697927.036207
+        }
+      ],
+      "para1": "The Eastern Europe region has a population-weighted average RTLP score of 0.31. Across its 10 member countries, roughly 31% of the nine core protections are in place on average, resulting in an estimated $798.9 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Czechia (R=0.89). Lowest: Belarus (R=0.00).",
+      "para2": "Weaker indicators (especially Existence of Legal Protections, Independent Judiciary) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $410.2 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "RUS",
+          "country": "Russia",
+          "r": 0.111,
+          "lost": 534269542691.18774
+        },
+        {
+          "iso3": "POL",
+          "country": "Poland",
+          "r": 0.667,
+          "lost": 91776710614.67624
+        },
+        {
+          "iso3": "UKR",
+          "country": "Ukraine",
+          "r": 0.222,
+          "lost": 47610883675.954216
+        },
+        {
+          "iso3": "ROU",
+          "country": "Romania",
+          "r": 0.667,
+          "lost": 38256421798.88657
+        },
+        {
+          "iso3": "BLR",
+          "country": "Belarus",
+          "r": 0.0,
+          "lost": 18990466367.978233
+        },
+        {
+          "iso3": "HUN",
+          "country": "Hungary",
+          "r": 0.667,
+          "lost": 22272273892.564068
+        },
+        {
+          "iso3": "BGR",
+          "country": "Bulgaria",
+          "r": 0.444,
+          "lost": 18890559296.664185
+        },
+        {
+          "iso3": "SVK",
+          "country": "Slovakia",
+          "r": 0.667,
+          "lost": 14093407653.237505
+        },
+        {
+          "iso3": "CZE",
+          "country": "Czechia",
+          "r": 0.889,
+          "lost": 11567802097.61598
+        },
+        {
+          "iso3": "MDA",
+          "country": "Moldova",
+          "r": 0.778,
+          "lost": 1213356056.9101136
+        }
+      ]
+    },
+    "Central America": {
+      "name": "Central America",
+      "slug": "central_america",
+      "n": 8,
+      "total_pop": 183409961.0,
+      "weighted_r": 0.2175,
+      "mean_r": 0.25,
+      "total_lost": 497121650902.74133,
+      "best": {
+        "name": "Costa Rica",
+        "r": 0.89
+      },
+      "worst": {
+        "name": "El Salvador",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.125,
+          "n_yes": 1,
+          "attributable": 71078051542.04442
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 74256398981.2643
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.25,
+          "n_yes": 2,
+          "attributable": 68193919570.98618
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.25,
+          "n_yes": 2,
+          "attributable": 68193919570.98618
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.25,
+          "n_yes": 2,
+          "attributable": 68193919570.98618
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.25,
+          "n_yes": 2,
+          "attributable": 68193919570.98618
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.25,
+          "n_yes": 2,
+          "attributable": 68193919570.98618
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.625,
+          "n_yes": 5,
+          "attributable": 1618404854.6553497
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.25,
+          "n_yes": 2,
+          "attributable": 9199197669.846289
+        }
+      ],
+      "para1": "The Central America region has a population-weighted average RTLP score of 0.22. Across its 8 member countries, roughly 22% of the nine core protections are in place on average, resulting in an estimated $497.1 billion in annual lost GDP. The region shows strength in Freedom of Expression and Whistleblower . Highest: Costa Rica (R=0.89). Lowest: El Salvador (R=0.00).",
+      "para2": "Weaker indicators (especially Existence of Legal Protections, Independent Judiciary) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $154.5 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "MEX",
+          "country": "Mexico",
+          "r": 0.222,
+          "lost": 433151977105.38696
+        },
+        {
+          "iso3": "GTM",
+          "country": "Guatemala",
+          "r": 0.111,
+          "lost": 28299895289.550674
+        },
+        {
+          "iso3": "SLV",
+          "country": "El Salvador",
+          "r": 0.0,
+          "lost": 8841240000.000008
+        },
+        {
+          "iso3": "HND",
+          "country": "Honduras",
+          "r": 0.111,
+          "lost": 9273391463.51093
+        },
+        {
+          "iso3": "PAN",
+          "country": "Panama",
+          "r": 0.667,
+          "lost": 8652395913.174713
+        },
+        {
+          "iso3": "NIC",
+          "country": "Nicaragua",
+          "r": 0.0,
+          "lost": 4923495741.898139
+        },
+        {
+          "iso3": "CRI",
+          "country": "Costa Rica",
+          "r": 0.889,
+          "lost": 3178347439.219882
+        },
+        {
+          "iso3": "BLZ",
+          "country": "Belize",
+          "r": 0.0,
+          "lost": 800907950.0000004
+        }
+      ]
+    },
+    "Western Asia": {
+      "name": "Western Asia",
+      "slug": "western_asia",
+      "n": 17,
+      "total_pop": 303355980.0,
+      "weighted_r": 0.086,
+      "mean_r": 0.2092,
+      "total_lost": 1132572994956.3474,
+      "best": {
+        "name": "Cyprus",
+        "r": 0.78
+      },
+      "worst": {
+        "name": "Saudi Arabia",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 143832274405.15988
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 143832274405.15988
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.059,
+          "n_yes": 1,
+          "attributable": 142081254538.42056
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.529,
+          "n_yes": 9,
+          "attributable": 103394735953.21223
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.059,
+          "n_yes": 1,
+          "attributable": 142081254538.42056
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.059,
+          "n_yes": 1,
+          "attributable": 142081254538.42056
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.529,
+          "n_yes": 9,
+          "attributable": 103394735953.21223
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.412,
+          "n_yes": 7,
+          "attributable": 114271397157.61302
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.235,
+          "n_yes": 4,
+          "attributable": 97603813466.7283
+        }
+      ],
+      "para1": "The Western Asia region has a population-weighted average RTLP score of 0.09. Across its 17 member countries, roughly 9% of the nine core protections are in place on average, resulting in an estimated $1,132.6 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Cyprus (R=0.78). Lowest: Saudi Arabia (R=0.00).",
+      "para2": "Weaker indicators (especially Existence of Legal Protections, Independent Judiciary) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $429.7 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "SAU",
+          "country": "Saudi Arabia",
+          "r": 0.0,
+          "lost": 309951133333.3331
+        },
+        {
+          "iso3": "TUR",
+          "country": "T\u00fcrkiye",
+          "r": 0.111,
+          "lost": 339780942193.53107
+        },
+        {
+          "iso3": "ARE",
+          "country": "United Arab Emirates",
+          "r": 0.0,
+          "lost": 138081211708.64542
+        },
+        {
+          "iso3": "ISR",
+          "country": "Israel",
+          "r": 0.333,
+          "lost": 108075984252.33615
+        },
+        {
+          "iso3": "IRQ",
+          "country": "Iraq",
+          "r": 0.0,
+          "lost": 69910314403.84612
+        },
+        {
+          "iso3": "QAT",
+          "country": "Qatar",
+          "r": 0.222,
+          "lost": 51137948717.94869
+        },
+        {
+          "iso3": "KWT",
+          "country": "Kuwait",
+          "r": 0.333,
+          "lost": 32045454610.666798
+        },
+        {
+          "iso3": "OMN",
+          "country": "Oman",
+          "r": 0.222,
+          "lost": 24998679712.856888
+        },
+        {
+          "iso3": "AZE",
+          "country": "Azerbaijan",
+          "r": 0.0,
+          "lost": 18578970588.235283
+        },
+        {
+          "iso3": "BHR",
+          "country": "Bahrain",
+          "r": 0.0,
+          "lost": 11777433577.127653
+        },
+        {
+          "iso3": "JOR",
+          "country": "Jordan",
+          "r": 0.333,
+          "lost": 10670457915.492949
+        },
+        {
+          "iso3": "GEO",
+          "country": "Georgia",
+          "r": 0.444,
+          "lost": 5698237257.499256
+        },
+        {
+          "iso3": "ARM",
+          "country": "Armenia",
+          "r": 0.444,
+          "lost": 4325879230.005344
+        },
+        {
+          "iso3": "LBN",
+          "country": "Lebanon",
+          "r": 0.333,
+          "lost": 4038307721.344019
+        },
+        {
+          "iso3": "CYP",
+          "country": "Cyprus",
+          "r": 0.778,
+          "lost": 3502039733.478647
+        },
+        {
+          "iso3": "SYR",
+          "country": "Syria",
+          "r": 0.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "YEM",
+          "country": "Yemen",
+          "r": 0.0,
+          "lost": 0.0
+        }
+      ]
+    },
+    "Northern Europe": {
+      "name": "Northern Europe",
+      "slug": "northern_europe",
+      "n": 10,
+      "total_pop": 108873930.0,
+      "weighted_r": 0.7818,
+      "mean_r": 0.9333,
+      "total_lost": 375369758198.06805,
+      "best": {
+        "name": "Norway",
+        "r": 1.0
+      },
+      "worst": {
+        "name": "United Kingdom",
+        "r": 0.67
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.8,
+          "n_yes": 8,
+          "attributable": 125696741999.84964
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.9,
+          "n_yes": 9,
+          "attributable": 2828973850.4454904
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 1.0,
+          "n_yes": 10,
+          "attributable": 0.0
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 1.0,
+          "n_yes": 10,
+          "attributable": 0.0
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.9,
+          "n_yes": 9,
+          "attributable": 122867768149.40414
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 1.0,
+          "n_yes": 10,
+          "attributable": 0.0
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 1.0,
+          "n_yes": 10,
+          "attributable": 0.0
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 1.0,
+          "n_yes": 10,
+          "attributable": 0.0
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.8,
+          "n_yes": 8,
+          "attributable": 123976274198.36874
+        }
+      ],
+      "para1": "The Northern Europe region has a population-weighted average RTLP score of 0.78. Across its 10 member countries, roughly 78% of the nine core protections are in place on average, resulting in an estimated $375.4 billion in annual lost GDP. The region shows strength in Law Enforcement Accountability, Protection Against Arbitrary Detention. Highest: Norway (R=1.00). Lowest: United Kingdom (R=0.67).",
+      "para2": "Weaker indicators (especially Existence of Legal Protections, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $372.5 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "GBR",
+          "country": "United Kingdom",
+          "r": 0.667,
+          "lost": 368603304448.21246
+        },
+        {
+          "iso3": "LTU",
+          "country": "Lithuania",
+          "r": 0.778,
+          "lost": 5657947700.890983
+        },
+        {
+          "iso3": "ISL",
+          "country": "Iceland",
+          "r": 0.889,
+          "lost": 1108506048.964607
+        },
+        {
+          "iso3": "NOR",
+          "country": "Norway",
+          "r": 1.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "IRL",
+          "country": "Ireland",
+          "r": 1.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "LVA",
+          "country": "Latvia",
+          "r": 1.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "DNK",
+          "country": "Denmark",
+          "r": 1.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "EST",
+          "country": "Estonia",
+          "r": 1.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "FIN",
+          "country": "Finland",
+          "r": 1.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "SWE",
+          "country": "Sweden",
+          "r": 1.0,
+          "lost": 0.0
+        }
+      ]
+    },
+    "South America": {
+      "name": "South America",
+      "slug": "south_america",
+      "n": 12,
+      "total_pop": 435299309.0,
+      "weighted_r": 0.4207,
+      "mean_r": 0.463,
+      "total_lost": 679720446296.192,
+      "best": {
+        "name": "Chile",
+        "r": 1.0
+      },
+      "worst": {
+        "name": "Venezuela",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.167,
+          "n_yes": 2,
+          "attributable": 129390931782.3257
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.167,
+          "n_yes": 2,
+          "attributable": 129390931782.3257
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.333,
+          "n_yes": 4,
+          "attributable": 128421615617.51802
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.833,
+          "n_yes": 10,
+          "attributable": 5042901573.39917
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.167,
+          "n_yes": 2,
+          "attributable": 129390931782.3257
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.333,
+          "n_yes": 4,
+          "attributable": 128421615617.51802
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.833,
+          "n_yes": 10,
+          "attributable": 5042901573.39917
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.917,
+          "n_yes": 11,
+          "attributable": 3327860090.49396
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.417,
+          "n_yes": 5,
+          "attributable": 21290756476.886356
+        }
+      ],
+      "para1": "The South America region has a population-weighted average RTLP score of 0.42. Across its 12 member countries, roughly 42% of the nine core protections are in place on average, resulting in an estimated $679.7 billion in annual lost GDP. The region shows strength in Freedom of Expression and Whistleblower , Protection Against Arbitrary Detention. Highest: Chile (R=1.00). Lowest: Venezuela (R=0.00).",
+      "para2": "Weaker indicators (especially Independent Judiciary, Freedom from Torture and Inhumane Treatm) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $388.2 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "BRA",
+          "country": "Brazil",
+          "r": 0.444,
+          "lost": 364303608157.31177
+        },
+        {
+          "iso3": "ARG",
+          "country": "Argentina",
+          "r": 0.444,
+          "lost": 106394242556.6731
+        },
+        {
+          "iso3": "COL",
+          "country": "Colombia",
+          "r": 0.444,
+          "lost": 69803025813.21185
+        },
+        {
+          "iso3": "PER",
+          "country": "Peru",
+          "r": 0.333,
+          "lost": 57844393812.588135
+        },
+        {
+          "iso3": "VEN",
+          "country": "Venezuela",
+          "r": 0.0,
+          "lost": 29950740814.44564
+        },
+        {
+          "iso3": "ECU",
+          "country": "Ecuador",
+          "r": 0.333,
+          "lost": 24935214940.000004
+        },
+        {
+          "iso3": "BOL",
+          "country": "Bolivia",
+          "r": 0.111,
+          "lost": 13720331863.241682
+        },
+        {
+          "iso3": "PRY",
+          "country": "Paraguay",
+          "r": 0.333,
+          "lost": 8891623679.488916
+        },
+        {
+          "iso3": "GUY",
+          "country": "Guyana",
+          "r": 0.556,
+          "lost": 3288361310.9512343
+        },
+        {
+          "iso3": "SUR",
+          "country": "Suriname",
+          "r": 0.556,
+          "lost": 588903348.2795025
+        },
+        {
+          "iso3": "CHL",
+          "country": "Chile",
+          "r": 1.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "URY",
+          "country": "Uruguay",
+          "r": 1.0,
+          "lost": 0.0
+        }
+      ]
+    },
+    "South-eastern Asia": {
+      "name": "South-eastern Asia",
+      "slug": "south-eastern_asia",
+      "n": 11,
+      "total_pop": 695353901.0,
+      "weighted_r": 0.2569,
+      "mean_r": 0.2525,
+      "total_lost": 756211087622.4031,
+      "best": {
+        "name": "Singapore",
+        "r": 0.67
+      },
+      "worst": {
+        "name": "Vietnam",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.091,
+          "n_yes": 1,
+          "attributable": 109983266696.66257
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 128229488226.3908
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.273,
+          "n_yes": 3,
+          "attributable": 95846846231.85916
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.455,
+          "n_yes": 5,
+          "attributable": 33916259299.414932
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.182,
+          "n_yes": 2,
+          "attributable": 109921079746.14879
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.273,
+          "n_yes": 3,
+          "attributable": 95846846231.85916
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.455,
+          "n_yes": 5,
+          "attributable": 33916259299.414932
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.364,
+          "n_yes": 4,
+          "attributable": 52162480829.14317
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.182,
+          "n_yes": 2,
+          "attributable": 96388561061.5097
+        }
+      ],
+      "para1": "The South-eastern Asia region has a population-weighted average RTLP score of 0.26. Across its 11 member countries, roughly 26% of the nine core protections are in place on average, resulting in an estimated $756.2 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Singapore (R=0.67). Lowest: Vietnam (R=0.00).",
+      "para2": "Weaker indicators (especially Existence of Legal Protections, Independent Judiciary) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $334.6 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "IDN",
+          "country": "Indonesia",
+          "r": 0.333,
+          "lost": 279260019638.1944
+        },
+        {
+          "iso3": "VNM",
+          "country": "Vietnam",
+          "r": 0.0,
+          "lost": 119097057576.79385
+        },
+        {
+          "iso3": "THA",
+          "country": "Thailand",
+          "r": 0.111,
+          "lost": 131629414710.4209
+        },
+        {
+          "iso3": "PHL",
+          "country": "Philippines",
+          "r": 0.444,
+          "lost": 76936251630.3924
+        },
+        {
+          "iso3": "MYS",
+          "country": "Malaysia",
+          "r": 0.556,
+          "lost": 56296934057.158516
+        },
+        {
+          "iso3": "SGP",
+          "country": "Singapore",
+          "r": 0.667,
+          "lost": 54738664589.18467
+        },
+        {
+          "iso3": "MMR",
+          "country": "Myanmar",
+          "r": 0.0,
+          "lost": 18517087380.952435
+        },
+        {
+          "iso3": "KHM",
+          "country": "Cambodia",
+          "r": 0.0,
+          "lost": 11588161759.310133
+        },
+        {
+          "iso3": "LAO",
+          "country": "Laos",
+          "r": 0.0,
+          "lost": 4125733280.334482
+        },
+        {
+          "iso3": "BRN",
+          "country": "Brunei Darussalam",
+          "r": 0.0,
+          "lost": 3835202148.1199913
+        },
+        {
+          "iso3": "TLS",
+          "country": "Timor-Leste",
+          "r": 0.667,
+          "lost": 186560851.54132056
+        }
+      ]
+    },
+    "Southern Europe": {
+      "name": "Southern Europe",
+      "slug": "southern_europe",
+      "n": 14,
+      "total_pop": 150155462.0,
+      "weighted_r": 0.7051,
+      "mean_r": 0.5635,
+      "total_lost": 430228881098.42725,
+      "best": {
+        "name": "Portugal",
+        "r": 0.89
+      },
+      "worst": {
+        "name": "Andorra",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 168132504423.54135
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.071,
+          "n_yes": 1,
+          "attributable": 157690131587.37128
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.714,
+          "n_yes": 10,
+          "attributable": 3737047594.602068
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.857,
+          "n_yes": 12,
+          "attributable": 168732654.45101255
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.429,
+          "n_yes": 6,
+          "attributable": 93527829272.64465
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.714,
+          "n_yes": 10,
+          "attributable": 3737047594.602068
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.857,
+          "n_yes": 12,
+          "attributable": 168732654.45101255
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.857,
+          "n_yes": 12,
+          "attributable": 168732654.45101255
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.571,
+          "n_yes": 8,
+          "attributable": 2898122662.312833
+        }
+      ],
+      "para1": "The Southern Europe region has a population-weighted average RTLP score of 0.71. Across its 14 member countries, roughly 71% of the nine core protections are in place on average, resulting in an estimated $430.2 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Portugal (R=0.89). Lowest: Andorra (R=0.00).",
+      "para2": "Weaker indicators (especially Independent Judiciary, Existence of Legal Protections) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $419.4 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "ITA",
+          "country": "Italy",
+          "r": 0.667,
+          "lost": 238082507724.35925
+        },
+        {
+          "iso3": "ESP",
+          "country": "Spain",
+          "r": 0.778,
+          "lost": 115044776849.47919
+        },
+        {
+          "iso3": "GRC",
+          "country": "Greece",
+          "r": 0.667,
+          "lost": 25623837177.81182
+        },
+        {
+          "iso3": "SRB",
+          "country": "Serbia",
+          "r": 0.444,
+          "lost": 15016294326.518574
+        },
+        {
+          "iso3": "PRT",
+          "country": "Portugal",
+          "r": 0.889,
+          "lost": 10442372836.170069
+        },
+        {
+          "iso3": "HRV",
+          "country": "Croatia",
+          "r": 0.778,
+          "lost": 6198920688.593912
+        },
+        {
+          "iso3": "SVN",
+          "country": "Slovenia",
+          "r": 0.778,
+          "lost": 4864801013.159068
+        },
+        {
+          "iso3": "BIH",
+          "country": "Bosnia and Herzegovina",
+          "r": 0.556,
+          "lost": 3948476269.71991
+        },
+        {
+          "iso3": "ALB",
+          "country": "Albania",
+          "r": 0.556,
+          "lost": 3606190572.88898
+        },
+        {
+          "iso3": "MKD",
+          "country": "North Macedonia",
+          "r": 0.333,
+          "lost": 3390336449.0840406
+        },
+        {
+          "iso3": "MLT",
+          "country": "Malta",
+          "r": 0.778,
+          "lost": 1664771633.4965005
+        },
+        {
+          "iso3": "AND",
+          "country": "Andorra",
+          "r": 0.0,
+          "lost": 1009960601.3702936
+        },
+        {
+          "iso3": "MNE",
+          "country": "Montenegro",
+          "r": 0.667,
+          "lost": 827001667.0867727
+        },
+        {
+          "iso3": "SMR",
+          "country": "San Marino",
+          "r": 0.0,
+          "lost": 508633288.68881935
+        }
+      ]
+    },
+    "Western Europe": {
+      "name": "Western Europe",
+      "slug": "western_europe",
+      "n": 9,
+      "total_pop": 200859998.0,
+      "weighted_r": 0.8525,
+      "mean_r": 0.6914,
+      "total_lost": 479124219906.0572,
+      "best": {
+        "name": "Luxembourg",
+        "r": 1.0
+      },
+      "worst": {
+        "name": "Monaco",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.667,
+          "n_yes": 6,
+          "attributable": 18367747855.90166
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.667,
+          "n_yes": 6,
+          "attributable": 105889477922.51022
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.778,
+          "n_yes": 7,
+          "attributable": 541390507.0076069
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.778,
+          "n_yes": 7,
+          "attributable": 541390507.0076069
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.556,
+          "n_yes": 5,
+          "attributable": 123715835271.40428
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.778,
+          "n_yes": 7,
+          "attributable": 541390507.0076069
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.778,
+          "n_yes": 7,
+          "attributable": 541390507.0076069
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.778,
+          "n_yes": 7,
+          "attributable": 541390507.0076069
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.444,
+          "n_yes": 4,
+          "attributable": 228444206321.2027
+        }
+      ],
+      "para1": "The Western Europe region has a population-weighted average RTLP score of 0.85. Across its 9 member countries, roughly 85% of the nine core protections are in place on average, resulting in an estimated $479.1 billion in annual lost GDP. The region shows strength in Law Enforcement Accountability, Protection Against Arbitrary Detention. Highest: Luxembourg (R=1.00). Lowest: Monaco (R=0.00).",
+      "para2": "Weaker indicators (especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $458.0 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "FRA",
+          "country": "France",
+          "r": 0.778,
+          "lost": 210696174831.0053
+        },
+        {
+          "iso3": "DEU",
+          "country": "Germany",
+          "r": 0.889,
+          "lost": 156186419260.15616
+        },
+        {
+          "iso3": "NLD",
+          "country": "Netherlands",
+          "r": 0.889,
+          "lost": 40497589952.421875
+        },
+        {
+          "iso3": "AUT",
+          "country": "Austria",
+          "r": 0.778,
+          "lost": 35652714697.788124
+        },
+        {
+          "iso3": "CHE",
+          "country": "Switzerland",
+          "r": 0.889,
+          "lost": 31218806601.61718
+        },
+        {
+          "iso3": "MCO",
+          "country": "Monaco",
+          "r": 0.0,
+          "lost": 2781445843.119856
+        },
+        {
+          "iso3": "LIE",
+          "country": "Liechtenstein",
+          "r": 0.0,
+          "lost": 2091068719.9486058
+        },
+        {
+          "iso3": "LUX",
+          "country": "Luxembourg",
+          "r": 1.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "BEL",
+          "country": "Belgium",
+          "r": 1.0,
+          "lost": 0.0
+        }
+      ]
+    },
+    "Australia and New Zealand": {
+      "name": "Australia and New Zealand",
+      "slug": "australia_and_new_zealand",
+      "n": 2,
+      "total_pop": 32484312.0,
+      "weighted_r": 0.7959,
+      "mean_r": 0.8333,
+      "total_lost": 125807242946.77597,
+      "best": null,
+      "worst": null,
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.5,
+          "n_yes": 1,
+          "attributable": 58567415055.09436
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 1.0,
+          "n_yes": 2,
+          "attributable": 0.0
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 67239827891.681564
+        }
+      ],
+      "para1": "The Australia and New Zealand region has a population-weighted average RTLP score of 0.80. Across its 2 member countries, roughly 80% of the nine core protections are in place on average, resulting in an estimated $125.8 billion in annual lost GDP. The region shows strength in Existence of Legal Protections, Independent Judiciary.",
+      "para2": "Weaker indicators (especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $125.8 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "AUS",
+          "country": "Australia",
+          "r": 0.778,
+          "lost": 117134830110.18877
+        },
+        {
+          "iso3": "NZL",
+          "country": "New Zealand",
+          "r": 0.889,
+          "lost": 8672412836.587212
+        }
+      ]
+    },
+    "Northern Africa": {
+      "name": "Northern Africa",
+      "slug": "northern_africa",
+      "n": 6,
+      "total_pop": 271540834.0,
+      "weighted_r": 0.2211,
+      "mean_r": 0.2407,
+      "total_lost": 211366465110.31503,
+      "best": {
+        "name": "Tunisia",
+        "r": 0.56
+      },
+      "worst": {
+        "name": "Sudan",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 31655754870.246902
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.167,
+          "n_yes": 1,
+          "attributable": 26383804469.9317
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.167,
+          "n_yes": 1,
+          "attributable": 29944678681.6955
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.667,
+          "n_yes": 4,
+          "attributable": 2726655192.4356565
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 31655754870.246902
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.167,
+          "n_yes": 1,
+          "attributable": 29944678681.6955
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.667,
+          "n_yes": 4,
+          "attributable": 2726655192.4356565
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.333,
+          "n_yes": 2,
+          "attributable": 24672728281.3803
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 31655754870.246902
+        }
+      ],
+      "para1": "The Northern Africa region has a population-weighted average RTLP score of 0.22. Across its 6 member countries, roughly 22% of the nine core protections are in place on average, resulting in an estimated $211.4 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Tunisia (R=0.56). Lowest: Sudan (R=0.00).",
+      "para2": "Weaker indicators (especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $95.0 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "EGY",
+          "country": "Egypt",
+          "r": 0.222,
+          "lost": 90780645900.83215
+        },
+        {
+          "iso3": "DZA",
+          "country": "Algeria",
+          "r": 0.222,
+          "lost": 62841865721.78034
+        },
+        {
+          "iso3": "MAR",
+          "country": "Morocco",
+          "r": 0.444,
+          "lost": 26359752001.576008
+        },
+        {
+          "iso3": "SDN",
+          "country": "Sudan",
+          "r": 0.0,
+          "lost": 12418108928.084656
+        },
+        {
+          "iso3": "LBY",
+          "country": "Libya",
+          "r": 0.0,
+          "lost": 12121787803.83625
+        },
+        {
+          "iso3": "TUN",
+          "country": "Tunisia",
+          "r": 0.556,
+          "lost": 6844304754.205613
+        }
+      ]
+    },
+    "Central Asia": {
+      "name": "Central Asia",
+      "slug": "central_asia",
+      "n": 5,
+      "total_pop": 82261723.0,
+      "weighted_r": 0.0784,
+      "mean_r": 0.0889,
+      "total_lost": 121504990315.92477,
+      "best": {
+        "name": "Kyrgyzstan",
+        "r": 0.33
+      },
+      "worst": {
+        "name": "Kazakhstan",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 14093942411.40918
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 14093942411.40918
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 14093942411.40918
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.2,
+          "n_yes": 1,
+          "attributable": 13511333756.100431
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 14093942411.40918
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 14093942411.40918
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.2,
+          "n_yes": 1,
+          "attributable": 13511333756.100431
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.2,
+          "n_yes": 1,
+          "attributable": 13511333756.100431
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.2,
+          "n_yes": 1,
+          "attributable": 10501276990.577585
+        }
+      ],
+      "para1": "The Central Asia region has a population-weighted average RTLP score of 0.08. Across its 5 member countries, roughly 8% of the nine core protections are in place on average, resulting in an estimated $121.5 billion in annual lost GDP. The region shows strength in key areas. Highest: Kyrgyzstan (R=0.33). Lowest: Kazakhstan (R=0.00).",
+      "para2": "Weaker indicators (especially Freedom from Torture and Inhumane Treatm, Civilian Protection in Conflict Zones) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $42.3 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "KAZ",
+          "country": "Kazakhstan",
+          "r": 0.0,
+          "lost": 72870068662.2063
+        },
+        {
+          "iso3": "UZB",
+          "country": "Uzbekistan",
+          "r": 0.111,
+          "lost": 28741323366.652752
+        },
+        {
+          "iso3": "TKM",
+          "country": "Turkmenistan",
+          "r": 0.0,
+          "lost": 12846802468.074846
+        },
+        {
+          "iso3": "TJK",
+          "country": "Tajikistan",
+          "r": 0.0,
+          "lost": 3551143887.138388
+        },
+        {
+          "iso3": "KGZ",
+          "country": "Kyrgyzstan",
+          "r": 0.333,
+          "lost": 3495651931.8524923
+        }
+      ]
+    },
+    "Southern Africa": {
+      "name": "Southern Africa",
+      "slug": "southern_africa",
+      "n": 5,
+      "total_pop": 73138702.0,
+      "weighted_r": 0.4379,
+      "mean_r": 0.3778,
+      "total_lost": 74108984953.49005,
+      "best": {
+        "name": "Namibia",
+        "r": 0.56
+      },
+      "worst": {
+        "name": "Eswatini",
+        "r": 0.22
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 14701668723.116367
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 14701668723.116367
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.2,
+          "n_yes": 1,
+          "attributable": 14255923572.725834
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 1.0,
+          "n_yes": 5,
+          "attributable": 0.0
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.2,
+          "n_yes": 1,
+          "attributable": 1330168777.3302035
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.2,
+          "n_yes": 1,
+          "attributable": 14255923572.725834
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 1.0,
+          "n_yes": 5,
+          "attributable": 0.0
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.8,
+          "n_yes": 4,
+          "attributable": 161962861.35907897
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 14701668723.116367
+        }
+      ],
+      "para1": "The Southern Africa region has a population-weighted average RTLP score of 0.44. Across its 5 member countries, roughly 44% of the nine core protections are in place on average, resulting in an estimated $74.1 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Namibia (R=0.56). Lowest: Eswatini (R=0.22).",
+      "para2": "Weaker indicators (especially Independent Judiciary, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $44.1 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "ZAF",
+          "country": "South Africa",
+          "r": 0.444,
+          "lost": 66857499728.93082
+        },
+        {
+          "iso3": "BWA",
+          "country": "Botswana",
+          "r": 0.333,
+          "lost": 3880412702.581328
+        },
+        {
+          "iso3": "NAM",
+          "country": "Namibia",
+          "r": 0.556,
+          "lost": 1782980601.5621374
+        },
+        {
+          "iso3": "SWZ",
+          "country": "Eswatini",
+          "r": 0.222,
+          "lost": 1133740029.5135527
+        },
+        {
+          "iso3": "LSO",
+          "country": "Lesotho",
+          "r": 0.333,
+          "lost": 454351890.9022146
+        }
+      ]
+    },
+    "Western Africa": {
+      "name": "Western Africa",
+      "slug": "western_africa",
+      "n": 16,
+      "total_pop": 456246090.0,
+      "weighted_r": 0.3363,
+      "mean_r": 0.3264,
+      "total_lost": 117051587306.34068,
+      "best": {
+        "name": "Cabo Verde",
+        "r": 0.67
+      },
+      "worst": {
+        "name": "Guinea",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.125,
+          "n_yes": 2,
+          "attributable": 16318554177.798983
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 20155759744.0459
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.188,
+          "n_yes": 3,
+          "attributable": 19268661523.833527
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.75,
+          "n_yes": 12,
+          "attributable": 1400752857.4388006
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.125,
+          "n_yes": 2,
+          "attributable": 17321308926.139523
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.188,
+          "n_yes": 3,
+          "attributable": 19268661523.833527
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.75,
+          "n_yes": 12,
+          "attributable": 1400752857.4388006
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.812,
+          "n_yes": 13,
+          "attributable": 1761375951.7657108
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 20155759744.0459
+        }
+      ],
+      "para1": "The Western Africa region has a population-weighted average RTLP score of 0.34. Across its 16 member countries, roughly 34% of the nine core protections are in place on average, resulting in an estimated $117.1 billion in annual lost GDP. The region shows strength in Freedom of Expression and Whistleblower , Protection Against Arbitrary Detention. Highest: Cabo Verde (R=0.67). Lowest: Guinea (R=0.00).",
+      "para2": "Weaker indicators (especially Independent Judiciary, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $57.6 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "NGA",
+          "country": "Nigeria",
+          "r": 0.333,
+          "lost": 50452376028.23006
+        },
+        {
+          "iso3": "CIV",
+          "country": "C\u00f4te d'Ivoire",
+          "r": 0.333,
+          "lost": 17422635829.856777
+        },
+        {
+          "iso3": "GHA",
+          "country": "Ghana",
+          "r": 0.556,
+          "lost": 10974414718.19521
+        },
+        {
+          "iso3": "GIN",
+          "country": "Guinea",
+          "r": 0.0,
+          "lost": 6252169573.3521185
+        },
+        {
+          "iso3": "SEN",
+          "country": "Senegal",
+          "r": 0.444,
+          "lost": 5468009433.490593
+        },
+        {
+          "iso3": "BFA",
+          "country": "Burkina Faso",
+          "r": 0.222,
+          "lost": 5395770299.038418
+        },
+        {
+          "iso3": "MLI",
+          "country": "Mali",
+          "r": 0.333,
+          "lost": 5358949447.976082
+        },
+        {
+          "iso3": "NER",
+          "country": "Niger",
+          "r": 0.333,
+          "lost": 3975225697.1571355
+        },
+        {
+          "iso3": "TGO",
+          "country": "Togo",
+          "r": 0.0,
+          "lost": 2662795036.632743
+        },
+        {
+          "iso3": "MRT",
+          "country": "Mauritania",
+          "r": 0.111,
+          "lost": 2727011421.720198
+        },
+        {
+          "iso3": "BEN",
+          "country": "Benin",
+          "r": 0.556,
+          "lost": 2864352494.189975
+        },
+        {
+          "iso3": "SLE",
+          "country": "Sierra Leone",
+          "r": 0.333,
+          "lost": 1394225447.0624595
+        },
+        {
+          "iso3": "LBR",
+          "country": "Liberia",
+          "r": 0.333,
+          "lost": 955860179.9999996
+        },
+        {
+          "iso3": "GNB",
+          "country": "Guinea-Bissau",
+          "r": 0.111,
+          "lost": 554598451.1369947
+        },
+        {
+          "iso3": "GMB",
+          "country": "Gambia",
+          "r": 0.556,
+          "lost": 320651833.2292093
+        },
+        {
+          "iso3": "CPV",
+          "country": "Cabo Verde",
+          "r": 0.667,
+          "lost": 272541415.0727349
+        }
+      ]
+    },
+    "Eastern Africa": {
+      "name": "Eastern Africa",
+      "slug": "eastern_africa",
+      "n": 18,
+      "total_pop": 499464295.0,
+      "weighted_r": 0.2438,
+      "mean_r": 0.216,
+      "total_lost": 121704961725.27464,
+      "best": {
+        "name": "Seychelles",
+        "r": 0.89
+      },
+      "worst": {
+        "name": "Mozambique",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.056,
+          "n_yes": 1,
+          "attributable": 18830116770.429256
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.056,
+          "n_yes": 1,
+          "attributable": 18830116770.429256
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.111,
+          "n_yes": 2,
+          "attributable": 16118066827.847706
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.556,
+          "n_yes": 10,
+          "attributable": 2076707532.5349243
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.056,
+          "n_yes": 1,
+          "attributable": 18830116770.429256
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.111,
+          "n_yes": 2,
+          "attributable": 16118066827.847706
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.556,
+          "n_yes": 10,
+          "attributable": 2076707532.5349243
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.444,
+          "n_yes": 8,
+          "attributable": 9922704604.043655
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 18902358089.17793
+        }
+      ],
+      "para1": "The Eastern Africa region has a population-weighted average RTLP score of 0.24. Across its 18 member countries, roughly 24% of the nine core protections are in place on average, resulting in an estimated $121.7 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Seychelles (R=0.89). Lowest: Mozambique (R=0.00).",
+      "para2": "Weaker indicators (especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $56.6 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "ETH",
+          "country": "Ethiopia",
+          "r": 0.222,
+          "lost": 34939402855.69684
+        },
+        {
+          "iso3": "KEN",
+          "country": "Kenya",
+          "r": 0.333,
+          "lost": 24067911581.186394
+        },
+        {
+          "iso3": "UGA",
+          "country": "Uganda",
+          "r": 0.222,
+          "lost": 12579444986.76894
+        },
+        {
+          "iso3": "TZA",
+          "country": "Tanzania",
+          "r": 0.556,
+          "lost": 10848199770.326231
+        },
+        {
+          "iso3": "ZWE",
+          "country": "Zimbabwe",
+          "r": 0.222,
+          "lost": 9692529353.837114
+        },
+        {
+          "iso3": "MOZ",
+          "country": "Mozambique",
+          "r": 0.0,
+          "lost": 5686335326.265554
+        },
+        {
+          "iso3": "ZMB",
+          "country": "Zambia",
+          "r": 0.333,
+          "lost": 5060637068.450214
+        },
+        {
+          "iso3": "MDG",
+          "country": "Madagascar",
+          "r": 0.111,
+          "lost": 4355125372.530781
+        },
+        {
+          "iso3": "RWA",
+          "country": "Rwanda",
+          "r": 0.0,
+          "lost": 3562910558.77421
+        },
+        {
+          "iso3": "MUS",
+          "country": "Mauritius",
+          "r": 0.222,
+          "lost": 3485501083.439669
+        },
+        {
+          "iso3": "SOM",
+          "country": "Somalia",
+          "r": 0.111,
+          "lost": 2991749999.9999976
+        },
+        {
+          "iso3": "MWI",
+          "country": "Malawi",
+          "r": 0.333,
+          "lost": 2263282265.8923874
+        },
+        {
+          "iso3": "DJI",
+          "country": "Djibouti",
+          "r": 0.222,
+          "lost": 968834052.66307
+        },
+        {
+          "iso3": "BDI",
+          "country": "Burundi",
+          "r": 0.0,
+          "lost": 770608266.8315831
+        },
+        {
+          "iso3": "COM",
+          "country": "Comoros",
+          "r": 0.111,
+          "lost": 360247863.8629718
+        },
+        {
+          "iso3": "SYC",
+          "country": "Seychelles",
+          "r": 0.889,
+          "lost": 72241318.74867092
+        },
+        {
+          "iso3": "ERI",
+          "country": "Eritrea",
+          "r": 0.0,
+          "lost": 0.0
+        },
+        {
+          "iso3": "SSD",
+          "country": "South Sudan",
+          "r": 0.0,
+          "lost": 0.0
+        }
+      ]
+    },
+    "Caribbean": {
+      "name": "Caribbean",
+      "slug": "caribbean",
+      "n": 13,
+      "total_pop": 39675542.0,
+      "weighted_r": 0.2019,
+      "mean_r": 0.1538,
+      "total_lost": 43281675211.3108,
+      "best": {
+        "name": "Barbados",
+        "r": 0.78
+      },
+      "worst": {
+        "name": "Bahamas",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 7461692811.315663
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.077,
+          "n_yes": 1,
+          "attributable": 7211757811.315663
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.154,
+          "n_yes": 2,
+          "attributable": 3069016290.0300474
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.231,
+          "n_yes": 3,
+          "attributable": 5623493090.673871
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.077,
+          "n_yes": 1,
+          "attributable": 7211757811.315663
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.154,
+          "n_yes": 2,
+          "attributable": 3069016290.0300474
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.231,
+          "n_yes": 3,
+          "attributable": 5623493090.673871
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.385,
+          "n_yes": 5,
+          "attributable": 692496725.9259266
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.077,
+          "n_yes": 1,
+          "attributable": 3318951290.030048
+        }
+      ],
+      "para1": "The Caribbean region has a population-weighted average RTLP score of 0.20. Across its 13 member countries, roughly 20% of the nine core protections are in place on average, resulting in an estimated $43.3 billion in annual lost GDP. The region shows strength in key areas. Highest: Barbados (R=0.78). Lowest: Bahamas (R=0.00).",
+      "para2": "Weaker indicators (especially Socioeconomic Conditions, Existence of Legal Protections) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $18.0 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "DOM",
+          "country": "Dominican Republic",
+          "r": 0.444,
+          "lost": 20713707606.42808
+        },
+        {
+          "iso3": "HTI",
+          "country": "Haiti",
+          "r": 0.111,
+          "lost": 6306038747.698629
+        },
+        {
+          "iso3": "TTO",
+          "country": "Trinidad and Tobago",
+          "r": 0.333,
+          "lost": 5126708905.896983
+        },
+        {
+          "iso3": "BHS",
+          "country": "Bahamas",
+          "r": 0.0,
+          "lost": 3958200000.0000043
+        },
+        {
+          "iso3": "JAM",
+          "country": "Jamaica",
+          "r": 0.333,
+          "lost": 4402879417.9537735
+        },
+        {
+          "iso3": "LCA",
+          "country": "St. Lucia",
+          "r": 0.0,
+          "lost": 637265740.7407408
+        },
+        {
+          "iso3": "ATG",
+          "country": "Antigua and Barbuda",
+          "r": 0.0,
+          "lost": 551905718.5185184
+        },
+        {
+          "iso3": "BRB",
+          "country": "Barbados",
+          "r": 0.778,
+          "lost": 499870000.0000009
+        },
+        {
+          "iso3": "GRD",
+          "country": "Grenada",
+          "r": 0.0,
+          "lost": 342979629.62962884
+        },
+        {
+          "iso3": "VCT",
+          "country": "St. Vincent and the Grenadines",
+          "r": 0.0,
+          "lost": 289301851.8518527
+        },
+        {
+          "iso3": "KNA",
+          "country": "St. Kitts and Nevis",
+          "r": 0.0,
+          "lost": 280597222.22222215
+        },
+        {
+          "iso3": "DMA",
+          "country": "Dominica",
+          "r": 0.0,
+          "lost": 172220370.37037042
+        },
+        {
+          "iso3": "CUB",
+          "country": "Cuba",
+          "r": 0.0,
+          "lost": 0.0
+        }
+      ]
+    },
+    "Middle Africa": {
+      "name": "Middle Africa",
+      "slug": "middle_africa",
+      "n": 9,
+      "total_pop": 212915636.0,
+      "weighted_r": 0.1401,
+      "mean_r": 0.1728,
+      "total_lost": 67573162671.58704,
+      "best": {
+        "name": "Gabon",
+        "r": 0.44
+      },
+      "worst": {
+        "name": "Chad",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.111,
+          "n_yes": 1,
+          "attributable": 8696570566.071527
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 9393093380.260702
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 9393093380.260702
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.333,
+          "n_yes": 3,
+          "attributable": 5302534852.665931
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.111,
+          "n_yes": 1,
+          "attributable": 9365688226.224405
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 9393093380.260702
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.333,
+          "n_yes": 3,
+          "attributable": 5302534852.665931
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.667,
+          "n_yes": 6,
+          "attributable": 1333460652.9164326
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 9393093380.260702
+        }
+      ],
+      "para1": "The Middle Africa region has a population-weighted average RTLP score of 0.14. Across its 9 member countries, roughly 14% of the nine core protections are in place on average, resulting in an estimated $67.6 billion in annual lost GDP. The region shows strength in Freedom of Expression and Whistleblower . Highest: Gabon (R=0.44). Lowest: Chad (R=0.00).",
+      "para2": "Weaker indicators (especially Civilian Protection in Conflict Zones, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $28.2 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "AGO",
+          "country": "Angola",
+          "r": 0.333,
+          "lost": 20199783356.215805
+        },
+        {
+          "iso3": "COD",
+          "country": "DR Congo",
+          "r": 0.111,
+          "lost": 17740546447.67735
+        },
+        {
+          "iso3": "CMR",
+          "country": "Cameroon",
+          "r": 0.111,
+          "lost": 13324173580.051414
+        },
+        {
+          "iso3": "TCD",
+          "country": "Chad",
+          "r": 0.0,
+          "lost": 4879704937.820759
+        },
+        {
+          "iso3": "COG",
+          "country": "Congo Republic",
+          "r": 0.0,
+          "lost": 3929996519.1615963
+        },
+        {
+          "iso3": "GNQ",
+          "country": "Equatorial Guinea",
+          "r": 0.0,
+          "lost": 3191444419.2655387
+        },
+        {
+          "iso3": "GAB",
+          "country": "Gabon",
+          "r": 0.444,
+          "lost": 3482614070.9458714
+        },
+        {
+          "iso3": "CAF",
+          "country": "Central African Republic",
+          "r": 0.111,
+          "lost": 687873570.2672173
+        },
+        {
+          "iso3": "STP",
+          "country": "Sao Tome and Principe",
+          "r": 0.444,
+          "lost": 137025770.1814828
+        }
+      ]
+    },
+    "Melanesia": {
+      "name": "Melanesia",
+      "slug": "melanesia",
+      "n": 4,
+      "total_pop": 12652261.0,
+      "weighted_r": 0.3554,
+      "mean_r": 0.4444,
+      "total_lost": 7621691652.988062,
+      "best": {
+        "name": "Fiji",
+        "r": 0.56
+      },
+      "worst": {
+        "name": "Papua New Guinea",
+        "r": 0.33
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 1349016363.7590954
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 1349016363.7590954
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.5,
+          "n_yes": 2,
+          "attributable": 1112813098.9758396
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 1.0,
+          "n_yes": 4,
+          "attributable": 0.0
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 1349016363.7590954
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.5,
+          "n_yes": 2,
+          "attributable": 1112813098.9758396
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 1.0,
+          "n_yes": 4,
+          "attributable": 0.0
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 1.0,
+          "n_yes": 4,
+          "attributable": 0.0
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 1349016363.7590954
+        }
+      ],
+      "para1": "The Melanesia region has a population-weighted average RTLP score of 0.36. Across its 4 member countries, roughly 36% of the nine core protections are in place on average, resulting in an estimated $7.6 billion in annual lost GDP. The region shows strength in Protection Against Arbitrary Detention, Access to Justice. Highest: Fiji (R=0.56). Lowest: Papua New Guinea (R=0.33).",
+      "para2": "Weaker indicators (especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $4.0 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "PNG",
+          "country": "Papua New Guinea",
+          "r": 0.333,
+          "lost": 6360085653.104917
+        },
+        {
+          "iso3": "FJI",
+          "country": "Fiji",
+          "r": 0.556,
+          "lost": 795750121.2361678
+        },
+        {
+          "iso3": "SLB",
+          "country": "Solomon Islands",
+          "r": 0.333,
+          "lost": 316792940.7501222
+        },
+        {
+          "iso3": "VUT",
+          "country": "Vanuatu",
+          "r": 0.556,
+          "lost": 149062937.8968554
+        }
+      ]
+    },
+    "Polynesia": {
+      "name": "Polynesia",
+      "slug": "polynesia",
+      "n": 4,
+      "total_pop": 343787.0,
+      "weighted_r": 0.0,
+      "mean_r": 0.0,
+      "total_lost": 497073720.750978,
+      "best": {
+        "name": "Samoa",
+        "r": 0.0
+      },
+      "worst": {
+        "name": "Samoa",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 55230413.41677533
+        }
+      ],
+      "para1": "The Polynesia region has a population-weighted average RTLP score of 0.00. Across its 4 member countries, roughly 0% of the nine core protections are in place on average, resulting in an estimated $0.5 billion in annual lost GDP. The region shows strength in key areas. Highest: Samoa (R=0.00). Lowest: Samoa (R=0.00).",
+      "para2": "Weaker indicators (especially Freedom of Expression and Whistleblower , Socioeconomic Conditions) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $0.2 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "WSM",
+          "country": "Samoa",
+          "r": 0.0,
+          "lost": 293937446.4127813
+        },
+        {
+          "iso3": "TON",
+          "country": "Tonga",
+          "r": 0.0,
+          "lost": 147188694.22213596
+        },
+        {
+          "iso3": "NRU",
+          "country": "Nauru",
+          "r": 0.0,
+          "lost": 40647155.158058435
+        },
+        {
+          "iso3": "TUV",
+          "country": "Tuvalu",
+          "r": 0.0,
+          "lost": 15300424.958002351
+        }
+      ]
+    },
+    "Micronesia": {
+      "name": "Micronesia",
+      "slug": "micronesia",
+      "n": 4,
+      "total_pop": 302921.0,
+      "weighted_r": 0.0493,
+      "mean_r": 0.0278,
+      "total_lost": 336407417.59264535,
+      "best": {
+        "name": "Kiribati",
+        "r": 0.11
+      },
+      "worst": {
+        "name": "Micronesia, Fed. Sts.",
+        "r": 0.0
+      },
+      "indicators": [
+        {
+          "num": 1,
+          "name": "Legal Protections",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 38447569.19254987
+        },
+        {
+          "num": 2,
+          "name": "Independent Judiciary",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 38447569.19254987
+        },
+        {
+          "num": 3,
+          "name": "Law Enforcement Accountability",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 38447569.19254987
+        },
+        {
+          "num": 4,
+          "name": "Protection Against Arbitrary Detention",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 38447569.19254987
+        },
+        {
+          "num": 5,
+          "name": "Freedom from Torture & Inhumane Treatment",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 38447569.19254987
+        },
+        {
+          "num": 6,
+          "name": "Civilian Protection in Conflict",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 38447569.19254987
+        },
+        {
+          "num": 7,
+          "name": "Access to Justice",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 38447569.19254987
+        },
+        {
+          "num": 8,
+          "name": "Freedom of Expression & Whistleblowers",
+          "frac_yes": 0.0,
+          "n_yes": 0,
+          "attributable": 38447569.19254987
+        },
+        {
+          "num": 9,
+          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "frac_yes": 0.25,
+          "n_yes": 1,
+          "attributable": 28826864.052246395
+        }
+      ],
+      "para1": "The Micronesia region has a population-weighted average RTLP score of 0.05. Across its 4 member countries, roughly 5% of the nine core protections are in place on average, resulting in an estimated $0.3 billion in annual lost GDP. The region shows strength in key areas. Highest: Kiribati (R=0.11). Lowest: Micronesia, Fed. Sts. (R=0.00).",
+      "para2": "Weaker indicators (especially Access to Justice, Freedom of Expression and Whistleblower ) are linked to the largest slices of the region's bounded disparity. Improvement on the weakest three is cross-sectionally associated with up to $0.1 billion in reduced annual loss (within the 25% cap).",
+      "members": [
+        {
+          "iso3": "FSM",
+          "country": "Micronesia, Fed. Sts.",
+          "r": 0.0,
+          "lost": 117856274.87216875
+        },
+        {
+          "iso3": "MHL",
+          "country": "Marshall Islands",
+          "r": 0.0,
+          "lost": 72527122.49755852
+        },
+        {
+          "iso3": "PLW",
+          "country": "Palau",
+          "r": 0.0,
+          "lost": 69058379.10049029
+        },
+        {
+          "iso3": "KIR",
+          "country": "Kiribati",
+          "r": 0.111,
+          "lost": 76965641.1224278
+        }
+      ]
+    }
+  },
+  "nations": [
+    {
+      "iso3": "CHN",
+      "country": "China",
+      "region": "Eastern Asia",
+      "r": 0.0,
+      "g0": 13303.15,
+      "pop": 1408975000.0,
+      "lost_per_cap": 3325.79,
+      "total_lost": 4685950792706.785,
+      "rank": null
+    },
+    {
+      "iso3": "USA",
+      "country": "United States",
+      "region": "Northern America",
+      "r": 0.6667,
+      "g0": 84534.04,
+      "pop": 340110988.0,
+      "lost_per_cap": 8453.4,
+      "total_lost": 2875095613073.1177,
+      "rank": null
+    },
+    {
+      "iso3": "IND",
+      "country": "India",
+      "region": "Southern Asia",
+      "r": 0.0,
+      "g0": 2694.74,
+      "pop": 1450935791.0,
+      "lost_per_cap": 673.68,
+      "total_lost": 977472883464.5205,
+      "rank": null
+    },
+    {
+      "iso3": "RUS",
+      "country": "Russia",
+      "region": "Eastern Europe",
+      "r": 0.1111,
+      "g0": 14889.02,
+      "pop": 143533851.0,
+      "lost_per_cap": 3722.25,
+      "total_lost": 534269542691.18774,
+      "rank": null
+    },
+    {
+      "iso3": "MEX",
+      "country": "Mexico",
+      "region": "Central America",
+      "r": 0.2222,
+      "g0": 14185.78,
+      "pop": 130861007.0,
+      "lost_per_cap": 3310.02,
+      "total_lost": 433151977105.38696,
+      "rank": null
+    },
+    {
+      "iso3": "JPN",
+      "country": "Japan",
+      "region": "Eastern Asia",
+      "r": 0.6667,
+      "g0": 32487.08,
+      "pop": 123975371.0,
+      "lost_per_cap": 3248.71,
+      "total_lost": 402759752355.05774,
+      "rank": null
+    },
+    {
+      "iso3": "KOR",
+      "country": "South Korea",
+      "region": "Eastern Asia",
+      "r": 0.3333,
+      "g0": 36238.64,
+      "pop": 51751065.0,
+      "lost_per_cap": 7247.73,
+      "total_lost": 375077641881.3608,
+      "rank": null
+    },
+    {
+      "iso3": "GBR",
+      "country": "United Kingdom",
+      "region": "Northern Europe",
+      "r": 0.6667,
+      "g0": 53246.37,
+      "pop": 69226000.0,
+      "lost_per_cap": 5324.64,
+      "total_lost": 368603304448.21246,
+      "rank": null
+    },
+    {
+      "iso3": "BRA",
+      "country": "Brazil",
+      "region": "South America",
+      "r": 0.4444,
+      "g0": 10310.55,
+      "pop": 211998573.0,
+      "lost_per_cap": 1718.42,
+      "total_lost": 364303608157.31177,
+      "rank": null
+    },
+    {
+      "iso3": "TUR",
+      "country": "T\u00fcrkiye",
+      "region": "Western Asia",
+      "r": 0.1111,
+      "g0": 15892.72,
+      "pop": 85518661.0,
+      "lost_per_cap": 3973.18,
+      "total_lost": 339780942193.53107,
+      "rank": null
+    },
+    {
+      "iso3": "SAU",
+      "country": "Saudi Arabia",
+      "region": "Western Asia",
+      "r": 0.0,
+      "g0": 35121.66,
+      "pop": 35300280.0,
+      "lost_per_cap": 8780.42,
+      "total_lost": 309951133333.3331,
+      "rank": null
+    },
+    {
+      "iso3": "IDN",
+      "country": "Indonesia",
+      "region": "South-eastern Asia",
+      "r": 0.3333,
+      "g0": 4925.43,
+      "pop": 283487931.0,
+      "lost_per_cap": 985.09,
+      "total_lost": 279260019638.1944,
+      "rank": null
+    },
+    {
+      "iso3": "ITA",
+      "country": "Italy",
+      "region": "Southern Europe",
+      "r": 0.6667,
+      "g0": 40385.34,
+      "pop": 58952704.0,
+      "lost_per_cap": 4038.53,
+      "total_lost": 238082507724.35925,
+      "rank": null
+    },
+    {
+      "iso3": "FRA",
+      "country": "France",
+      "region": "Western Europe",
+      "r": 0.7778,
+      "g0": 46103.08,
+      "pop": 68551653.0,
+      "lost_per_cap": 3073.54,
+      "total_lost": 210696174831.0053,
+      "rank": null
+    },
+    {
+      "iso3": "DEU",
+      "country": "Germany",
+      "region": "Western Europe",
+      "r": 0.8889,
+      "g0": 56103.73,
+      "pop": 83516593.0,
+      "lost_per_cap": 1870.12,
+      "total_lost": 156186419260.15616,
+      "rank": null
+    },
+    {
+      "iso3": "CAN",
+      "country": "Canada",
+      "region": "Northern America",
+      "r": 0.7778,
+      "g0": 54340.35,
+      "pop": 41288599.0,
+      "lost_per_cap": 3622.69,
+      "total_lost": 149575788442.25095,
+      "rank": null
+    },
+    {
+      "iso3": "ARE",
+      "country": "United Arab Emirates",
+      "region": "Western Asia",
+      "r": 0.0,
+      "g0": 50273.51,
+      "pop": 10986400.0,
+      "lost_per_cap": 12568.38,
+      "total_lost": 138081211708.64542,
+      "rank": null
+    },
+    {
+      "iso3": "THA",
+      "country": "Thailand",
+      "region": "South-eastern Asia",
+      "r": 0.1111,
+      "g0": 7346.62,
+      "pop": 71668011.0,
+      "lost_per_cap": 1836.66,
+      "total_lost": 131629414710.4209,
+      "rank": null
+    },
+    {
+      "iso3": "VNM",
+      "country": "Vietnam",
+      "region": "South-eastern Asia",
+      "r": 0.0,
+      "g0": 4717.29,
+      "pop": 100987686.0,
+      "lost_per_cap": 1179.32,
+      "total_lost": 119097057576.79385,
+      "rank": null
+    },
+    {
+      "iso3": "IRN",
+      "country": "Iran",
+      "region": "Southern Asia",
+      "r": 0.0,
+      "g0": 5190.17,
+      "pop": 91567738.0,
+      "lost_per_cap": 1297.54,
+      "total_lost": 118813022303.85385,
+      "rank": null
+    },
+    {
+      "iso3": "AUS",
+      "country": "Australia",
+      "region": "Australia and New Zealand",
+      "r": 0.7778,
+      "g0": 64603.99,
+      "pop": 27196812.0,
+      "lost_per_cap": 4306.93,
+      "total_lost": 117134830110.18877,
+      "rank": null
+    },
+    {
+      "iso3": "ESP",
+      "country": "Spain",
+      "region": "Southern Europe",
+      "r": 0.7778,
+      "g0": 35326.77,
+      "pop": 48848840.0,
+      "lost_per_cap": 2355.12,
+      "total_lost": 115044776849.47919,
+      "rank": null
+    },
+    {
+      "iso3": "BGD",
+      "country": "Bangladesh",
+      "region": "Southern Asia",
+      "r": 0.0,
+      "g0": 2593.42,
+      "pop": 173562364.0,
+      "lost_per_cap": 648.35,
+      "total_lost": 112529858017.21286,
+      "rank": null
+    },
+    {
+      "iso3": "ISR",
+      "country": "Israel",
+      "region": "Western Asia",
+      "r": 0.3333,
+      "g0": 54176.68,
+      "pop": 9974400.0,
+      "lost_per_cap": 10835.34,
+      "total_lost": 108075984252.33615,
+      "rank": null
+    },
+    {
+      "iso3": "ARG",
+      "country": "Argentina",
+      "region": "South America",
+      "r": 0.4444,
+      "g0": 13969.78,
+      "pop": 45696159.0,
+      "lost_per_cap": 2328.3,
+      "total_lost": 106394242556.6731,
+      "rank": null
+    },
+    {
+      "iso3": "PAK",
+      "country": "Pakistan",
+      "region": "Southern Asia",
+      "r": 0.0,
+      "g0": 1478.77,
+      "pop": 251269164.0,
+      "lost_per_cap": 369.69,
+      "total_lost": 92892500030.31667,
+      "rank": null
+    },
+    {
+      "iso3": "POL",
+      "country": "Poland",
+      "region": "Eastern Europe",
+      "r": 0.6667,
+      "g0": 25103.57,
+      "pop": 36559233.0,
+      "lost_per_cap": 2510.36,
+      "total_lost": 91776710614.67624,
+      "rank": null
+    },
+    {
+      "iso3": "EGY",
+      "country": "Egypt",
+      "region": "Northern Africa",
+      "r": 0.2222,
+      "g0": 3338.47,
+      "pop": 116538258.0,
+      "lost_per_cap": 778.98,
+      "total_lost": 90780645900.83215,
+      "rank": null
+    },
+    {
+      "iso3": "PHL",
+      "country": "Philippines",
+      "region": "South-eastern Asia",
+      "r": 0.4444,
+      "g0": 3984.83,
+      "pop": 115843670.0,
+      "lost_per_cap": 664.14,
+      "total_lost": 76936251630.3924,
+      "rank": null
+    },
+    {
+      "iso3": "KAZ",
+      "country": "Kazakhstan",
+      "region": "Central Asia",
+      "r": 0.0,
+      "g0": 14154.63,
+      "pop": 20592571.0,
+      "lost_per_cap": 3538.66,
+      "total_lost": 72870068662.2063,
+      "rank": null
+    },
+    {
+      "iso3": "IRQ",
+      "country": "Iraq",
+      "region": "Western Asia",
+      "r": 0.0,
+      "g0": 6073.61,
+      "pop": 46042015.0,
+      "lost_per_cap": 1518.4,
+      "total_lost": 69910314403.84612,
+      "rank": null
+    },
+    {
+      "iso3": "COL",
+      "country": "Colombia",
+      "region": "South America",
+      "r": 0.4444,
+      "g0": 7919.21,
+      "pop": 52886363.0,
+      "lost_per_cap": 1319.87,
+      "total_lost": 69803025813.21185,
+      "rank": null
+    },
+    {
+      "iso3": "ZAF",
+      "country": "South Africa",
+      "region": "Southern Africa",
+      "r": 0.4444,
+      "g0": 6267.19,
+      "pop": 64007187.0,
+      "lost_per_cap": 1044.53,
+      "total_lost": 66857499728.93082,
+      "rank": null
+    },
+    {
+      "iso3": "DZA",
+      "country": "Algeria",
+      "region": "Northern Africa",
+      "r": 0.2222,
+      "g0": 5752.99,
+      "pop": 46814308.0,
+      "lost_per_cap": 1342.36,
+      "total_lost": 62841865721.78034,
+      "rank": null
+    },
+    {
+      "iso3": "PER",
+      "country": "Peru",
+      "region": "South America",
+      "r": 0.3333,
+      "g0": 8452.37,
+      "pop": 34217848.0,
+      "lost_per_cap": 1690.47,
+      "total_lost": 57844393812.588135,
+      "rank": null
+    },
+    {
+      "iso3": "MYS",
+      "country": "Malaysia",
+      "region": "South-eastern Asia",
+      "r": 0.5556,
+      "g0": 11874.43,
+      "pop": 35557673.0,
+      "lost_per_cap": 1583.26,
+      "total_lost": 56296934057.158516,
+      "rank": null
+    },
+    {
+      "iso3": "SGP",
+      "country": "Singapore",
+      "region": "South-eastern Asia",
+      "r": 0.6667,
+      "g0": 90674.07,
+      "pop": 6036860.0,
+      "lost_per_cap": 9067.41,
+      "total_lost": 54738664589.18467,
+      "rank": null
+    },
+    {
+      "iso3": "QAT",
+      "country": "Qatar",
+      "region": "Western Asia",
+      "r": 0.2222,
+      "g0": 76688.69,
+      "pop": 2857822.0,
+      "lost_per_cap": 17894.03,
+      "total_lost": 51137948717.94869,
+      "rank": null
+    },
+    {
+      "iso3": "NGA",
+      "country": "Nigeria",
+      "region": "Western Africa",
+      "r": 0.3333,
+      "g0": 1084.16,
+      "pop": 232679478.0,
+      "lost_per_cap": 216.83,
+      "total_lost": 50452376028.23006,
+      "rank": null
+    },
+    {
+      "iso3": "UKR",
+      "country": "Ukraine",
+      "region": "Eastern Europe",
+      "r": 0.2222,
+      "g0": 5389.47,
+      "pop": 37860221.0,
+      "lost_per_cap": 1257.54,
+      "total_lost": 47610883675.954216,
+      "rank": null
+    },
+    {
+      "iso3": "NLD",
+      "country": "Netherlands",
+      "region": "Western Europe",
+      "r": 0.8889,
+      "g0": 67520.42,
+      "pop": 17993485.0,
+      "lost_per_cap": 2250.68,
+      "total_lost": 40497589952.421875,
+      "rank": null
+    },
+    {
+      "iso3": "ROU",
+      "country": "Romania",
+      "region": "Eastern Europe",
+      "r": 0.6667,
+      "g0": 20080.21,
+      "pop": 19051804.0,
+      "lost_per_cap": 2008.02,
+      "total_lost": 38256421798.88657,
+      "rank": null
+    },
+    {
+      "iso3": "AUT",
+      "country": "Austria",
+      "region": "Western Europe",
+      "r": 0.7778,
+      "g0": 58268.88,
+      "pop": 9177982.0,
+      "lost_per_cap": 3884.59,
+      "total_lost": 35652714697.788124,
+      "rank": null
+    },
+    {
+      "iso3": "ETH",
+      "country": "Ethiopia",
+      "region": "Eastern Africa",
+      "r": 0.2222,
+      "g0": 1133.88,
+      "pop": 132059767.0,
+      "lost_per_cap": 264.57,
+      "total_lost": 34939402855.69684,
+      "rank": null
+    },
+    {
+      "iso3": "KWT",
+      "country": "Kuwait",
+      "region": "Western Asia",
+      "r": 0.3333,
+      "g0": 32717.72,
+      "pop": 4897263.0,
+      "lost_per_cap": 6543.54,
+      "total_lost": 32045454610.666798,
+      "rank": null
+    },
+    {
+      "iso3": "CHE",
+      "country": "Switzerland",
+      "region": "Western Europe",
+      "r": 0.8889,
+      "g0": 103998.19,
+      "pop": 9005582.0,
+      "lost_per_cap": 3466.61,
+      "total_lost": 31218806601.61718,
+      "rank": null
+    },
+    {
+      "iso3": "VEN",
+      "country": "Venezuela",
+      "region": "South America",
+      "r": 0.0,
+      "g0": 4217.59,
+      "pop": 28405543.0,
+      "lost_per_cap": 1054.4,
+      "total_lost": 29950740814.44564,
+      "rank": null
+    },
+    {
+      "iso3": "UZB",
+      "country": "Uzbekistan",
+      "region": "Central Asia",
+      "r": 0.1111,
+      "g0": 3161.7,
+      "pop": 36361859.0,
+      "lost_per_cap": 790.43,
+      "total_lost": 28741323366.652752,
+      "rank": null
+    },
+    {
+      "iso3": "GTM",
+      "country": "Guatemala",
+      "region": "Central America",
+      "r": 0.1111,
+      "g0": 6150.03,
+      "pop": 18406359.0,
+      "lost_per_cap": 1537.51,
+      "total_lost": 28299895289.550674,
+      "rank": null
+    },
+    {
+      "iso3": "MAR",
+      "country": "Morocco",
+      "region": "Northern Africa",
+      "r": 0.4444,
+      "g0": 4153.19,
+      "pop": 38081173.0,
+      "lost_per_cap": 692.2,
+      "total_lost": 26359752001.576008,
+      "rank": null
+    },
+    {
+      "iso3": "GRC",
+      "country": "Greece",
+      "region": "Southern Europe",
+      "r": 0.6667,
+      "g0": 24626.15,
+      "pop": 10405134.0,
+      "lost_per_cap": 2462.61,
+      "total_lost": 25623837177.81182,
+      "rank": null
+    },
+    {
+      "iso3": "OMN",
+      "country": "Oman",
+      "region": "Western Asia",
+      "r": 0.2222,
+      "g0": 20285.23,
+      "pop": 5281538.0,
+      "lost_per_cap": 4733.22,
+      "total_lost": 24998679712.856888,
+      "rank": null
+    },
+    {
+      "iso3": "ECU",
+      "country": "Ecuador",
+      "region": "South America",
+      "r": 0.3333,
+      "g0": 6874.71,
+      "pop": 18135478.0,
+      "lost_per_cap": 1374.94,
+      "total_lost": 24935214940.000004,
+      "rank": null
+    },
+    {
+      "iso3": "KEN",
+      "country": "Kenya",
+      "region": "Eastern Africa",
+      "r": 0.3333,
+      "g0": 2132.43,
+      "pop": 56432944.0,
+      "lost_per_cap": 426.49,
+      "total_lost": 24067911581.186394,
+      "rank": null
+    },
+    {
+      "iso3": "HUN",
+      "country": "Hungary",
+      "region": "Eastern Europe",
+      "r": 0.6667,
+      "g0": 23292.33,
+      "pop": 9562065.0,
+      "lost_per_cap": 2329.23,
+      "total_lost": 22272273892.564068,
+      "rank": null
+    },
+    {
+      "iso3": "DOM",
+      "country": "Dominican Republic",
+      "region": "Caribbean",
+      "r": 0.4444,
+      "g0": 10875.66,
+      "pop": 11427557.0,
+      "lost_per_cap": 1812.61,
+      "total_lost": 20713707606.42808,
+      "rank": null
+    },
+    {
+      "iso3": "AGO",
+      "country": "Angola",
+      "region": "Middle Africa",
+      "r": 0.3333,
+      "g0": 2665.87,
+      "pop": 37885849.0,
+      "lost_per_cap": 533.17,
+      "total_lost": 20199783356.215805,
+      "rank": null
+    },
+    {
+      "iso3": "LKA",
+      "country": "Sri Lanka",
+      "region": "Southern Asia",
+      "r": 0.3333,
+      "g0": 4515.57,
+      "pop": 21916000.0,
+      "lost_per_cap": 903.11,
+      "total_lost": 19792637101.92999,
+      "rank": null
+    },
+    {
+      "iso3": "BLR",
+      "country": "Belarus",
+      "region": "Eastern Europe",
+      "r": 0.0,
+      "g0": 8317.63,
+      "pop": 9132629.0,
+      "lost_per_cap": 2079.41,
+      "total_lost": 18990466367.978233,
+      "rank": null
+    },
+    {
+      "iso3": "BGR",
+      "country": "Bulgaria",
+      "region": "Eastern Europe",
+      "r": 0.4444,
+      "g0": 17596.02,
+      "pop": 6441421.0,
+      "lost_per_cap": 2932.67,
+      "total_lost": 18890559296.664185,
+      "rank": null
+    },
+    {
+      "iso3": "AZE",
+      "country": "Azerbaijan",
+      "region": "Western Asia",
+      "r": 0.0,
+      "g0": 7283.85,
+      "pop": 10202830.0,
+      "lost_per_cap": 1820.96,
+      "total_lost": 18578970588.235283,
+      "rank": null
+    },
+    {
+      "iso3": "MMR",
+      "country": "Myanmar",
+      "region": "South-eastern Asia",
+      "r": 0.0,
+      "g0": 1359.05,
+      "pop": 54500091.0,
+      "lost_per_cap": 339.76,
+      "total_lost": 18517087380.952435,
+      "rank": null
+    },
+    {
+      "iso3": "COD",
+      "country": "DR Congo",
+      "region": "Middle Africa",
+      "r": 0.1111,
+      "g0": 649.38,
+      "pop": 109276265.0,
+      "lost_per_cap": 162.35,
+      "total_lost": 17740546447.67735,
+      "rank": null
+    },
+    {
+      "iso3": "CIV",
+      "country": "C\u00f4te d'Ivoire",
+      "region": "Western Africa",
+      "r": 0.3333,
+      "g0": 2727.89,
+      "pop": 31934230.0,
+      "lost_per_cap": 545.58,
+      "total_lost": 17422635829.856777,
+      "rank": null
+    },
+    {
+      "iso3": "SRB",
+      "country": "Serbia",
+      "region": "Southern Europe",
+      "r": 0.4444,
+      "g0": 13679.21,
+      "pop": 6586476.0,
+      "lost_per_cap": 2279.87,
+      "total_lost": 15016294326.518574,
+      "rank": null
+    },
+    {
+      "iso3": "SVK",
+      "country": "Slovakia",
+      "region": "Eastern Europe",
+      "r": 0.6667,
+      "g0": 25992.67,
+      "pop": 5422069.0,
+      "lost_per_cap": 2599.27,
+      "total_lost": 14093407653.237505,
+      "rank": null
+    },
+    {
+      "iso3": "BOL",
+      "country": "Bolivia",
+      "region": "South America",
+      "r": 0.1111,
+      "g0": 4421.17,
+      "pop": 12413315.0,
+      "lost_per_cap": 1105.29,
+      "total_lost": 13720331863.241682,
+      "rank": null
+    },
+    {
+      "iso3": "CMR",
+      "country": "Cameroon",
+      "region": "Middle Africa",
+      "r": 0.1111,
+      "g0": 1830.01,
+      "pop": 29123744.0,
+      "lost_per_cap": 457.5,
+      "total_lost": 13324173580.051414,
+      "rank": null
+    },
+    {
+      "iso3": "TKM",
+      "country": "Turkmenistan",
+      "region": "Central Asia",
+      "r": 0.0,
+      "g0": 6856.66,
+      "pop": 7494498.0,
+      "lost_per_cap": 1714.16,
+      "total_lost": 12846802468.074846,
+      "rank": null
+    },
+    {
+      "iso3": "UGA",
+      "country": "Uganda",
+      "region": "Eastern Africa",
+      "r": 0.2222,
+      "g0": 1077.91,
+      "pop": 50015092.0,
+      "lost_per_cap": 251.51,
+      "total_lost": 12579444986.76894,
+      "rank": null
+    },
+    {
+      "iso3": "SDN",
+      "country": "Sudan",
+      "region": "Northern Africa",
+      "r": 0.0,
+      "g0": 984.61,
+      "pop": 50448963.0,
+      "lost_per_cap": 246.15,
+      "total_lost": 12418108928.084656,
+      "rank": null
+    },
+    {
+      "iso3": "LBY",
+      "country": "Libya",
+      "region": "Northern Africa",
+      "r": 0.0,
+      "g0": 6569.16,
+      "pop": 7381023.0,
+      "lost_per_cap": 1642.29,
+      "total_lost": 12121787803.83625,
+      "rank": null
+    },
+    {
+      "iso3": "BHR",
+      "country": "Bahrain",
+      "region": "Western Asia",
+      "r": 0.0,
+      "g0": 29653.57,
+      "pop": 1588670.0,
+      "lost_per_cap": 7413.39,
+      "total_lost": 11777433577.127653,
+      "rank": null
+    },
+    {
+      "iso3": "KHM",
+      "country": "Cambodia",
+      "region": "South-eastern Asia",
+      "r": 0.0,
+      "g0": 2627.88,
+      "pop": 17638801.0,
+      "lost_per_cap": 656.97,
+      "total_lost": 11588161759.310133,
+      "rank": null
+    },
+    {
+      "iso3": "CZE",
+      "country": "Czechia",
+      "region": "Eastern Europe",
+      "r": 0.8889,
+      "g0": 31823.31,
+      "pop": 10905028.0,
+      "lost_per_cap": 1060.78,
+      "total_lost": 11567802097.61598,
+      "rank": null
+    },
+    {
+      "iso3": "GHA",
+      "country": "Ghana",
+      "region": "Western Africa",
+      "r": 0.5556,
+      "g0": 2390.77,
+      "pop": 34427414.0,
+      "lost_per_cap": 318.77,
+      "total_lost": 10974414718.19521,
+      "rank": null
+    },
+    {
+      "iso3": "TZA",
+      "country": "Tanzania",
+      "region": "Eastern Africa",
+      "r": 0.5556,
+      "g0": 1186.72,
+      "pop": 68560157.0,
+      "lost_per_cap": 158.23,
+      "total_lost": 10848199770.326231,
+      "rank": null
+    },
+    {
+      "iso3": "JOR",
+      "country": "Jordan",
+      "region": "Western Asia",
+      "r": 0.3333,
+      "g0": 4618.1,
+      "pop": 11552876.0,
+      "lost_per_cap": 923.62,
+      "total_lost": 10670457915.492949,
+      "rank": null
+    },
+    {
+      "iso3": "PRT",
+      "country": "Portugal",
+      "region": "Southern Europe",
+      "r": 0.8889,
+      "g0": 29292.24,
+      "pop": 10694681.0,
+      "lost_per_cap": 976.41,
+      "total_lost": 10442372836.170069,
+      "rank": null
+    },
+    {
+      "iso3": "ZWE",
+      "country": "Zimbabwe",
+      "region": "Eastern Africa",
+      "r": 0.2222,
+      "g0": 2497.2,
+      "pop": 16634373.0,
+      "lost_per_cap": 582.68,
+      "total_lost": 9692529353.837114,
+      "rank": null
+    },
+    {
+      "iso3": "HND",
+      "country": "Honduras",
+      "region": "Central America",
+      "r": 0.1111,
+      "g0": 3426.43,
+      "pop": 10825703.0,
+      "lost_per_cap": 856.61,
+      "total_lost": 9273391463.51093,
+      "rank": null
+    },
+    {
+      "iso3": "PRY",
+      "country": "Paraguay",
+      "region": "South America",
+      "r": 0.3333,
+      "g0": 6416.1,
+      "pop": 6929153.0,
+      "lost_per_cap": 1283.22,
+      "total_lost": 8891623679.488916,
+      "rank": null
+    },
+    {
+      "iso3": "SLV",
+      "country": "El Salvador",
+      "region": "Central America",
+      "r": 0.0,
+      "g0": 5579.66,
+      "pop": 6338193.0,
+      "lost_per_cap": 1394.91,
+      "total_lost": 8841240000.000008,
+      "rank": null
+    },
+    {
+      "iso3": "NZL",
+      "country": "New Zealand",
+      "region": "Australia and New Zealand",
+      "r": 0.8889,
+      "g0": 49205.18,
+      "pop": 5287500.0,
+      "lost_per_cap": 1640.17,
+      "total_lost": 8672412836.587212,
+      "rank": null
+    },
+    {
+      "iso3": "PAN",
+      "country": "Panama",
+      "region": "Central America",
+      "r": 0.6667,
+      "g0": 19161.22,
+      "pop": 4515577.0,
+      "lost_per_cap": 1916.12,
+      "total_lost": 8652395913.174713,
+      "rank": null
+    },
+    {
+      "iso3": "NPL",
+      "country": "Nepal",
+      "region": "Southern Asia",
+      "r": 0.3333,
+      "g0": 1447.31,
+      "pop": 29651054.0,
+      "lost_per_cap": 289.46,
+      "total_lost": 8582853657.342179,
+      "rank": null
+    },
+    {
+      "iso3": "TUN",
+      "country": "Tunisia",
+      "region": "Northern Africa",
+      "r": 0.5556,
+      "g0": 4181.14,
+      "pop": 12277109.0,
+      "lost_per_cap": 557.49,
+      "total_lost": 6844304754.205613,
+      "rank": null
+    },
+    {
+      "iso3": "PNG",
+      "country": "Papua New Guinea",
+      "region": "Melanesia",
+      "r": 0.3333,
+      "g0": 3006.71,
+      "pop": 10576502.0,
+      "lost_per_cap": 601.34,
+      "total_lost": 6360085653.104917,
+      "rank": null
+    },
+    {
+      "iso3": "HTI",
+      "country": "Haiti",
+      "region": "Caribbean",
+      "r": 0.1111,
+      "g0": 2142.62,
+      "pop": 11772557.0,
+      "lost_per_cap": 535.66,
+      "total_lost": 6306038747.698629,
+      "rank": null
+    },
+    {
+      "iso3": "GIN",
+      "country": "Guinea",
+      "region": "Western Africa",
+      "r": 0.0,
+      "g0": 1694.95,
+      "pop": 14754785.0,
+      "lost_per_cap": 423.74,
+      "total_lost": 6252169573.3521185,
+      "rank": null
+    },
+    {
+      "iso3": "HRV",
+      "country": "Croatia",
+      "region": "Southern Europe",
+      "r": 0.7778,
+      "g0": 24050.44,
+      "pop": 3866200.0,
+      "lost_per_cap": 1603.36,
+      "total_lost": 6198920688.593912,
+      "rank": null
+    },
+    {
+      "iso3": "GEO",
+      "country": "Georgia",
+      "region": "Western Asia",
+      "r": 0.4444,
+      "g0": 9241.49,
+      "pop": 3699557.0,
+      "lost_per_cap": 1540.25,
+      "total_lost": 5698237257.499256,
+      "rank": null
+    },
+    {
+      "iso3": "MOZ",
+      "country": "Mozambique",
+      "region": "Eastern Africa",
+      "r": 0.0,
+      "g0": 656.78,
+      "pop": 34631766.0,
+      "lost_per_cap": 164.19,
+      "total_lost": 5686335326.265554,
+      "rank": null
+    },
+    {
+      "iso3": "LTU",
+      "country": "Lithuania",
+      "region": "Northern Europe",
+      "r": 0.7778,
+      "g0": 29384.02,
+      "pop": 2888278.0,
+      "lost_per_cap": 1958.93,
+      "total_lost": 5657947700.890983,
+      "rank": null
+    },
+    {
+      "iso3": "SEN",
+      "country": "Senegal",
+      "region": "Western Africa",
+      "r": 0.4444,
+      "g0": 1773.22,
+      "pop": 18501984.0,
+      "lost_per_cap": 295.54,
+      "total_lost": 5468009433.490593,
+      "rank": null
+    },
+    {
+      "iso3": "BFA",
+      "country": "Burkina Faso",
+      "region": "Western Africa",
+      "r": 0.2222,
+      "g0": 981.99,
+      "pop": 23548781.0,
+      "lost_per_cap": 229.13,
+      "total_lost": 5395770299.038418,
+      "rank": null
+    },
+    {
+      "iso3": "MLI",
+      "country": "Mali",
+      "region": "Western Africa",
+      "r": 0.3333,
+      "g0": 1094.62,
+      "pop": 24478595.0,
+      "lost_per_cap": 218.92,
+      "total_lost": 5358949447.976082,
+      "rank": null
+    },
+    {
+      "iso3": "TTO",
+      "country": "Trinidad and Tobago",
+      "region": "Caribbean",
+      "r": 0.3333,
+      "g0": 18733.41,
+      "pop": 1368333.0,
+      "lost_per_cap": 3746.68,
+      "total_lost": 5126708905.896983,
+      "rank": null
+    },
+    {
+      "iso3": "ZMB",
+      "country": "Zambia",
+      "region": "Eastern Africa",
+      "r": 0.3333,
+      "g0": 1187.11,
+      "pop": 21314956.0,
+      "lost_per_cap": 237.42,
+      "total_lost": 5060637068.450214,
+      "rank": null
+    },
+    {
+      "iso3": "NIC",
+      "country": "Nicaragua",
+      "region": "Central America",
+      "r": 0.0,
+      "g0": 2847.54,
+      "pop": 6916140.0,
+      "lost_per_cap": 711.88,
+      "total_lost": 4923495741.898139,
+      "rank": null
+    },
+    {
+      "iso3": "TCD",
+      "country": "Chad",
+      "region": "Middle Africa",
+      "r": 0.0,
+      "g0": 961.56,
+      "pop": 20299123.0,
+      "lost_per_cap": 240.39,
+      "total_lost": 4879704937.820759,
+      "rank": null
+    },
+    {
+      "iso3": "SVN",
+      "country": "Slovenia",
+      "region": "Southern Europe",
+      "r": 0.7778,
+      "g0": 34301.03,
+      "pop": 2127400.0,
+      "lost_per_cap": 2286.74,
+      "total_lost": 4864801013.159068,
+      "rank": null
+    },
+    {
+      "iso3": "AFG",
+      "country": "Afghanistan",
+      "region": "Southern Asia",
+      "r": 0.0,
+      "g0": 413.76,
+      "pop": 42647492.0,
+      "lost_per_cap": 103.44,
+      "total_lost": 4411434126.095313,
+      "rank": null
+    },
+    {
+      "iso3": "JAM",
+      "country": "Jamaica",
+      "region": "Caribbean",
+      "r": 0.3333,
+      "g0": 7753.8,
+      "pop": 2839175.0,
+      "lost_per_cap": 1550.76,
+      "total_lost": 4402879417.9537735,
+      "rank": null
+    },
+    {
+      "iso3": "MDG",
+      "country": "Madagascar",
+      "region": "Eastern Africa",
+      "r": 0.1111,
+      "g0": 544.99,
+      "pop": 31964956.0,
+      "lost_per_cap": 136.25,
+      "total_lost": 4355125372.530781,
+      "rank": null
+    },
+    {
+      "iso3": "ARM",
+      "country": "Armenia",
+      "region": "Western Asia",
+      "r": 0.4444,
+      "g0": 8556.21,
+      "pop": 3033500.0,
+      "lost_per_cap": 1426.04,
+      "total_lost": 4325879230.005344,
+      "rank": null
+    },
+    {
+      "iso3": "LAO",
+      "country": "Laos",
+      "region": "South-eastern Asia",
+      "r": 0.0,
+      "g0": 2123.98,
+      "pop": 7769819.0,
+      "lost_per_cap": 530.99,
+      "total_lost": 4125733280.334482,
+      "rank": null
+    },
+    {
+      "iso3": "LBN",
+      "country": "Lebanon",
+      "region": "Western Asia",
+      "r": 0.3333,
+      "g0": 3477.72,
+      "pop": 5805962.0,
+      "lost_per_cap": 695.54,
+      "total_lost": 4038307721.344019,
+      "rank": null
+    },
+    {
+      "iso3": "NER",
+      "country": "Niger",
+      "region": "Western Africa",
+      "r": 0.3333,
+      "g0": 735.27,
+      "pop": 27032412.0,
+      "lost_per_cap": 147.05,
+      "total_lost": 3975225697.1571355,
+      "rank": null
+    },
+    {
+      "iso3": "BHS",
+      "country": "Bahamas",
+      "region": "Caribbean",
+      "r": 0.0,
+      "g0": 39455.45,
+      "pop": 401283.0,
+      "lost_per_cap": 9863.86,
+      "total_lost": 3958200000.0000043,
+      "rank": null
+    },
+    {
+      "iso3": "BIH",
+      "country": "Bosnia and Herzegovina",
+      "region": "Southern Europe",
+      "r": 0.5556,
+      "g0": 9358.79,
+      "pop": 3164253.0,
+      "lost_per_cap": 1247.84,
+      "total_lost": 3948476269.71991,
+      "rank": null
+    },
+    {
+      "iso3": "COG",
+      "country": "Congo Republic",
+      "region": "Middle Africa",
+      "r": 0.0,
+      "g0": 2482.25,
+      "pop": 6332961.0,
+      "lost_per_cap": 620.56,
+      "total_lost": 3929996519.1615963,
+      "rank": null
+    },
+    {
+      "iso3": "BWA",
+      "country": "Botswana",
+      "region": "Southern Africa",
+      "r": 0.3333,
+      "g0": 7695.75,
+      "pop": 2521139.0,
+      "lost_per_cap": 1539.15,
+      "total_lost": 3880412702.581328,
+      "rank": null
+    },
+    {
+      "iso3": "BRN",
+      "country": "Brunei Darussalam",
+      "region": "South-eastern Asia",
+      "r": 0.0,
+      "g0": 33153.47,
+      "pop": 462721.0,
+      "lost_per_cap": 8288.37,
+      "total_lost": 3835202148.1199913,
+      "rank": null
+    },
+    {
+      "iso3": "ALB",
+      "country": "Albania",
+      "region": "Southern Europe",
+      "r": 0.5556,
+      "g0": 11377.78,
+      "pop": 2377128.0,
+      "lost_per_cap": 1517.04,
+      "total_lost": 3606190572.88898,
+      "rank": null
+    },
+    {
+      "iso3": "RWA",
+      "country": "Rwanda",
+      "region": "Eastern Africa",
+      "r": 0.0,
+      "g0": 999.65,
+      "pop": 14256567.0,
+      "lost_per_cap": 249.91,
+      "total_lost": 3562910558.77421,
+      "rank": null
+    },
+    {
+      "iso3": "TJK",
+      "country": "Tajikistan",
+      "region": "Central Asia",
+      "r": 0.0,
+      "g0": 1341.2,
+      "pop": 10590927.0,
+      "lost_per_cap": 335.3,
+      "total_lost": 3551143887.138388,
+      "rank": null
+    },
+    {
+      "iso3": "CYP",
+      "country": "Cyprus",
+      "region": "Western Asia",
+      "r": 0.7778,
+      "g0": 38674.29,
+      "pop": 1358282.0,
+      "lost_per_cap": 2578.29,
+      "total_lost": 3502039733.478647,
+      "rank": null
+    },
+    {
+      "iso3": "KGZ",
+      "country": "Kyrgyzstan",
+      "region": "Central Asia",
+      "r": 0.3333,
+      "g0": 2420.19,
+      "pop": 7221868.0,
+      "lost_per_cap": 484.04,
+      "total_lost": 3495651931.8524923,
+      "rank": null
+    },
+    {
+      "iso3": "MUS",
+      "country": "Mauritius",
+      "region": "Eastern Africa",
+      "r": 0.2222,
+      "g0": 11990.78,
+      "pop": 1245779.0,
+      "lost_per_cap": 2797.85,
+      "total_lost": 3485501083.439669,
+      "rank": null
+    },
+    {
+      "iso3": "GAB",
+      "country": "Gabon",
+      "region": "Middle Africa",
+      "r": 0.4444,
+      "g0": 8230.04,
+      "pop": 2538952.0,
+      "lost_per_cap": 1371.67,
+      "total_lost": 3482614070.9458714,
+      "rank": null
+    },
+    {
+      "iso3": "MKD",
+      "country": "North Macedonia",
+      "region": "Southern Europe",
+      "r": 0.3333,
+      "g0": 9291.86,
+      "pop": 1824359.0,
+      "lost_per_cap": 1858.37,
+      "total_lost": 3390336449.0840406,
+      "rank": null
+    },
+    {
+      "iso3": "GUY",
+      "country": "Guyana",
+      "region": "South America",
+      "r": 0.5556,
+      "g0": 29675.24,
+      "pop": 831087.0,
+      "lost_per_cap": 3956.7,
+      "total_lost": 3288361310.9512343,
+      "rank": null
+    },
+    {
+      "iso3": "GNQ",
+      "country": "Equatorial Guinea",
+      "region": "Middle Africa",
+      "r": 0.0,
+      "g0": 6745.4,
+      "pop": 1892516.0,
+      "lost_per_cap": 1686.35,
+      "total_lost": 3191444419.2655387,
+      "rank": null
+    },
+    {
+      "iso3": "CRI",
+      "country": "Costa Rica",
+      "region": "Central America",
+      "r": 0.8889,
+      "g0": 18587.15,
+      "pop": 5129910.0,
+      "lost_per_cap": 619.57,
+      "total_lost": 3178347439.219882,
+      "rank": null
+    },
+    {
+      "iso3": "MNG",
+      "country": "Mongolia",
+      "region": "Eastern Asia",
+      "r": 0.5556,
+      "g0": 6750.63,
+      "pop": 3524788.0,
+      "lost_per_cap": 900.08,
+      "total_lost": 3172605336.6017556,
+      "rank": null
+    },
+    {
+      "iso3": "SOM",
+      "country": "Somalia",
+      "region": "Eastern Africa",
+      "r": 0.1111,
+      "g0": 629.54,
+      "pop": 19009151.0,
+      "lost_per_cap": 157.38,
+      "total_lost": 2991749999.9999976,
+      "rank": null
+    },
+    {
+      "iso3": "BEN",
+      "country": "Benin",
+      "region": "Western Africa",
+      "r": 0.5556,
+      "g0": 1485.38,
+      "pop": 14462724.0,
+      "lost_per_cap": 198.05,
+      "total_lost": 2864352494.189975,
+      "rank": null
+    },
+    {
+      "iso3": "MCO",
+      "country": "Monaco",
+      "region": "Western Europe",
+      "r": 0.0,
+      "g0": 288001.43,
+      "pop": 38631.0,
+      "lost_per_cap": 72000.36,
+      "total_lost": 2781445843.119856,
+      "rank": null
+    },
+    {
+      "iso3": "MRT",
+      "country": "Mauritania",
+      "region": "Western Africa",
+      "r": 0.1111,
+      "g0": 2110.12,
+      "pop": 5169395.0,
+      "lost_per_cap": 527.53,
+      "total_lost": 2727011421.720198,
+      "rank": null
+    },
+    {
+      "iso3": "TGO",
+      "country": "Togo",
+      "region": "Western Africa",
+      "r": 0.0,
+      "g0": 1119.38,
+      "pop": 9515236.0,
+      "lost_per_cap": 279.85,
+      "total_lost": 2662795036.632743,
+      "rank": null
+    },
+    {
+      "iso3": "MWI",
+      "country": "Malawi",
+      "region": "Eastern Africa",
+      "r": 0.3333,
+      "g0": 522.57,
+      "pop": 21655286.0,
+      "lost_per_cap": 104.51,
+      "total_lost": 2263282265.8923874,
+      "rank": null
+    },
+    {
+      "iso3": "LIE",
+      "country": "Liechtenstein",
+      "region": "Western Europe",
+      "r": 0.0,
+      "g0": 206780.59,
+      "pop": 40450.0,
+      "lost_per_cap": 51695.15,
+      "total_lost": 2091068719.9486058,
+      "rank": null
+    },
+    {
+      "iso3": "NAM",
+      "country": "Namibia",
+      "region": "Southern Africa",
+      "r": 0.5556,
+      "g0": 4413.13,
+      "pop": 3030131.0,
+      "lost_per_cap": 588.42,
+      "total_lost": 1782980601.5621374,
+      "rank": null
+    },
+    {
+      "iso3": "MLT",
+      "country": "Malta",
+      "region": "Southern Europe",
+      "r": 0.7778,
+      "g0": 43898.58,
+      "pop": 568847.0,
+      "lost_per_cap": 2926.57,
+      "total_lost": 1664771633.4965005,
+      "rank": null
+    },
+    {
+      "iso3": "MDV",
+      "country": "Maldives",
+      "region": "Southern Asia",
+      "r": 0.3333,
+      "g0": 13379.35,
+      "pop": 527799.0,
+      "lost_per_cap": 2675.87,
+      "total_lost": 1412321653.450905,
+      "rank": null
+    },
+    {
+      "iso3": "SLE",
+      "country": "Sierra Leone",
+      "region": "Western Africa",
+      "r": 0.3333,
+      "g0": 806.65,
+      "pop": 8642022.0,
+      "lost_per_cap": 161.33,
+      "total_lost": 1394225447.0624595,
+      "rank": null
+    },
+    {
+      "iso3": "MDA",
+      "country": "Moldova",
+      "region": "Eastern Europe",
+      "r": 0.7778,
+      "g0": 7576.2,
+      "pop": 2402306.0,
+      "lost_per_cap": 505.08,
+      "total_lost": 1213356056.9101136,
+      "rank": null
+    },
+    {
+      "iso3": "SWZ",
+      "country": "Eswatini",
+      "region": "Southern Africa",
+      "r": 0.2222,
+      "g0": 3909.56,
+      "pop": 1242822.0,
+      "lost_per_cap": 912.23,
+      "total_lost": 1133740029.5135527,
+      "rank": null
+    },
+    {
+      "iso3": "ISL",
+      "country": "Iceland",
+      "region": "Northern Europe",
+      "r": 0.8889,
+      "g0": 86040.53,
+      "pop": 386506.0,
+      "lost_per_cap": 2868.02,
+      "total_lost": 1108506048.964607,
+      "rank": null
+    },
+    {
+      "iso3": "AND",
+      "country": "Andorra",
+      "region": "Southern Europe",
+      "r": 0.0,
+      "g0": 49303.65,
+      "pop": 81938.0,
+      "lost_per_cap": 12325.91,
+      "total_lost": 1009960601.3702936,
+      "rank": null
+    },
+    {
+      "iso3": "DJI",
+      "country": "Djibouti",
+      "region": "Eastern Africa",
+      "r": 0.2222,
+      "g0": 3552.72,
+      "pop": 1168722.0,
+      "lost_per_cap": 828.97,
+      "total_lost": 968834052.66307,
+      "rank": null
+    },
+    {
+      "iso3": "LBR",
+      "country": "Liberia",
+      "region": "Western Africa",
+      "r": 0.3333,
+      "g0": 851.5,
+      "pop": 5612817.0,
+      "lost_per_cap": 170.3,
+      "total_lost": 955860179.9999996,
+      "rank": null
+    },
+    {
+      "iso3": "MNE",
+      "country": "Montenegro",
+      "region": "Southern Europe",
+      "r": 0.6667,
+      "g0": 13263.33,
+      "pop": 623525.0,
+      "lost_per_cap": 1326.33,
+      "total_lost": 827001667.0867727,
+      "rank": null
+    },
+    {
+      "iso3": "BLZ",
+      "country": "Belize",
+      "region": "Central America",
+      "r": 0.0,
+      "g0": 7681.24,
+      "pop": 417072.0,
+      "lost_per_cap": 1920.31,
+      "total_lost": 800907950.0000004,
+      "rank": null
+    },
+    {
+      "iso3": "FJI",
+      "country": "Fiji",
+      "region": "Melanesia",
+      "r": 0.5556,
+      "g0": 6425.74,
+      "pop": 928784.0,
+      "lost_per_cap": 856.77,
+      "total_lost": 795750121.2361678,
+      "rank": null
+    },
+    {
+      "iso3": "BDI",
+      "country": "Burundi",
+      "region": "Eastern Africa",
+      "r": 0.0,
+      "g0": 219.42,
+      "pop": 14047786.0,
+      "lost_per_cap": 54.86,
+      "total_lost": 770608266.8315831,
+      "rank": null
+    },
+    {
+      "iso3": "CAF",
+      "country": "Central African Republic",
+      "region": "Middle Africa",
+      "r": 0.1111,
+      "g0": 516.16,
+      "pop": 5330690.0,
+      "lost_per_cap": 129.04,
+      "total_lost": 687873570.2672173,
+      "rank": null
+    },
+    {
+      "iso3": "LCA",
+      "country": "St. Lucia",
+      "region": "Caribbean",
+      "r": 0.0,
+      "g0": 14181.63,
+      "pop": 179744.0,
+      "lost_per_cap": 3545.41,
+      "total_lost": 637265740.7407408,
+      "rank": null
+    },
+    {
+      "iso3": "BTN",
+      "country": "Bhutan",
+      "region": "Southern Asia",
+      "r": 0.3333,
+      "g0": 3831.33,
+      "pop": 791524.0,
+      "lost_per_cap": 766.27,
+      "total_lost": 606517194.0496699,
+      "rank": null
+    },
+    {
+      "iso3": "SUR",
+      "country": "Suriname",
+      "region": "South America",
+      "r": 0.5556,
+      "g0": 6961.79,
+      "pop": 634431.0,
+      "lost_per_cap": 928.24,
+      "total_lost": 588903348.2795025,
+      "rank": null
+    },
+    {
+      "iso3": "GNB",
+      "country": "Guinea-Bissau",
+      "region": "Western Africa",
+      "r": 0.1111,
+      "g0": 1007.74,
+      "pop": 2201352.0,
+      "lost_per_cap": 251.94,
+      "total_lost": 554598451.1369947,
+      "rank": null
+    },
+    {
+      "iso3": "ATG",
+      "country": "Antigua and Barbuda",
+      "region": "Caribbean",
+      "r": 0.0,
+      "g0": 23542.45,
+      "pop": 93772.0,
+      "lost_per_cap": 5885.61,
+      "total_lost": 551905718.5185184,
+      "rank": null
+    },
+    {
+      "iso3": "SMR",
+      "country": "San Marino",
+      "region": "Southern Europe",
+      "r": 0.0,
+      "g0": 59879.72,
+      "pop": 33977.0,
+      "lost_per_cap": 14969.93,
+      "total_lost": 508633288.68881935,
+      "rank": null
+    },
+    {
+      "iso3": "BRB",
+      "country": "Barbados",
+      "region": "Caribbean",
+      "r": 0.7778,
+      "g0": 26544.87,
+      "pop": 282467.0,
+      "lost_per_cap": 1769.66,
+      "total_lost": 499870000.0000009,
+      "rank": null
+    },
+    {
+      "iso3": "LSO",
+      "country": "Lesotho",
+      "region": "Southern Africa",
+      "r": 0.3333,
+      "g0": 971.91,
+      "pop": 2337423.0,
+      "lost_per_cap": 194.38,
+      "total_lost": 454351890.9022146,
+      "rank": null
+    },
+    {
+      "iso3": "COM",
+      "country": "Comoros",
+      "region": "Eastern Africa",
+      "r": 0.1111,
+      "g0": 1662.76,
+      "pop": 866628.0,
+      "lost_per_cap": 415.69,
+      "total_lost": 360247863.8629718,
+      "rank": null
+    },
+    {
+      "iso3": "GRD",
+      "country": "Grenada",
+      "region": "Caribbean",
+      "r": 0.0,
+      "g0": 11705.09,
+      "pop": 117207.0,
+      "lost_per_cap": 2926.27,
+      "total_lost": 342979629.62962884,
+      "rank": null
+    },
+    {
+      "iso3": "GMB",
+      "country": "Gambia",
+      "region": "Western Africa",
+      "r": 0.5556,
+      "g0": 871.34,
+      "pop": 2759988.0,
+      "lost_per_cap": 116.18,
+      "total_lost": 320651833.2292093,
+      "rank": null
+    },
+    {
+      "iso3": "SLB",
+      "country": "Solomon Islands",
+      "region": "Melanesia",
+      "r": 0.3333,
+      "g0": 1933.56,
+      "pop": 819198.0,
+      "lost_per_cap": 386.71,
+      "total_lost": 316792940.7501222,
+      "rank": null
+    },
+    {
+      "iso3": "WSM",
+      "country": "Samoa",
+      "region": "Polynesia",
+      "r": 0.0,
+      "g0": 5392.88,
+      "pop": 218019.0,
+      "lost_per_cap": 1348.22,
+      "total_lost": 293937446.4127813,
+      "rank": null
+    },
+    {
+      "iso3": "VCT",
+      "country": "St. Vincent and the Grenadines",
+      "region": "Caribbean",
+      "r": 0.0,
+      "g0": 11501.23,
+      "pop": 100616.0,
+      "lost_per_cap": 2875.31,
+      "total_lost": 289301851.8518527,
+      "rank": null
+    },
+    {
+      "iso3": "KNA",
+      "country": "St. Kitts and Nevis",
+      "region": "Caribbean",
+      "r": 0.0,
+      "g0": 23960.65,
+      "pop": 46843.0,
+      "lost_per_cap": 5990.16,
+      "total_lost": 280597222.22222215,
+      "rank": null
+    },
+    {
+      "iso3": "CPV",
+      "country": "Cabo Verde",
+      "region": "Western Africa",
+      "r": 0.6667,
+      "g0": 5192.48,
+      "pop": 524877.0,
+      "lost_per_cap": 519.25,
+      "total_lost": 272541415.0727349,
+      "rank": null
+    },
+    {
+      "iso3": "TLS",
+      "country": "Timor-Leste",
+      "region": "South-eastern Asia",
+      "r": 0.6667,
+      "g0": 1331.97,
+      "pop": 1400638.0,
+      "lost_per_cap": 133.2,
+      "total_lost": 186560851.54132056,
+      "rank": null
+    },
+    {
+      "iso3": "DMA",
+      "country": "Dominica",
+      "region": "Caribbean",
+      "r": 0.0,
+      "g0": 10405.28,
+      "pop": 66205.0,
+      "lost_per_cap": 2601.32,
+      "total_lost": 172220370.37037042,
+      "rank": null
+    },
+    {
+      "iso3": "VUT",
+      "country": "Vanuatu",
+      "region": "Melanesia",
+      "r": 0.5556,
+      "g0": 3410.77,
+      "pop": 327777.0,
+      "lost_per_cap": 454.77,
+      "total_lost": 149062937.8968554,
+      "rank": null
+    },
+    {
+      "iso3": "TON",
+      "country": "Tonga",
+      "region": "Polynesia",
+      "r": 0.0,
+      "g0": 5651.59,
+      "pop": 104175.0,
+      "lost_per_cap": 1412.9,
+      "total_lost": 147188694.22213596,
+      "rank": null
+    },
+    {
+      "iso3": "STP",
+      "country": "Sao Tome and Principe",
+      "region": "Middle Africa",
+      "r": 0.4444,
+      "g0": 3490.57,
+      "pop": 235536.0,
+      "lost_per_cap": 581.76,
+      "total_lost": 137025770.1814828,
+      "rank": null
+    },
+    {
+      "iso3": "FSM",
+      "country": "Micronesia, Fed. Sts.",
+      "region": "Micronesia",
+      "r": 0.0,
+      "g0": 4166.0,
+      "pop": 113160.0,
+      "lost_per_cap": 1041.5,
+      "total_lost": 117856274.87216875,
+      "rank": null
+    },
+    {
+      "iso3": "KIR",
+      "country": "Kiribati",
+      "region": "Micronesia",
+      "r": 0.1111,
+      "g0": 2288.63,
+      "pop": 134518.0,
+      "lost_per_cap": 572.16,
+      "total_lost": 76965641.1224278,
+      "rank": null
+    },
+    {
+      "iso3": "MHL",
+      "country": "Marshall Islands",
+      "region": "Micronesia",
+      "r": 0.0,
+      "g0": 7726.34,
+      "pop": 37548.0,
+      "lost_per_cap": 1931.58,
+      "total_lost": 72527122.49755852,
+      "rank": null
+    },
+    {
+      "iso3": "SYC",
+      "country": "Seychelles",
+      "region": "Eastern Africa",
+      "r": 0.8889,
+      "g0": 17858.82,
+      "pop": 121354.0,
+      "lost_per_cap": 595.29,
+      "total_lost": 72241318.74867092,
+      "rank": null
+    },
+    {
+      "iso3": "PLW",
+      "country": "Palau",
+      "region": "Micronesia",
+      "r": 0.0,
+      "g0": 15610.82,
+      "pop": 17695.0,
+      "lost_per_cap": 3902.71,
+      "total_lost": 69058379.10049029,
+      "rank": null
+    },
+    {
+      "iso3": "NRU",
+      "country": "Nauru",
+      "region": "Polynesia",
+      "r": 0.0,
+      "g0": 13609.16,
+      "pop": 11947.0,
+      "lost_per_cap": 3402.29,
+      "total_lost": 40647155.158058435,
+      "rank": null
+    },
+    {
+      "iso3": "TUV",
+      "country": "Tuvalu",
+      "region": "Polynesia",
+      "r": 0.0,
+      "g0": 6344.78,
+      "pop": 9646.0,
+      "lost_per_cap": 1586.19,
+      "total_lost": 15300424.958002351,
+      "rank": null
+    }
+  ]
+}
