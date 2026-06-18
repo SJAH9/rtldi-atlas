@@ -23,7 +23,7 @@ Structure (four separately-generated parts for fast iteration; no duplication):
 
   BACK MATTER
   - Data Attribution and Sources
-  - Falsification of Malthusian Scarcity (short note on the conditional nature of Malthusian outcomes)
+  # - Falsification of Malthusian Scarcity (short note on the conditional nature of Malthusian outcomes)
   - Index of Terms (alphabetical, includes the 9 levers + key sub-terms)
   - Credits and Acknowledgments
 
@@ -836,7 +836,7 @@ def build_front_matter(data: dict) -> Path:
         ("UN Regional Summaries (22 regions)", "12"),
         ("Detailed Nation Profiles (A–Z)", "~35"),
         ("Data Attribution and Sources", "~210"),
-        ("Falsification of Malthusian Scarcity", "~211"),
+       #("Falsification of Malthusian Scarcity", "~211"),
         ("Index of Terms", "~212"),
         ("Credits and Acknowledgments", "~213"),
     ]
@@ -1343,24 +1343,24 @@ def build_back_matter(data: dict) -> Path:
     )
 
     # ========== NEW: FALSIFICATION OF MALTHUS (streamlined from source) ==========
-    pdf.add_page()
-    pdf.chapter_title("Falsification of Malthusian Scarcity")
+    # pdf.add_page()
+    # pdf.chapter_title("Falsification of Malthusian Scarcity")
 
-    pdf.body_text(
-        "Thomas Malthus argued that population grows exponentially while resources grow linearly, leading to famine and checks on population unless growth is deliberately limited."
-    )
+    # pdf.body_text(
+    #    "Thomas Malthus argued that population grows exponentially while resources grow linearly, leading to famine and checks on population unless growth is deliberately limited."
+    # )
 
-    pdf.body_text(
-        "The conditions Malthus projected are true when nations do not equally protect the lives of all people within their borders: more people then equate to less available resource per person. But when the right to life is equally protected, GDP rises for multiple reasons and rises exponentially because societal stresses are distributed evenly among a more productive and more capable society."
-    )
+    # pdf.body_text(
+    #    "The conditions Malthus projected are true when nations do not equally protect the lives of all people within their borders: more people then equate to less available resource per person. But when the right to life is equally protected, GDP rises for multiple reasons and rises exponentially because societal stresses are distributed evenly among a more productive and more capable society."
+  #  )
 
-    pdf.body_text(
-        "The levers make this possible at low annual cost. Freedom from torture, freedom from arbitrary detention, and an independent judiciary together make a nation investible — businesses and startups form when the risk of death or arbitrary imprisonment does not stop capital from flowing in. Whistleblower protections allow corruption and theft to be exposed at scales previously unknown. Most of the nine levers have minimal annual cost; they are force multipliers of economic velocity."
-    )
+   # pdf.body_text(
+   #     "The levers make this possible at low annual cost. Freedom from torture, freedom from arbitrary detention, and an independent judiciary together make a nation investible — businesses and startups form when the risk of death or arbitrary imprisonment does not stop capital from flowing in. Whistleblower protections allow corruption and theft to be exposed at scales previously unknown. Most of the nine levers have minimal annual cost; they are force multipliers of economic velocity."
+  #  )
 
-    pdf.body_text(
-        "The important distinction is that this analysis does not negate the efficacy of Malthusian regimes. A nation can choose the Malthusian relationship to its population and receive the expected constraints on per-capita resources, or it can activate more of the nine levers and enjoy the scaling benefits of an optimized institutional environment. The opportunity to realize greater economic scale through these levers is now visible in the data."
-    )
+   # pdf.body_text(
+   #     "The important distinction is that this analysis does not negate the efficacy of Malthusian regimes. A nation can choose the Malthusian relationship to its population and receive the expected constraints on per-capita resources, or it can activate more of the nine levers and enjoy the scaling benefits of an optimized institutional environment. The opportunity to realize greater economic scale through these levers is now visible in the data."
+  #  )
 
     # ========== INDEX OF TERMS ==========
     pdf.add_page()
@@ -1385,7 +1385,7 @@ def build_back_matter(data: dict) -> Path:
         ("Binarization / threshold", "The documented conversion of continuous V-Dem and World Bank values into the binary 0/1 scores for the nine indicators (e.g., ≥2.0 on 0-4 scales, ≤5 % undernourishment + ≤10 % poverty for #9)."),
         ("η (eta)", "The sensitivity coefficient (current data-driven default 0.30 from population-weighted 2026 UN cross-section). In the bounded model ΔG = min(η(1 − R) × G₀, 0.25 × G₀); the cross-sectional premium per indicator, then capped so the nine RTLP indicators are never credited with more than 25% of observed G₀ after other determinants are given due weight. (Source document used a more conservative 0.05 structural value.)"),
         ("Steady state", "A balanced biological, economic, or social condition that the framework argues is supported or undermined by the strength of the nine life protections and the resulting causal enclosures."),
-        ("Malthusian theory", "The proposition (Thomas Malthus) that population grows exponentially while resources grow linearly, inevitably producing scarcity and misery unless population is checked. The source and this atlas present geometric and empirical counter-evidence under conditions of equal right-to-life protection."),
+   #     ("Malthusian theory","The proposition (Thomas Malthus) that population grows exponentially while resources grow linearly, inevitably producing scarcity and misery unless population is checked. The source and this atlas present geometric and empirical counter-evidence under conditions of equal right-to-life protection. There is no evidence of high population leading to lower GDP per capita. Strong corollary across many data sets links population and GDP suggesting resource development may be a direct consequence of population growth and greater economic capacity."),
 
         ("UN region / regional summary", "One of the 22 geographic groupings used for aggregates, focused choropleths, member-nations tables (with R / G0 / population / capital exclusions + REGIONAL TOTAL row), and 9-lever breakdowns."),
         ("Member-nations table", "The compact table on each regional summary page that lists every country in the region together with its R, G0, population, and capital exclusions, plus a bottom row of regional totals."),
