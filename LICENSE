@@ -2,6 +2,10 @@ MIT License
 
 Copyright (c) 2026 Sid J.A. Hubbard
 
+This repository contains the RTLDI Atlas (code, data processing pipeline, documentation, and generated outputs). These materials are licensed under the MIT License below.
+
+The underlying theoretical framework, concepts, and content from the book "Causality and Attraction: A Continuum of Steady States" (by Sid J.A. Hubbard) remain under their original copyright and are NOT licensed under this MIT License.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
