@@ -5,7 +5,11 @@
 > Sid J.A. Hubbard, *Causality and Attraction: A Continuum of Steady States* (Version 3, May 2026).  
 > DOI: [10.5281/zenodo.19468550](https://doi.org/10.5281/zenodo.19468550)
 
-The ATLAS takes the RTLDI (Right to Life Deficit Index) from the source (Zenodo 10.5281/zenodo.19468550) and extends it via population-weighted regression (25% conservative cap) to quantify capital exclusions — the lost potential GDP where capital is excluded from the economy because the nine protections required for it to operate are not present. Global total on the order of 15 trillion dollars. The levers are the low-cost conditions whose activation brings that capital back in.
+## License
+
+The **RTLDI Atlas** in this repository (code, data processing pipeline, documentation, and generated outputs) is licensed under the [MIT License](LICENSE).
+
+**Important clarification**: Only the RTLDI Atlas materials in this repository are covered by the MIT License. The underlying theoretical framework and content from the book *Causality and Attraction: A Continuum of Steady States* remain under their original copyright (CC BY-NC-ND 4.0) and are **not** licensed under this MIT License.
 
 ## Releases
 
@@ -145,7 +149,6 @@ python3 -m src.generate_html_atlas
 - `outputs/atlas/RTLDI_ATLAS_2026_front.pdf`
 - `outputs/atlas/RTLDI_ATLAS_2026_regions.pdf`
 - `outputs/atlas/RTLDI_ATLAS_2026_nations.pdf`
-- `outputs/atlas/RTLDI_ATLAS_2026_back.pdf`
 - `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf` (full concatenated release)
 - `outputs/html-atlas/index.html` (self-contained front + regions edition with capital exclusions framing)
 - `outputs/html-atlas/maps/global.svg` + 22 regional `*.svg` (vector choropleths)
