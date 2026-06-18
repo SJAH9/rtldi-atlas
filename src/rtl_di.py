@@ -38,10 +38,10 @@ class RTLDIConfig:
     """Configuration for RTLDI calculation."""
     eta: float = 0.30  # population-weighted empirical premium (~30.5% per indicator) from 2026 UN cross-section regression
     # Contextual cap on the share of observed G0 that these 9 RTLP indicators can realistically
-    # be credited with (or drag), after giving due weight to industry base, resource endowments,
+    # be credited with capital exclusions, after giving due weight to industry base, resource endowments,
     # human capital, geography, history, and other deep determinants. Derived from case studies
     # of archetypal nations (see atlas front matter "Contextual Bounding" section). This prevents
-    # the model from claiming more "lost GDP" than is plausible once non-RTLP factors are credited.
+    # the model from claiming more "capital exclusions" than is plausible once non-lever factors are credited.
     max_institutional_share: float = 0.25
     # Binarization defaults (see docs/indicator_crosswalk.md for justification)
     # For V-Dem 0-4 components (higher=better protection)
@@ -99,7 +99,7 @@ def compute_delta_g(r: float, g0: float, eta: float = 0.30, max_share: float = 0
 
 
 def total_deficit(delta_g: float, population: float) -> float:
-    """Aggregate national annual deficit = per capita loss × population."""
+    """Aggregate national annual capital exclusions = per capita capital exclusion × population."""
     if delta_g < 0 or population < 0:
         raise ValueError("delta_g and population must be non-negative")
     return delta_g * population
@@ -206,7 +206,7 @@ def compute_rtl_di_for_row(
     population: Optional[float] = None,
     eta: float = 0.27,
 ) -> Dict[str, float]:
-    """Return dict with per_capita_loss and (if pop given) total_deficit."""
+    """Return dict with per_capita_exclusion and (if pop given) total_capital_exclusions (internal keys may use deficit for compatibility)."""
     dg = compute_delta_g(r, g0, eta)
     out = {"r": r, "g0": g0, "eta": eta, "delta_g_per_capita": dg}
     if population is not None and population > 0:
