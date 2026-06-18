@@ -12,7 +12,7 @@ For the initial version (pre full V-Dem integration):
   - Average of 0.70 for the other 8 (near global source avg 0.62, slightly optimistic)
   - Or a simple poverty-modulated R for demo variation.
 - Always uses the exact equation from the source.
-- Outputs ranked table with per-capita and total deficit.
+- Outputs ranked table with per-capita and total capital exclusions (lost potential GDP). RTLDI = Right to Life Deficit Index from the source, extended via population-weighted regression (25% cap) to show where capital is excluded due to missing protections. Global total ~15T in exclusions.
 - Also writes a nicely formatted XLSX (openpyxl).
 
 Run:
@@ -292,13 +292,13 @@ def write_xlsx_atlas(
     ws.merge_cells("A4:E4")
     avg_r_key = "global_avg_r" if "global_avg_r" in summary else "global_avg_r_placeholder"
     avg_r = summary.get(avg_r_key, summary.get("global_avg_r", float("nan")))
-    ws["A4"] = f"Countries: {summary['n_countries']} | With GDP: {summary['n_with_gdp']} | Est. global deficit: ${summary['total_global_deficit_est_usd']:,.0f} | Avg R: {avg_r:.3f}"
+    ws["A4"] = f"Countries: {summary['n_countries']} | With GDP: {summary['n_with_gdp']} | Est. global capital exclusions: ${summary['total_global_deficit_est_usd']:,.0f} | Avg R: {avg_r:.3f}"
     ws["A4"].font = Font(bold=True)
 
     # Headers
     headers = [
         "Rank (total $)", "ISO3", "Country", "UN Region", "R", "G0 (GDP pc current US$)",
-        "ΔG per capita (US$)", "Population", "Total annual deficit (US$)", "Rank (lowest R)",
+        "ΔG per capita (US$)", "Population", "Total annual capital exclusions (US$)", "Rank (lowest R)",
         "Undernourish %", "Poverty $2.15 %", "Has GDP", "Has Socio", "Notes",
     ]
     for col, h in enumerate(headers, 1):

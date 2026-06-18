@@ -101,7 +101,7 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
             "vdem_year": "V-Dem year",
             "g0_year": "GDP baseline year",
             "delta_g_per_capita": "ΔG per capita (USD)",
-            "total_deficit_usd": "Total annual deficit (USD)",
+            "total_deficit_usd": "Total annual capital exclusions (USD)",
             "population": "Population",
         },
     )
@@ -226,7 +226,7 @@ def main():
     fig.write_image(pdf_path, width=1380, height=820)
     print(f"Saved PDF: {pdf_path}  ({pdf_path.stat().st_size / 1024:.0f} KB)")
 
-    print("\nDone. Enclosure strength = RTLP R (higher = stronger protection of life-dignity within the nested enclosures).")
+    print("\nDone. Enclosure strength = RTLP R (higher = stronger protection allowing capital to operate without exclusion).")
     print("To re-run with fresh data: python -m src.build_atlas --year 2026 && python -m src.generate_enclosure_map")
 
 

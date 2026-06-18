@@ -1,29 +1,30 @@
 #!/usr/bin/env python3
 """
 Generate a print-ready PDF ebook for the RTLDI ATLAS 2026 (modular parts + concatenated release).
+RTLDI = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Extended via population-weighted regression (25% cap) to quantify capital exclusions — the lost potential GDP where capital is excluded from the economy because the nine protections necessary for it to operate are not present. The atlas makes visible the ~15 trillion in global capital exclusions so nations can act to bring that capital back in.
 
 Structure (four separately-generated parts for fast iteration; no duplication):
   FRONT MATTER
   - Title / cover page
   - Executive description / foreword
   - Methodology (condensed)
-  - Diagnostic Guide
-  - Cartographic Approach + global choropleth + global lost-GDP by 9 indicators + world description + total
+  - Using the RTLDI to Identify Capital Exclusions
+  - Cartographic Approach + global choropleth + global capital exclusions by 9 levers + world description + total
   - Table of Contents
-  - Summary Table of All 193 UN Member Nations (paginated, sorted by total loss)
+  - Summary Table of All 193 UN Member Nations (paginated, by capital exclusions)
 
   REGIONS (22 UN regional summary pages)
-  - One page per region: choropleth, aggregates, best/worst, two-para cumulative description,
-    member-nations table with REGIONAL TOTAL, 9-indicator breakdown + universal-fail callout if applicable
+  - One page per region: choropleth, aggregates, two-para cumulative description,
+    member-nations table with REGIONAL TOTAL, 9-lever breakdown + opportunity callout if applicable
 
   NATIONS (individual country pages — the 193-page section)
-  - Detailed profiles: one page per nation (A-Z order), with GDP loss projections + full 9-indicator
-    RTLP breakdown + three-year RTLDI trend plot (varying G0, R fixed) + regional zoom map
+  - Detailed profiles: one page per nation (A-Z order), with capital exclusions figures + full 9-lever
+    RTLDI breakdown + three-year RTLDI trend plot (varying G0, R fixed) + regional zoom map
 
   BACK MATTER
   - Data Attribution and Sources
   - Falsification of Malthusian Scarcity (short note on the conditional nature of Malthusian outcomes)
-  - Index of Terms (alphabetical, includes the 9 indicators + key sub-terms)
+  - Index of Terms (alphabetical, includes the 9 levers + key sub-terms)
   - Credits and Acknowledgments
 
 Usage (recommended for fast iteration):
@@ -130,7 +131,7 @@ class RTLDIAtlasPDF(FPDF):
         if self.page_no() > 1:
             self.set_font(FONT_NAME, "", 8)
             self.set_text_color(100, 100, 100)
-            self.cell(0, 8, "RTLDI ATLAS 2026 | Right-to-Life Deficit Index for UN Member States", align="C")
+            self.cell(0, 8, "RTLDI ATLAS 2026 | Right to Life Deficit Index — Capital Exclusions", align="C")
             self.ln(4)
             self.set_draw_color(*HEADER_COLOR)
             self.line(MARGIN, 12, PAGE_WIDTH - MARGIN, 12)
@@ -445,7 +446,7 @@ def prepare_atlas_data():
         total_lost = sum(losts)
         g0s = [float(c.get("g0") or 0) for c in cs]
         mean_g0 = sum(g0s) / n if n else 0
-        # 9 indicators: frac Yes + attributable lost GDP (scaled to respect each country's cap)
+        # 9 levers: frac Yes + attributable capital exclusions (scaled to respect each country's cap)
         inds = []
         if cs and "components" in cs[0]:
             for i in range(9):
@@ -495,7 +496,7 @@ def prepare_atlas_data():
         }
     sorted_regions = sorted(regional_data.items(), key=lambda x: -x[1]["total_lost_gdp"])
 
-    # Global lost GDP per indicator (for the full map page in front matter) — capped + scaled
+    # Global capital exclusions per lever (for the full map page in front matter) — capped + scaled
     global_indicator_losts = [0.0] * 9
     global_total_lost = 0.0
     indicator_names = []
@@ -573,12 +574,12 @@ def build_front_matter(data: dict) -> Path:
     pdf.cell(0, 12, "RTLDI ATLAS 2026", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.set_font(FONT_NAME, "", 14)
     pdf.ln(5)
-    pdf.cell(0, 8, "Right-to-Life Deficit Index", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 8, "Right to Life Deficit Index", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.cell(0, 8, "for United Nations Member States", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.ln(8)
     pdf.set_font(FONT_NAME, "", 11)
     pdf.set_text_color(60, 60, 60)
-    pdf.multi_cell(0, 6, "Annual GDP Disparity Associated with RTLP Shortfalls\n(Contextually Bounded)\n\n2026 Edition", align="C")
+    pdf.multi_cell(0, 6, "Identifying Capital Exclusions — Lost Potential GDP Due to Missing Protections\n(Contextually Bounded)\n\n2026 Edition", align="C")
     pdf.ln(15)
     pdf.set_font(FONT_NAME, "", 9)
     pdf.multi_cell(0, 5, "Based on the framework in\nSid J.A. Hubbard\nCausality and Attraction: A Continuum of Steady States (Version 3, May 2026)\nDOI: 10.5281/zenodo.19468550", align="C")
@@ -591,12 +592,16 @@ def build_front_matter(data: dict) -> Path:
     pdf.add_page()
     pdf.chapter_title("Executive Description")
     pdf.body_text(
-        "The Right-to-Life Deficit Index (RTLDI) shows the annual GDP lost because nine basic protections are not fully in place. The global figure is trillions of dollars every year. The nine protections are simple binary levers — either present or absent. Flipping them from absent to present is low-cost and high-return for any society.\n\n"
-        "This 2026 Atlas applies the framework to all 193 UN Member States. V-Dem data (2024) supplies the eight governance and civil-liberties components; World Bank data supplies the most recent published GDP per capita as the dynamic baseline (G₀). The result is a clear map of where incomplete protection of life imposes large, measurable costs on human economic activity."
+        "The RTLDI — Right to Life Deficit Index — is taken from the source framework (Hubbard, Zenodo 10.5281/zenodo.19468550) and extended here so that the world can see and capture the lost potential GDP caused by missing protections.\n\n"
+        "We call this lost potential GDP \"capital exclusions\": places and economies where capital is excluded from productive use because the nine foundational protections necessary for it to operate safely are not present. The RTLDI shows that the global economy currently has approximately 15 trillion dollars in capital exclusions sitting outside the economy — waiting for nations to decide to put the necessary protections in place."
     )
     pdf.ln(3)
     pdf.body_text(
-        "The Atlas is a practical reference for NGOs, researchers, and — most importantly — for the people and policymakers inside each nation who want to see the concrete economic costs of incomplete protection and to use that knowledge as a diagnostic for reform. The nine levers are described in plain terms in the Nested Causal Modelling section that follows."
+        "This 2026 Atlas applies the source RTLDI to all 193 UN Member States using V-Dem (2024 components) and the most recent World Bank GDP per capita data. Through population-weighted regression analysis of countries that have these protections versus those that do not, and with a conservative 25% attribution (the portion of observed national wealth associated with the institutional capacity to protect life and capital), the atlas quantifies the scale of these exclusions. The nine levers are low-cost, high-return institutional conditions. Activating them is how nations can bring excluded capital back into the economy."
+    )
+    pdf.ln(3)
+    pdf.body_text(
+        "This is practical economic intelligence. The findings are not judgments on nations but measurements of where specific, actionable protections correspond to large capital exclusions (lost potential GDP). The nine levers and the method behind the extension are described in the sections that follow."
     )
 
     # ========== METHODOLOGY ==========
@@ -618,7 +623,7 @@ def build_front_matter(data: dict) -> Path:
         "9. Socioeconomic Conditions — World Bank: undernourishment ≤ 5 % AND poverty headcount ($2.15) ≤ 10 %.\n\n"
         "R = (number of 'Yes' indicators) / 9\n\n"
         "Economic Projection\n"
-        "ΔG (per-capita) = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with η≈0.30 (the 25% cap from the contextual-bounding template). G₀ is the most recent published GDP per capita (World Bank, labeled 2026 baseline). Total national bounded disparity = ΔG × population.\n\n"
+        "ΔG (per-capita) = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with η≈0.30 (the 25% cap from the regression). G₀ is the most recent published GDP per capita (World Bank, labeled 2026 baseline). Total capital exclusions = ΔG × population.\n\n"
         "Data Vintage Note for 2026 Edition\n"
         "V-Dem components reflect the latest available year in the source file (2024). GDP per capita (G₀) "
         "uses the freshest published values available at the time of atlas production. This follows the "
@@ -635,66 +640,59 @@ def build_front_matter(data: dict) -> Path:
     pdf.chapter_title("Nested Causal Modelling/Mapping")
 
     pdf.body_text(
-        "Nested causal modelling is the data-science practice of analysing graphs of highly correlated variables to identify the small set of binary conditions whose presence or absence provides the causal support for a target outcome — in this case, the highest possible GDP per capita.\n\n"
-        "The score R (0.0 to 1.0) is the simple average of nine binary indicators. Each indicator is either present (1) or absent (0). The model is verified by the strength of the correlation between higher R and higher observed GDP across the 187 nations with complete data.\n\n"
-        "The modelling follows three laws of nested causal enclosure:\n"
-        "1. Every system is enclosed by another system and, in turn, encloses others.\n"
-        "2. Resources and energy move between enclosures in balanced exchange.\n"
-        "3. Enclosures scale without limit; there is always an enclosure between any two.\n\n"
-        "When these laws are applied to data on prosperity, nine binary conditions stand out. Their presence or absence strongly supports (or undermines) the steady states in which economies grow. These nine conditions happen to be the core protections of the right to life, but they can equally be viewed as simple on/off functions in any economic system.\n\n"
-        "Sid J.A. Hubbard performed this nested causal modelling on the global cross-section of data with the explicit target of maximal GDP. The nine levers that emerged are the ones that, when present, act as force multipliers for economic velocity at very low annual cost.\n\n"
-        "The 25 % cap applied to all projections is a deliberate limiting factor. The raw data suggest a higher sensitivity (closer to 0.33), but the cap prevents any single set of factors from being credited with more than a conservative share of observed output and keeps the figures stable for practical use.\n\n"
-        "Example — Whistleblower protections. When the law protects people who report government corruption, the whistles blow, the corruption is found and stopped, public money is used more efficiently, and investors see lower risk. The annual cost is minimal (pass and enforce the law). The multiplier effect on economic velocity is large."
+        "The RTLDI in this atlas begins with the source framework (Hubbard, Zenodo DOI 10.5281/zenodo.19468550) and extends it through population-weighted regression on the full UN cross-section. The target is to quantify \"capital exclusions\" — the lost potential GDP that exists because the nine foundational protections required for capital to operate safely are not present.\n\n"
+        "R (0.0 to 1.0) is the simple average of the nine binary indicators from the source. The model is verified by the strong population-weighted correlation between higher R and higher observed GDP. A conservative 25% attribution cap is applied so that no more than one-quarter of any nation's observed wealth is credited to these institutional conditions (the raw regression suggests a higher coefficient, closer to 0.33).\n\n"
+        "The nine conditions function as the institutional prerequisites that allow capital to enter and remain in an economy without unacceptable risk of arbitrary loss. Where they are absent, capital is excluded. The RTLDI extension makes the scale of these exclusions visible so that nations can see the concrete economic opportunity in putting the protections in place."
     )
 
     # ========== DIAGNOSTIC GUIDE ==========
     pdf.add_page()
-    pdf.chapter_title("Diagnostic Guide: Using RTLDI as a Reform Tool")
+    pdf.chapter_title("Using the RTLDI to Identify Capital Exclusions")
 
     pdf.body_text(
-        "The RTLDI ATLAS is not only a ranking. It is a diagnostic instrument that converts the presence or absence of nine specific protections into a recurring, measurable annual economic cost.\n\n"
-        "This section explains how people and policymakers inside these nations can use the R scores, the 9-component breakdowns, the per-capita ΔG figures, and the total national deficits as concrete levers for change."
+        "This atlas extends the source RTLDI to make visible the capital exclusions — the lost potential GDP — that result when the nine protections are not in place. The global total is on the order of 15 trillion dollars sitting outside productive economic activity.\n\n"
+        "Governments, investors, and analysts can use the R scores and the 9-component breakdowns to see exactly where specific, low-cost institutional changes correspond to large volumes of currently excluded capital. Activating the levers is how that capital can be brought back into the economy."
     )
 
     pdf.chapter_title("The Core Translation")
     pdf.body_text(
         "The bounded equation is ΔG = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with η≈0.30 from the population-weighted 2026 cross-section.\n\n"
-        "R is the average of the nine binary RTLP indicators. G₀ is GDP per capita. ΔG is the estimated annual disparity per person associated with incomplete protection (capped so these nine factors are never credited with more than 25% of observed G₀ after industry, resources, history, location and human capital are given their due). Total national disparity ≈ ΔG × population.\n\n"
-        "A country with R = 0.44 and G₀ = $10,000 shows roughly $1,512 per person per year in disparity under the current cross-sectional association (0.30 × 0.56 × 10,000). The contextual cap of 25% of G₀ limits the maximum claim for any nation. The figure is a statistical benchmark and upper-bound reference, not a guaranteed amount that would appear if the indicators alone were improved while holding everything else fixed."
+        "R is the average of the nine binary indicators from the source RTLDI. G₀ is GDP per capita. ΔG is the estimated per-person capital exclusion (lost potential GDP) associated with the current level of these protections (capped so the nine indicators are never credited with more than 25% of observed G₀ after other factors are given their due). Total capital exclusions ≈ ΔG × population.\n\n"
+        "A country with R = 0.44 and G₀ = $10,000 shows roughly $1,512 per person per year in capital exclusions under the current cross-sectional relationship (0.30 × 0.56 × 10,000). The 25% cap is the conservative adjustment from the population-weighted regression. The figure is the measured volume of capital currently excluded from that economy — the potential GDP that can be brought back in once the protections are in place."
     )
 
     pdf.chapter_title("The Nine Levers")
     pdf.body_text(
-        "Each lever is a simple binary condition — either present or absent. When present, it acts as a low-cost force multiplier for economic velocity. The nine levers were identified by nested causal modelling of global data with the target of maximal GDP.\n\n"
-        "1. Legal Protections\nPresent when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when rules are known and fairly enforced. Annual cost is low.\n\n"
-        "2. Independent Judiciary\nPresent when judges are protected from political pressure so they rule according to law. Absent when courts serve the powerful instead of the law. Multiplies GDP by making contracts and property rights reliable for everyone. Annual cost is low.\n\n"
-        "3. Law Enforcement Accountability\nPresent when police and security forces are investigated and punished when they break the law. Absent when state agents can kill or abuse without consequence. Multiplies GDP by allowing people to travel, work, and invest without fear. Annual cost is low.\n\n"
-        "4. Protection Against Arbitrary Detention\nPresent when no one can be held without charge, time limits, or judicial review. Absent when the state can jail people at will. Multiplies GDP by protecting continuity of talent and enterprise. Annual cost is low.\n\n"
-        "5. Freedom from Torture\nPresent when torture is a crime with no exceptions and evidence obtained by it is excluded. Absent when state agents can use pain to extract information. Multiplies GDP by building social trust and accurate information flows. Annual cost is low.\n\n"
-        "6. Civilian Protection in Conflict\nPresent when armed forces distinguish civilians from combatants and are held accountable. Absent when civilians are treated as acceptable targets. Multiplies GDP by preserving human and physical capital for recovery. Annual cost is training and accountability.\n\n"
-        "7. Access to Justice\nPresent when ordinary people can bring serious claims against the powerful and have them heard. Absent when only the powerful obtain remedies. Multiplies GDP by making contracts and rights meaningful for everyone. Annual cost is legal aid and court capacity.\n\n"
-        "8. Freedom of Expression & Whistleblower Protections\nPresent when laws protect people who report government corruption from retaliation. Absent when speaking out can lead to punishment. Multiplies GDP because corruption is exposed and stopped, public money goes further, and investors see lower risk. Annual cost is low — mainly passing and enforcing the law. When the law protects whistleblowers, the whistles blow and tell you where the corruption is.\n\n"
-        "9. Socioeconomic Conditions\nPresent when extreme undernourishment and poverty are kept below minimal thresholds. Absent when large parts of the population cannot meet basic survival needs. Multiplies GDP because a healthy, minimally secure population works, learns, and consumes more. Annual cost is fiscal priority on basic nutrition and health.\n\n"
-        "These nine work together. Weakness in one makes the others harder to maintain. All nine have low annual cost relative to the economic velocity they unlock."
+        "Each lever is a simple binary condition — either present or absent. When present, it removes a barrier that otherwise excludes capital from the economy. The nine levers were identified by the source modelling (extended here via population-weighted regression) with the target of maximal economic scale. Activating them is how nations can reduce capital exclusions and bring excluded GDP back into productive use.\n\n"
+        "1. Legal Protections\nPresent when ordinary law is applied consistently to state agents as well as everyone else. These protections represent opportunities to support greater economic scale by lowering the risk of arbitrary loss; people and businesses invest and trade more when rules are known and fairly enforced. Annual cost is low.\n\n"
+        "2. Independent Judiciary\nPresent when judges are protected from political pressure so they rule according to law. These protections represent opportunities for contracts and property rights to be reliable for everyone. Annual cost is low.\n\n"
+        "3. Law Enforcement Accountability\nPresent when police and security forces are investigated and punished when they break the law. These protections represent opportunities for people to travel, work, and invest with greater security. Annual cost is low.\n\n"
+        "4. Protection Against Arbitrary Detention\nPresent when no one can be held without charge, time limits, or judicial review. These protections represent opportunities to protect continuity of talent and enterprise. Annual cost is low.\n\n"
+        "5. Freedom from Torture\nPresent when torture is a crime with no exceptions and evidence obtained by it is excluded. These protections represent opportunities to build social trust and accurate information flows. Annual cost is low.\n\n"
+        "6. Civilian Protection in Conflict\nPresent when armed forces distinguish civilians from combatants and are held accountable. These protections represent opportunities to preserve human and physical capital for recovery. Annual cost is training and accountability.\n\n"
+        "7. Access to Justice\nPresent when ordinary people can bring serious claims against the powerful and have them heard. These protections represent opportunities for contracts and rights to be meaningful for everyone. Annual cost is legal aid and court capacity.\n\n"
+        "8. Freedom of Expression & Whistleblower Protections\nPresent when laws protect people who report government corruption from retaliation. These protections represent opportunities for corruption to be exposed and stopped, public money to go further, and investors to see lower risk. Annual cost is low — mainly passing and enforcing the law. When the law protects whistleblowers, the whistles blow and tell you where the corruption is.\n\n"
+        "9. Commitment to Basic Human Security\nPresent when a society deliberately sets and maintains a floor against extreme deprivation (through nutrition, basic health access, and minimal material security). This is a measurable expression of political will and institutional priority. When present, it expands the share of the population that can participate productively in the economy, increasing overall scale and velocity. Annual cost is a fiscal and political choice about minimum security standards.\n\n"
+        "These nine work together as a system of low-cost, high-return institutional conditions. Societies that activate more of them consistently realize greater economic scale and velocity."
     )
 
     pdf.chapter_title("How the Levers Work in Practice")
     pdf.body_text(
-        "Each lever is either present or absent. When absent, it slows economic velocity. When present, it multiplies it at low annual cost. The nine levers were identified by nested causal modelling of global data with the target of maximal GDP.\n\n"
-        "Finance ministries, businesses, and citizens can use the R score and the 9-component breakdown as a practical diagnostic: note which levers are absent, estimate the annual disparity, and compare the cost of reform against the recurring gain. The 3-year trend plots on nation pages show whether the drag is stable or beginning to shrink as specific protections improve."
+        "Each lever is either present or absent. When present, it removes a barrier that otherwise excludes capital from the economy. The nine levers come from the source RTLDI and are extended here so the volume of capital exclusions (lost potential GDP) associated with each missing lever becomes visible.\n\n"
+        "Governments, investors, and analysts can use the R score and the 9-component breakdown as practical economic intelligence: identify which levers are not yet activated in a jurisdiction and see the corresponding scale of excluded capital that could be brought back in once the protections are in place. The levers are low-cost relative to the GDP they help unlock."
     )
 
     pdf.chapter_title("Practical Use")
     pdf.body_text(
-        "For national policymakers: Open your profile. Note your R and the specific 'No' indicators. Compare the total annual disparity to your health or education budget. Ask the civil service to cost the effort required to move one or two indicators and compare it to the recurring gain.\n\n"
-        "For civil society and media: Use the numbers in domestic advocacy. 'We lose $2.3 billion every year because we have not made law enforcement accountable for killings. That is more than the entire health budget. Here is the one change that begins to close the gap.'\n\n"
-        "For citizens: The data is public. When leaders promise 'development,' ask which of the nine protections they will strengthen and how we will know in four years whether R has moved.\n\n"
-        "For international actors: Target governance and security assistance to the specific indicators that are currently 'No' for that country."
+        "For national policymakers: Open your profile. Note your R and the specific levers that are not yet activated. Compare the total annual capital exclusions (lost potential GDP) in your jurisdiction to relevant budgets. Ask the civil service to cost the effort required to activate one or two levers and the volume of excluded capital that could be brought back into the economy.\n\n"
+        "For civil society and media: Use the numbers in domestic advocacy to highlight the opportunity. 'We have $2.3 billion in capital exclusions every year associated with law enforcement accountability. That is more than the entire health budget. Here is one change that can bring that excluded capital back in.'\n\n"
+        "For citizens: The data is public. When leaders promise 'development,' ask which of the nine protections they will strengthen and how we will know in four years whether R has moved — and what capital exclusions that could eliminate.\n\n"
+        "For international actors: Target governance and security assistance to the specific levers that currently show the largest capital exclusions in that country."
     )
 
     pdf.chapter_title("Limitations")
     pdf.body_text(
-        "R uses 2024 V-Dem data paired with the freshest published GDP figures. Binarization thresholds are modeling choices; always examine the raw values. The 25 % cap is a deliberate limiting factor applied to projections (raw analysis of the data suggests a higher sensitivity, closer to 0.33). The identity of the weak indicators is more robust than the precise dollar figure."
+        "R uses 2024 V-Dem data paired with the freshest published GDP figures. Binarization thresholds are modeling choices; always examine the raw values. The 25 % cap is a deliberate conservative adjustment from the population-weighted regression on the UN cross-section (raw analysis suggests a higher coefficient, closer to 0.33). The identity of the levers with the largest associated capital exclusions is more robust than the precise dollar figure. The atlas quantifies the scale of exclusions based on the source RTLDI; whether and how much capital returns when protections are strengthened depends on many other factors."
     )
 
     pdf.small_text(
@@ -751,16 +749,16 @@ def build_front_matter(data: dict) -> Path:
         pdf.set_x(MARGIN)
         pdf.small_text("[Global map could not be embedded]")
 
-    # Global Lost GDP table — placed after the body text / graphic area and before the interpretive world description
+    # Global Capital Exclusions table — placed after the body text / graphic area and before the interpretive world description
     pdf.set_x(MARGIN)
     pdf.set_font(FONT_NAME, "", 10)
     pdf.set_text_color(*HEADER_COLOR)
-    pdf.cell(0, 5, "Global Lost GDP by RTLP Indicator", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 5, "Global Capital Exclusions by Lever", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.ln(0.5)
 
     # Clean table header
     tcol = [7, 68, 32, 16]  # #, name, lost, pct
-    headers = ["#", "Indicator (RTLP)", "Annual Lost GDP", "% total"]
+    headers = ["#", "Indicator (RTLP)", "Annual Capital Exclusions", "% total"]
     pdf.set_font(FONT_NAME, "", 7.5)
     pdf.set_fill_color(*HEADER_COLOR)
     pdf.set_text_color(255, 255, 255)
@@ -815,7 +813,7 @@ def build_front_matter(data: dict) -> Path:
     pdf.set_font(FONT_NAME, "", 9)
     pdf.set_text_color(*HEADER_COLOR)
     total_t = global_total_lost / 1e12
-    pdf.multi_cell(0, 4, f"The total global annual lost GDP for the planet is estimated at ${total_t:,.2f} trillion.")
+    pdf.multi_cell(0, 4, f"The total global capital exclusions — lost potential GDP sitting outside the economy because the nine protections are not present — is estimated at ${total_t:,.2f} trillion. This is the capital the world can bring back in by activating the levers.")
 
     pdf.ln(0.5)
     pdf.set_x(MARGIN)
@@ -832,7 +830,7 @@ def build_front_matter(data: dict) -> Path:
     toc_items = [
         ("Executive Description", "2"),
         ("Methodology and Data Sources", "3"),
-        ("Diagnostic Guide: Using RTLDI for Reform", "4"),
+        ("Using RTLDI as Economic Intelligence", "4"),
         ("Cartographic Approach and the Nested Map", "5"),
         ("Summary Table of All 193 UN Member Nations", "6"),
         ("UN Regional Summaries (22 regions)", "12"),
@@ -863,7 +861,7 @@ def build_front_matter(data: dict) -> Path:
     pdf.ln(2)
 
     col_widths = [8, 38, 22, 18, 22, 28, 28]
-    headers = ["#", "Country", "Region", "R", "Per Capita Loss", "Total Loss (USD)", "Population"]
+    headers = ["#", "Country", "Region", "R", "Per Capita Capital Exclusions", "Capital Exclusions (USD)", "Population"]
     pdf.set_font(FONT_NAME, "", 7)
     pdf.set_fill_color(*HEADER_COLOR)
     pdf.set_text_color(255, 255, 255)
@@ -942,7 +940,7 @@ def build_front_matter(data: dict) -> Path:
 
 def build_regions(data: dict) -> Path:
     """Build the UN Regional Summaries PDF as its own independent part (22 regions).
-    One page per region with choropleth, stats, cumulative description (best/worst for n>3),
+    One page per region with choropleth, stats, cumulative description,
     member table + REGIONAL TOTAL, 9-indicator breakdown, and universal-fail callout where applicable.
     This is now separate so front matter changes and nation page changes do not force re-generation
     of the region pages (and vice-versa). Included in the final concat after front, before nations.
@@ -958,12 +956,12 @@ def build_regions(data: dict) -> Path:
         "The 193 UN Member States are grouped into 22 geographic regions. Below are one-page overviews for each region, "
         "aggregating the RTLDI metrics. For each region we show a choropleth of enclosure strength (R) for its member "
         "countries (zoomed to the region using the same Viridis scale as the global map), key aggregates (population-weighted "
-        "average R, total annual bounded disparity), and a breakdown of the 9 RTLP indicators. The breakdown reports the percentage "
-        "of countries in the region scoring 'Yes' on each indicator and the estimated portion of the region's total bounded disparity "
+        "average R, total annual capital exclusions), and a breakdown of the 9 RTLP indicators. The breakdown reports the percentage "
+        "of countries in the region scoring 'Yes' on each indicator and the estimated portion of the region's total capital exclusions "
         "attributable to shortfalls on that indicator (using the current η=0.30 scaled by each country's contextual 25% cap)."
     )
     pdf.small_text(
-        "Regional statistics are derived directly from the per-country 2026 atlas values (with the 25% contextual cap applied). High-impact regions (by total bounded disparity) are shown first."
+        "Regional statistics are derived directly from the per-country 2026 atlas values (with the 25% contextual cap applied). Regions with the largest capital exclusions are shown first."
     )
 
     for reg_name, reg_sum in sorted_regions:
@@ -977,20 +975,13 @@ def build_regions(data: dict) -> Path:
             f"Countries: {reg_sum['n_countries']}  |  "
             f"Population: {reg_sum['total_pop']/1e6:,.1f} million  |  "
             f"Pop-weighted Avg R: {reg_sum['weighted_r']:.3f}  |  "
-            f"Total Annual Lost GDP: ${reg_sum['total_lost_gdp']/1e9:,.2f} billion"
+            f"Total Annual Unrealized Scale: ${reg_sum['total_lost_gdp']/1e9:,.2f} billion"
         )
         pdf.cell(0, 4, stats, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(0.5)
 
         members = reg_sum.get("members", [])
         n = reg_sum['n_countries']
-        best = worst = None
-        if n > 3 and members:
-            valid = [m for m in members if m.get("r") is not None]
-            if valid:
-                best = max(valid, key=lambda x: x["r"])
-                worst = min(valid, key=lambda x: x["r"])
-
         inds = reg_sum.get("indicators", [])
         para1 = ""
         para2 = ""
@@ -1003,22 +994,16 @@ def build_regions(data: dict) -> Path:
                 f"The {reg_name} region has a population-weighted average RTLP score of {reg_sum['weighted_r']:.2f}. "
                 f"This cumulative measure indicates that, across its {n} member countries, "
                 f"roughly {reg_sum['weighted_r']*100:.0f}% of the nine core protections are in place on average, "
-                f"resulting in an estimated ${reg_sum['total_lost_gdp']/1e9:,.2f} billion in annual lost GDP. "
+                f"corresponding to an estimated ${reg_sum['total_lost_gdp']/1e9:,.2f} billion in capital exclusions (lost potential GDP) annually. "
                 f"The region demonstrates particular strength in {', '.join(strong_names) if strong_names else 'several key areas'}, "
-                f"where a substantial share of countries satisfy the binarization thresholds for those indicators."
+                f"where a substantial share of countries satisfy the binarization thresholds for those indicators. "
+                f"These protections represent opportunities to support greater economic scale for life and capital."
             )
-            if best and worst:
-                best_name = best.get("country", best.get("iso3", ""))
-                worst_name = worst.get("country", worst.get("iso3", ""))
-                para1 += (
-                    f" The highest-scoring nation is {best_name} (R={best['r']:.2f}), "
-                    f"while the lowest is {worst_name} (R={worst['r']:.2f})."
-                )
             para2 = (
-                f"Addressing the weaker indicators—especially {', '.join(weak_names) if weak_names else 'priority areas'}—"
-                f"is associated with the largest slices of the region's current bounded disparity (after the 25% institutional-share cap). "
-                f"The cross-sectional association links improvement on these protections to a reduction in disparity of roughly ${potential_b:,.2f} billion annually for the region as a whole (within the contextual bound). "
-                f"Whether and how much of that association is realizable depends on the other determinants of output (industry structure, resources, human capital, history) that the template explicitly credits."
+                f"Strengthening the areas with lower implementation—especially {', '.join(weak_names) if weak_names else 'priority areas'}—"
+                f"is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). "
+                f"The cross-sectional association links stronger protections to greater economic scale of roughly ${potential_b:,.2f} billion annually for the region as a whole (within the bound). "
+                f"Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors."
             )
 
         # Place map on the right; flow descriptive text (larger) on the left beside it.
@@ -1069,10 +1054,10 @@ def build_regions(data: dict) -> Path:
         if members_sorted:
             pdf.set_font(FONT_NAME, "", 6.5)
             pdf.set_text_color(*HEADER_COLOR)
-            pdf.cell(0, 3.5, "Member Nations (RTLP R, G0 per capita, Population, total lost) — sorted by R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.cell(0, 3.5, "Member Nations (RTLP R, G0 per capita, Population, capital exclusions) — sorted by capital exclusions", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             pdf.ln(0.2)
             tcols = [36, 9, 15, 16, 20]
-            thdrs = ["Country", "R", "G0 ($)", "Pop", "Lost ($)"]
+            thdrs = ["Country", "R", "G0 ($)", "Pop", "Capital Exclusions ($)"]
             pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_fill_color(*HEADER_COLOR)
             pdf.set_text_color(255, 255, 255)
@@ -1099,9 +1084,7 @@ def build_regions(data: dict) -> Path:
                 else:
                     lstr = "N/A"
 
-                is_best = best and m.get("iso3") == best.get("iso3")
-                is_worst = worst and m.get("iso3") == worst.get("iso3")
-                font = "B" if (is_best or is_worst) else ""
+                font = ""
                 pdf.set_font(FONT_NAME, font, 5)
 
                 if rr is not None:
@@ -1153,7 +1136,7 @@ def build_regions(data: dict) -> Path:
             pdf.set_text_color(70, 70, 70)
             pdf.set_x(MARGIN + 2)
             pdf.multi_cell(0, 2.4,
-                f"Attributable lost GDP: ${lost_b:,.2f} billion ({(lost_b * 1e9 / reg_sum['total_lost_gdp'] * 100) if reg_sum['total_lost_gdp'] > 0 else 0:.0f}% of region total). {ind['desc']}"
+                f"Associated capital exclusions: ${lost_b:,.2f} billion ({(lost_b * 1e9 / reg_sum['total_lost_gdp'] * 100) if reg_sum['total_lost_gdp'] > 0 else 0:.0f}% of region total). {ind['desc']}"
             )
             pdf.set_x(MARGIN)
 
@@ -1166,7 +1149,7 @@ def build_regions(data: dict) -> Path:
                 pdf.set_text_color(20, 20, 20)
                 pdf.multi_cell(0, 2.8,
                     f"Critically, every single nation in the {reg_name} region is currently failing indicator {chosen['num']}. {chosen['name']}. "
-                    f"The portion of the region's bounded disparity (after the 25% cap) currently attributed to this universal shortfall is ${gain_b:,.2f} billion."
+                    f"The portion of the region's capital exclusions (after the 25% cap) associated with this lever is ${gain_b:,.2f} billion."
                 )
                 pdf.ln(0.3)
 
@@ -1312,7 +1295,7 @@ def build_nations(data: dict) -> Path:
         pdf.set_text_color(100, 100, 100)
         pdf.multi_cell(0, 2.8,
             "Note: [Yes] = contributes +1 to R. Raw = V-Dem/WB value (higher=stronger protection). Thresholds in Methodology. Partial coverage possible for some nations. "
-            "See the Diagnostic Guide section for how to use your R and component scores as a reform diagnostic tool."
+            "See the Economic Intelligence section for how to use your R and component scores as a tool to identify opportunities for greater scale."
         )
 
     out_path = Path(NATIONS_PDF)
@@ -1356,7 +1339,7 @@ def build_back_matter(data: dict) -> Path:
     pdf.chapter_title("Nested Causal Modelling")
 
     pdf.body_text(
-        "The atlas is an application of nested causal modelling: the practice of identifying a small set of binary conditions whose presence or absence supports a target outcome (here, maximal GDP per capita). The nine levers are the conditions that emerged from modelling global data with that target. Their descriptions, costs, and multiplier effects are given in the front-matter section of the same name. The 25 % cap is a practical limiter on projections; the levers themselves are the transparent, low-cost, high-return part of the model."
+        "The atlas takes the RTLDI from the source document and extends it via population-weighted regression (25% cap) to quantify capital exclusions — the lost potential GDP where capital is excluded from the economy because the nine protections required for it to operate are not present. The nine levers are the conditions from the source modelling. Their descriptions and the scale of exclusions associated with each are given in the front-matter section. The 25 % cap is a practical limiter on projections; the levers are low-cost conditions whose activation can bring excluded capital back in."
     )
 
     # ========== NEW: FALSIFICATION OF MALTHUS (streamlined from source) ==========
@@ -1376,7 +1359,7 @@ def build_back_matter(data: dict) -> Path:
     )
 
     pdf.body_text(
-        "The important distinction is that this analysis does not negate the efficacy of Malthusian regimes. A nation can choose the Malthusian relationship to its population and receive the expected drain on resources (and plan for the expected trimming), or it can raise its RTLP score and enjoy the scaling benefits of an optimized enclosure. The cost of not caring for the lives of people equally is now visible: the choice is between expansion of corruption or stimulation of domestic industrial productivity."
+        "The important distinction is that this analysis does not negate the efficacy of Malthusian regimes. A nation can choose the Malthusian relationship to its population and receive the expected constraints on per-capita resources, or it can activate more of the nine levers and enjoy the scaling benefits of an optimized institutional environment. The opportunity to realize greater economic scale through these levers is now visible in the data."
     )
 
     # ========== INDEX OF TERMS ==========
@@ -1384,28 +1367,28 @@ def build_back_matter(data: dict) -> Path:
     pdf.chapter_title("Index of Terms")
 
     terms = [
-        ("ΔG (delta G)", "Annual GDP per capita loss due to incomplete right-to-life protection. Core output of the RTLDI equation."),
-        ("G₀ (G-zero)", "Baseline GDP per capita (World Bank, current US$). The 'current' economic size against which the deficit is measured."),
-        ("R (RTLP score)", "Right-to-Life Protection score, 0–1. Average of nine binary indicators. 1 = full protection across all dimensions."),
-        ("RTLDI", "Right-to-Life Deficit Index — the full framework and the per-country or global aggregate loss figure."),
-        ("RTLP", "Right-to-Life Protection — the nine binary indicators that are averaged to produce R."),
+        ("ΔG (delta G)", "Annual per-capita capital exclusions (lost potential GDP) associated with the current level of the nine levers. Core output of the RTLDI equation."),
+        ("G₀ (G-zero)", "Baseline GDP per capita (World Bank, current US$). The 'current' economic size against which capital exclusions are measured."),
+        ("R (lever activation score)", "Average activation level (0–1) of the nine Right to Life Deficit Index levers. 1 = full activation across all dimensions."),
+        ("RTLDI", "Right to Life Deficit Index — the full framework from the source (Zenodo 10.5281/zenodo.19468550), extended here to quantify capital exclusions (lost potential GDP where capital is excluded because the nine protections necessary for it to operate are absent)."),
+        ("The Nine Levers", "The nine binary institutional conditions (RTLDI) that are averaged to produce R. Low-cost, high-return switches identified through modelling for maximal prosperity."),
         ("V-Dem", "Varieties of Democracy project. Supplies the expert-coded governance and civil liberties indicators for eight of the nine RTLP components."),
         ("Crosswalk", "The explicit mapping from the nine verbatim RTLP questions to observable V-Dem variables and World Bank statistics, with defined binarization thresholds."),
         ("2026-fresh G0", "The most recent published GDP per capita values used as the dynamic baseline for the 2026 edition (even when RTLP components are from 2024)."),
         ("Mollweide", "Equal-area pseudocylindrical map projection used for all choropleths (global, regional, and per-nation zooms) to ensure visual area corresponds to geographic reality."),
         ("Choropleth", "Thematic map in which countries or regions are shaded by enclosure strength R (0–1) using the Viridis colormap; primary visual for the global, regional, and focus views."),
-        ("Diagnostic (tool/guide)", "The use of RTLP scores, component breakdowns, and attributable lost-GDP figures as a practical instrument for citizens, NGOs, and policymakers to identify reform priorities and quantify upside."),
-        ("Trend (3-year)", "The per-nation GDP-driven RTLDI plots (R held fixed at 2024 values) that illustrate recent economic-drag dynamics alongside the regional and global maps."),
-        ("Attributable lost GDP", "The share of a country or region's total lost output that is directly traceable to the absence of one specific RTLP indicator (sum of η/9 × G₀ × pop over countries failing that indicator, with current η≈0.30 from population-weighted cross-section)."),
+        ("Economic Intelligence (tool)", "The use of R scores, component breakdowns, and attributable capital exclusions figures as practical information for governments, businesses, and analysts to identify high-leverage institutional opportunities."),
+        ("Trend (3-year)", "The per-nation GDP-driven RTLDI plots (R held fixed at 2024 values) that illustrate recent dynamics in capital exclusions alongside the regional and global maps."),
+        ("Attributable capital exclusions", "The share of a country or region's total capital exclusions (lost potential GDP) that is directly traceable to the current implementation level of one specific protection (sum of η/9 × G₀ × pop over countries where the protection is not fully present, with current η≈0.30 from population-weighted cross-section)."),
         ("Enclosure (nested causal / human)", "The source document's central metaphor: the interdependent, layered structures of protection whose strength or weakness shapes higher-order economic and social steady states."),
-        ("Causality and Attraction", "The source monograph (Hubbard 2026V3, Zenodo 19468550) that supplies the RTLDI equation, the nine RTLP indicators, the nested-enclosures paradigm, and the cartographic critique of distortion."),
+        ("Causality and Attraction", "The source monograph (Hubbard 2026V3, Zenodo 19468550) that supplies the RTLDI equation, the nine RTLP indicators, the nested-enclosures paradigm, and the cartographic critique of distortion. This atlas extends the source RTLDI to quantify capital exclusions."),
         ("Binarization / threshold", "The documented conversion of continuous V-Dem and World Bank values into the binary 0/1 scores for the nine indicators (e.g., ≥2.0 on 0-4 scales, ≤5 % undernourishment + ≤10 % poverty for #9)."),
         ("η (eta)", "The sensitivity coefficient (current data-driven default 0.30 from population-weighted 2026 UN cross-section). In the bounded model ΔG = min(η(1 − R) × G₀, 0.25 × G₀); the cross-sectional premium per indicator, then capped so the nine RTLP indicators are never credited with more than 25% of observed G₀ after other determinants are given due weight. (Source document used a more conservative 0.05 structural value.)"),
         ("Steady state", "A balanced biological, economic, or social condition that the framework argues is supported or undermined by the strength of the nine life protections and the resulting causal enclosures."),
         ("Malthusian theory", "The proposition (Thomas Malthus) that population grows exponentially while resources grow linearly, inevitably producing scarcity and misery unless population is checked. The source and this atlas present geometric and empirical counter-evidence under conditions of equal right-to-life protection."),
 
-        ("UN region / regional summary", "One of the 22 geographic groupings used for aggregates, focused choropleths, member-nations tables (with R / G0 / population / lost + REGIONAL TOTAL row), and 9-indicator breakdowns."),
-        ("Member-nations table", "The compact table on each regional summary page that lists every country in the region together with its R, G0, population, and total lost GDP, plus a bottom row of regional totals."),
+        ("UN region / regional summary", "One of the 22 geographic groupings used for aggregates, focused choropleths, member-nations tables (with R / G0 / population / capital exclusions + REGIONAL TOTAL row), and 9-lever breakdowns."),
+        ("Member-nations table", "The compact table on each regional summary page that lists every country in the region together with its R, G0, population, and capital exclusions, plus a bottom row of regional totals."),
         ("Viridis", "The perceptually uniform sequential colormap (dark low-R → yellow high-R) used consistently for every enclosure-strength choropleth in the atlas."),
         ("Fitbounds / regional zoom", "The per-nation choropleth view that automatically zooms to the target country plus the rest of its UN region, using the same Mollweide projection and Viridis scale as the global map."),
     ]
@@ -1418,8 +1401,8 @@ def build_back_matter(data: dict) -> Path:
                 terms.append((name, desc))
 
     indicator_subterms = [
-        ("Arbitrary Detention", "Core protection against state overreach (RTLP indicator #4); failure contributes directly to attributable lost GDP in regions with weak rule of law."),
-        ("Torture and Inhumane Treatment", "RTLP indicator #5; one of the largest contributors to global lost GDP, highlighting physical integrity failures."),
+        ("Arbitrary Detention", "Core protection against state overreach (RTLP indicator #4); current implementation level contributes to associated capital exclusions in regions."),
+        ("Torture and Inhumane Treatment", "RTLP indicator #5; one of the larger contributors to global capital exclusions, highlighting physical integrity protections."),
         ("Independent Judiciary", "RTLP indicator #2; essential for enforcing all other protections and a frequent point of regional failure."),
         ("Socioeconomic Conditions", "RTLP indicator #9; combines World Bank undernourishment and poverty data; measures structural ability to sustain life."),
         ("Freedom of Expression and Whistleblower Protections", "RTLP indicator #8; critical for exposing violations and one of the lower-loss (stronger) areas globally."),
