@@ -975,7 +975,7 @@ def build_regions(data: dict) -> Path:
             f"Countries: {reg_sum['n_countries']}  |  "
             f"Population: {reg_sum['total_pop']/1e6:,.1f} million  |  "
             f"Pop-weighted Avg R: {reg_sum['weighted_r']:.3f}  |  "
-            f"Total Annual Unrealized Scale: ${reg_sum['total_lost_gdp']/1e9:,.2f} billion"
+            f"Total Annual Capital Exclusions: ${reg_sum['total_lost_gdp']/1e9:,.2f} billion"
         )
         pdf.cell(0, 4, stats, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(0.5)

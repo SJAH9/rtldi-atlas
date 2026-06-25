@@ -358,7 +358,10 @@ def write_xlsx_atlas(
     # Footer
     last = 7 + len(df)
     ws.merge_cells(f"A{last+2}:O{last+2}")
-    ws[f"A{last+2}"] = "PLACEHOLDER: Full R from 9 RTLP indicators requires V-Dem v16 data (see docs/indicator_crosswalk.md and src/fetch_vdem.py). This demonstrates the equation + pipeline with real WB G0/pop/socio."
+    if is_placeholder:
+        ws[f"A{last+2}"] = "PLACEHOLDER: Full R from 9 RTLP indicators requires V-Dem data (see docs/indicator_crosswalk.md and src/fetch_vdem.py). This demonstrates the equation + pipeline with real WB G0/pop/socio."
+    else:
+        ws[f"A{last+2}"] = "Canonical RTLDI Atlas output: R is computed from the documented V-Dem + World Bank crosswalk, and capital exclusions use the population-weighted eta with the 25% cap."
     ws[f"A{last+2}"].font = Font(italic=True, size=9, color="666666")
 
     wb.save(path)

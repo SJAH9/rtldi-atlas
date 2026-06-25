@@ -140,6 +140,8 @@ python3 -m src.generate_atlas_ebook
 python3 -m src.generate_html_atlas
 ```
 
+The HTML atlas is not a separate data product. It is generated from the same canonical pipeline as the PDF (`src.generate_atlas_ebook.prepare_atlas_data()`), and its nation table must contain the same 193 UN Member States as the master 2026 atlas table. Do not substitute a separately computed frontend JSON or alternate scoring pipeline for official releases.
+
 **Exact expected outputs for a successful full reproduction (matching the released v2026.7 asset):**
 - `outputs/atlas/rtl_di_atlas_un_members_2026.csv` and `.xlsx`
 - `outputs/atlas/rtl_di_atlas_summary_2026.json`
@@ -216,4 +218,3 @@ Produces:
 All outputs carry the exact 2026 rule footnote: V-Dem components 2024 + 2026 G₀ baseline. See the committed example in `outputs/figures/rtl_di_enclosure_strength_2026_choropleth.*`.
 
 *Built with the document as the north star. The map is the territory only when the data is honest.*
-

@@ -10,9 +10,8 @@ RTLDI = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Ex
   plotly code path (Mollweide-inspired or standard geo, Viridis R scale).
 - Single index.html with embedded data (JSON) + Tailwind via CDN (common
   pattern for rich self-contained data apps) + vanilla JS for all interactivity:
-  live sortable/filterable/searchable nation table, region explorer that
-  swaps vector map + stats + 9-lever breakdown + best/worst + member list,
-  dynamic bars, etc.
+  live sortable/filterable/searchable 193-nation table, static regional
+  summaries with vector maps, 9-lever breakdowns, and member tables.
 - No server required. Open index.html in any modern browser. All maps are
   local vector SVGs in the maps/ subdirectory.
 
@@ -163,24 +162,47 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     global_indicator_losts: List[float] = data["global_indicator_losts"]
     indicator_names: List[str] = data["indicator_names"]
     indicator_descs: List[str] = data["indicator_descs"]
+    detailed_all: List[Dict] = data["detailed_all"]
     detailed_by_loss: List[Dict] = data["detailed_by_loss"]
 
-    # Master table rows (for the interactive summary table)
+    def safe_float(value: Any, default: float = 0.0) -> float:
+        try:
+            if value is None or pd.isna(value):
+                return default
+            return float(value)
+        except (TypeError, ValueError):
+            return default
+
+    def safe_rank(value: Any) -> Any:
+        try:
+            if value is None or pd.isna(value):
+                return None
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
+    # Master table rows (for the interactive summary table).
+    # This must use the canonical full 193-nation breakdown, not a filtered
+    # presentation list, so the HTML atlas cannot drift into a second pipeline.
     nations = []
-    for d in detailed_by_loss:
+    for d in sorted(
+        detailed_all,
+        key=lambda row: (-safe_float(row.get("total_deficit_usd")), str(row.get("country", row.get("iso3", "")))),
+    ):
         nations.append({
             "iso3": d["iso3"],
             "country": d.get("country", d["iso3"]),
             "region": d.get("un_region", ""),
-            "r": round(float(d.get("r", 0)), 4),
-            "g0": round(float(d.get("g0", 0)), 2),
-            "pop": float(d.get("population", 0)),
-            "lost_per_cap": round(float(d.get("delta_g_per_capita", 0)), 2),
-            "total_lost": float(d.get("total_deficit_usd", 0)),
-            "rank": d.get("rank_by_total_deficit"),
+            "r": round(safe_float(d.get("r")), 4),
+            "g0": round(safe_float(d.get("g0")), 2),
+            "pop": safe_float(d.get("population")),
+            "lost_per_cap": round(safe_float(d.get("delta_g_per_capita")), 2),
+            "total_lost": safe_float(d.get("total_deficit_usd")),
+            "rank": safe_rank(d.get("rank_by_total_deficit")),
         })
 
-    # Pre-compute region detail packets (same logic as PDF for paras and indicators; no best/worst comparisons between nations)
+    # Pre-compute region detail packets using the same canonical PDF data.
+    # No cross-nation comparison callouts are generated.
     region_packets = {}
     for reg_name, reg_sum in regional_data.items():
         members = reg_sum.get("members", [])
@@ -277,7 +299,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
 
     # Pre-render full static HTML blocks for EVERY region summary so the HTML version
     # publishes the same content and data as the generated RTLDI_ATLAS_2026_regions.pdf
-    # (map + stats + best/worst + two-para description + 9-indicator breakdown + member table + TOTAL)
+    # (map + stats + two-para description + 9-indicator breakdown + member table + TOTAL)
     region_summary_blocks = []
     for reg_name, reg in sorted(embed_regions.items(), key=lambda x: -x[1]["total_lost"]):
         members = reg.get("members", [])
@@ -485,8 +507,8 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
               <th class="px-3 py-2 text-right cursor-pointer" data-sort="r">R</th>
               <th class="px-3 py-2 text-right cursor-pointer" data-sort="g0">G₀ (USD)</th>
               <th class="px-3 py-2 text-right cursor-pointer" data-sort="pop">Pop</th>
-              <th class="px-3 py-2 text-right cursor-pointer" data-sort="lost_per_cap">Unrealized Scale / cap</th>
-              <th class="px-3 py-2 text-right cursor-pointer" data-sort="total_lost">Unrealized Scale (USD)</th>
+              <th class="px-3 py-2 text-right cursor-pointer" data-sort="lost_per_cap">Capital Exclusions / cap</th>
+              <th class="px-3 py-2 text-right cursor-pointer" data-sort="total_lost">Capital Exclusions (USD)</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 text-[13px]"></tbody>
