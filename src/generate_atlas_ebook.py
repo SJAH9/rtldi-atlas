@@ -19,7 +19,7 @@ Structure (four separately-generated parts for fast iteration; no duplication):
 
   NATIONS (individual country pages — the 193-page section)
   - Detailed profiles: one page per nation (A-Z order), with capital exclusions figures + full 9-lever
-    RTLDI breakdown + three-year RTLDI trend plot (varying G0, R fixed) + regional zoom map
+    RTLDI breakdown + three-year RTLDI trend stated in text + country-only map
 
   BACK MATTER
   - Data Attribution and Sources
@@ -63,15 +63,6 @@ try:
     HAS_PYPDF = True
 except Exception:
     HAS_PYPDF = False
-
-# Optional matplotlib for the per-nation 3-year RTLDI (GDP) trend plots
-try:
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    HAS_MPL = True
-except Exception:
-    HAS_MPL = False
 
 try:
     import plotly.express as px
@@ -216,76 +207,73 @@ def load_g0_series(iso3_list, years=(2023, 2024, 2025)):
     return g0s
 
 
-def get_trend_plot_path(iso3: str, country: str, r: float, population: float, g0_by_year: dict,
-                        years=(2023, 2024, 2025)) -> Optional[Path]:
-    """Generate (or return cached temp) small PNG trend plot for this nation's RTLDI over 3 G0 years.
-    Uses fixed R + pop from the 2026 atlas; varies only G0. Returns path or None if insufficient data.
-    """
-    if not HAS_MPL:
-        return None
-    # Write to outputs (gitignored by outputs/figures/* rule) so user can inspect the per-nation trend plots after build
-    outdir = Path("outputs/figures/rtl_di_trends_2026")
-    outdir.mkdir(parents=True, exist_ok=True)
-    p = outdir / f"{iso3}.png"
-    # Always (re)build for freshness during this run; cheap
-    xs, ys_tot, ys_pc = [], [], []
+def load_iso2_lookup(path: str = "data/raw/un_member_states.csv") -> Dict[str, str]:
+    """Map ISO3 -> ISO2 for flag labels in nation profiles."""
+    try:
+        df = pd.read_csv(path)
+    except Exception:
+        return {}
+    out = {}
+    for _, row in df.iterrows():
+        iso3 = str(row.get("ISO3", "")).upper()
+        iso2 = str(row.get("ISO2", "")).strip().upper()
+        if iso3 and len(iso2) == 2 and iso2.isalpha():
+            out[iso3] = iso2
+    return out
+
+
+def format_money(n: float) -> str:
+    if n >= 1e12:
+        return f"${n/1e12:,.2f}T"
+    if n >= 1e9:
+        return f"${n/1e9:,.1f}B"
+    if n >= 1e6:
+        return f"${n/1e6:,.1f}M"
+    return f"${n:,.0f}"
+
+
+def format_trend_text(iso3: str, r: float, population: float, g0_by_year: dict,
+                      years=(2023, 2024, 2025)) -> str:
+    """Compact text replacement for the previous 3-point trend graphic."""
+    points = []
     for y in years:
         g0 = g0_by_year.get(y)
         if g0 is None or (isinstance(g0, float) and np.isnan(g0)):
             continue
         if r is None or population is None or population <= 0:
             continue
-        try:
-            dg = _bounded_drag(g0, r)
-            tot_b = dg * float(population) / 1e9
-            xs.append(int(y))
-            ys_tot.append(tot_b)
-            ys_pc.append(dg)
-        except Exception:
-            continue
-    if len(xs) < 2:
-        return None
-    fig, ax = plt.subplots(figsize=(5.2, 1.7), dpi=100)
-    c = "#1F4E79"
-    ax.plot(xs, ys_tot, "-o", color=c, lw=1.1, ms=3.5)
-    ax.fill_between(xs, ys_tot, alpha=0.12, color=c)
-    short = (country[:22] + "…") if len(country) > 23 else country
-    ax.set_title(f"RTLDI Deficit Trend — {short} (R={r:.2f} fixed)", fontsize=6.5, pad=1)
-    ax.set_ylabel("Total annual loss\n(USD billions)", fontsize=5.5)
-    ax.set_xlabel("Year (G₀)", fontsize=5.5)
-    ax.tick_params(axis="both", labelsize=5)
-    for x, y, pc in zip(xs, ys_tot, ys_pc):
-        ax.annotate(f"${pc:,.0f}", xy=(x, y), xytext=(0, 3), textcoords="offset points",
-                    fontsize=4.2, ha="center", color="#333")
-    ax.grid(True, ls=":", alpha=0.35)
-    plt.tight_layout(pad=0.2)
-    fig.savefig(p, dpi=100, facecolor="white", edgecolor="none", bbox_inches="tight")
-    plt.close(fig)
-    return p
+        dg = _bounded_drag(float(g0), float(r))
+        total = dg * float(population)
+        points.append((int(y), float(g0), float(dg), float(total)))
+    if not points:
+        return "Three-year RTLDI projection: insufficient recent GDP data for a reliable 3-position text trend."
+    pieces = [f"{year}: {format_money(total)} total capital exclusions (${dg:,.0f}/cap)" for year, _, dg, total in points]
+    if len(points) >= 2:
+        start = points[0][3]
+        end = points[-1][3]
+        change = end - start
+        direction = "increase" if change > 0 else "decrease" if change < 0 else "no change"
+        return (
+            "Three-position RTLDI projection (R fixed at latest V-Dem value; G0 varies by year): "
+            + "; ".join(pieces)
+            + f". Net {direction} from {points[0][0]} to {points[-1][0]}: {format_money(abs(change))}."
+        )
+    return "Three-position RTLDI projection (partial data): " + "; ".join(pieces) + "."
 
 
-def get_nation_focus_map(iso3: str, country: str, un_region: Optional[str], all_nations: list) -> Optional[Path]:
-    """Generate a small 'zoomed' choropleth for this nation + others in its UN region (proxy for geographic neighbors/context).
-    Uses the same Viridis R scale as the global map. Cached in outputs/figures/nation_focus_maps/
+def get_nation_country_map(iso3: str, country: str, r: float) -> Optional[Path]:
+    """Generate a country-only local map for a nation profile.
+    This intentionally does not include the rest of the UN region; it is a focused country view.
     """
     if not HAS_PLOTLY:
         return None
-    out_dir = Path("outputs/figures/nation_focus_maps")
+    out_dir = Path("outputs/figures/nation_country_maps")
     out_dir.mkdir(parents=True, exist_ok=True)
-    p = out_dir / f"{iso3}_focus.png"
+    p = out_dir / f"{iso3}_country.png"
     if p.exists():
         return p
 
-    # Focus set: the target country + all others in the same UN region (reasonable "neighborhood" proxy)
-    region = un_region or ""
-    focus = [n for n in all_nations if (n.get("un_region") or "") == region or n["iso3"] == iso3]
-    if len(focus) < 2:
-        focus = [n for n in all_nations if n["iso3"] == iso3]
-
-    focus_df = pd.DataFrame([
-        {"iso3": n["iso3"], "r": float(n.get("r", 0.0)), "country": n.get("country", n["iso3"])}
-        for n in focus
-    ])
+    focus_df = pd.DataFrame([{"iso3": iso3, "r": float(r or 0.0), "country": country}])
 
     fig = px.choropleth(
         focus_df,
@@ -300,13 +288,8 @@ def get_nation_focus_map(iso3: str, country: str, un_region: Optional[str], all_
 
     fig.update_geos(
         fitbounds="locations",
-        showcoastlines=True,
-        coastlinecolor="rgba(180,180,180,0.6)",
-        showland=True,
-        landcolor="rgba(245,245,245,0.9)",
-        showocean=True,
-        oceancolor="rgba(230,242,255,0.6)",
-        projection_type="mollweide",
+        visible=False,
+        projection_type="natural earth",
     )
 
     fig.update_layout(
@@ -315,23 +298,11 @@ def get_nation_focus_map(iso3: str, country: str, un_region: Optional[str], all_
             len=0.4,
             thickness=6,
         ),
-        title=dict(text=f"{country} + region (enclosure strength R)", font=dict(size=8)),
+        title=dict(text=f"{country} — country-only view (R={float(r or 0.0):.2f})", font=dict(size=8)),
         margin=dict(l=1, r=1, t=16, b=1),
         height=180,
         width=380,
         paper_bgcolor="white",
-    )
-
-    # Mark the target nation
-    fig.add_annotation(
-        text=f"★ {iso3}",
-        x=0.5,
-        y=0.92,
-        xref="paper",
-        yref="paper",
-        showarrow=False,
-        font=dict(size=6, color="#c00"),
-        bgcolor="rgba(255,255,255,0.75)",
     )
 
     fig.write_image(p, width=380, height=180, scale=1.5)
@@ -401,7 +372,7 @@ def prepare_atlas_data():
     """
     detailed_all, detailed_alpha = load_detailed_data()
 
-    print("Loading 3-year G0 series for nation trend plots...")
+    print("Loading 3-year G0 series for nation text trends...")
     all_isos = [d["iso3"] for d in detailed_all]
     g0_series = load_g0_series(all_isos)
 
@@ -1174,8 +1145,8 @@ def build_nations(data: dict) -> Path:
     """
     pdf = RTLDIAtlasPDF()
     detailed_alpha = data["detailed_alpha"]
-    detailed_all = data["detailed_all"]
     g0_series = data["g0_series"]
+    iso2_lookup = load_iso2_lookup()
 
     pdf.add_page()
     pdf.chapter_title("Detailed Nation Profiles (Alphabetical)")
@@ -1183,21 +1154,18 @@ def build_nations(data: dict) -> Path:
     for d in detailed_alpha:
         pdf.add_page()
 
+        iso2 = iso2_lookup.get(d["iso3"], "")
+        yes_count = sum(c['bin'] for c in d['components'])
+
         pdf.set_font(FONT_NAME, "", 13)
         pdf.set_text_color(*HEADER_COLOR)
         pdf.cell(0, 7, f"{d['country']} ({d['iso3']})", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.set_font(FONT_NAME, "", 9)
         pdf.set_text_color(80, 80, 80)
-        pdf.cell(0, 5, f"UN Region: {d.get('un_region', 'N/A')}  |  RTLP R = {d['r']:.3f} ({sum(c['bin'] for c in d['components'])}/9)  |  V-Dem year: {d['vdem_year']}  |  G0 year: {d['g0_year']}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        flag_text = f"  |  Flag code: {iso2}" if iso2 else ""
+        pdf.cell(0, 5, f"UN Region: {d.get('un_region', 'N/A')}  |  RTLP R = {d['r']:.3f} ({yes_count}/9)  |  V-Dem year: {d['vdem_year']}  |  G0 year: {d['g0_year']}{flag_text}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(2)
 
-        pdf.set_fill_color(245, 245, 245)
-        pdf.set_draw_color(*HEADER_COLOR)
-        pdf.rect(MARGIN, pdf.get_y(), CONTENT_WIDTH, 22, style="DF")
-        y_start = pdf.get_y() + 1
-        pdf.set_xy(MARGIN + 2, y_start)
-        pdf.set_font(FONT_NAME, "", 8)
-        pdf.set_text_color(*BLACK)
         g0 = d.get('g0') or 0
         dpc = d.get('delta_g_per_capita') or 0
         tot = d.get('total_deficit_usd') or 0
@@ -1208,68 +1176,42 @@ def build_nations(data: dict) -> Path:
             pop_str = f"{pop:,.0f}"
         else:
             pop_str = "N/A"
-        pdf.multi_cell(CONTENT_WIDTH - 4, 3.8,
-            f"Economic Impact (2026 GDP baseline)\n"
-            f"G0 (GDP per capita): ${g0:,.0f}   |   "
-            f"Per-capita annual loss (ΔG): ${dpc:,.0f}\n"
-            f"Total annual GDP loss: ${tot/1e9:,.2f} billion   |   "
-            f"Population: {pop_str}"
-        )
-        pdf.set_y(y_start + 22)
-
-        plot_path = get_trend_plot_path(
-            d["iso3"], d["country"], d.get("r"), d.get("population"),
+        trend_text = format_trend_text(
+            d["iso3"], d.get("r"), d.get("population"),
             g0_series.get(d["iso3"], {})
         )
-        focus_p = get_nation_focus_map(d["iso3"], d["country"], d.get("un_region"), detailed_all)
-        if plot_path and focus_p and plot_path.exists() and focus_p.exists():
-            pdf.ln(0.5)
-            plot_w = (CONTENT_WIDTH - 10) / 2
-            y0 = pdf.get_y()
-            pdf.set_font(FONT_NAME, "", 6)
-            pdf.set_text_color(*HEADER_COLOR)
-            pdf.set_xy(MARGIN + 2, y0)
-            pdf.cell(plot_w, 3, "3-Year Trend (R fixed, G0 varies)", align="C")
-            pdf.set_xy(MARGIN + 2 + plot_w + 4, y0)
-            pdf.cell(plot_w, 3, "Regional Zoom (R, Mollweide)", align="C")
-            y1 = y0 + 3.5
-            pdf.image(str(plot_path), x=MARGIN + 2, y=y1, w=plot_w, h=16)
-            pdf.image(str(focus_p), x=MARGIN + 2 + plot_w + 4, y=y1, w=plot_w, h=16)
-            pdf.set_y(y1 + 17)
-            pdf.set_font(FONT_NAME, "", 5)
-            pdf.set_text_color(90, 90, 90)
-            pdf.multi_cell(0, 2.2,
-                "Left: 3yr GDP-driven RTLDI trend. Right: region context (★ = this nation). Both use consistent scales with global map. See full choropleth earlier."
-            )
-            pdf.ln(0.5)
-        else:
-            if plot_path and plot_path.exists():
-                pdf.ln(1)
-                pdf.set_font(FONT_NAME, "", 7)
-                pdf.set_text_color(*HEADER_COLOR)
-                pdf.cell(0, 3.5, "Three-Year RTLDI Trend (based on 3 years of GDP data)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                y_plot = pdf.get_y()
-                img_w = CONTENT_WIDTH - 8
-                pdf.image(str(plot_path), x=MARGIN + 4, w=img_w, h=16)
-                pdf.set_y(y_plot + 17)
-                pdf.set_font(FONT_NAME, "", 5.5)
-                pdf.set_text_color(95, 95, 95)
-                pdf.multi_cell(0, 2.4, "R fixed 2024; G₀ varies. ΔG = η × (1 − R) × G₀ (η=0.30 from data).")
-                pdf.ln(0.5)
-            if focus_p and focus_p.exists():
-                pdf.ln(0.5)
-                pdf.set_font(FONT_NAME, "", 6.5)
-                pdf.set_text_color(*HEADER_COLOR)
-                pdf.cell(0, 3, "Regional Zoom — Enclosure Strength (R): this nation + region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                yf = pdf.get_y()
-                pdf.image(str(focus_p), x=MARGIN + 8, w=CONTENT_WIDTH - 16, h=14)
-                pdf.set_y(yf + 15)
-                pdf.set_font(FONT_NAME, "", 5)
-                pdf.set_text_color(95, 95, 95)
-                pdf.multi_cell(0, 2.2, "Zoomed regional view (Mollweide). ★ = this nation.")
-                pdf.ln(0.5)
 
-        pdf.ln(1)
+        pdf.set_fill_color(245, 245, 245)
+        pdf.set_draw_color(*HEADER_COLOR)
+        pdf.rect(MARGIN, pdf.get_y(), CONTENT_WIDTH, 30, style="DF")
+        y_start = pdf.get_y() + 1
+        pdf.set_xy(MARGIN + 2, y_start)
+        pdf.set_font(FONT_NAME, "", 7.4)
+        pdf.set_text_color(*BLACK)
+        pdf.multi_cell(CONTENT_WIDTH - 4, 3.25,
+            f"National Summary (2026 GDP baseline)\n"
+            f"G0 (GDP per capita): ${g0:,.0f}   |   "
+            f"Per-capita capital exclusions (ΔG): ${dpc:,.0f}   |   "
+            f"Total annual capital exclusions: ${tot/1e9:,.2f} billion   |   "
+            f"Population: {pop_str}\n"
+            f"{trend_text}"
+        )
+        pdf.set_y(y_start + 31)
+
+        country_map = get_nation_country_map(d["iso3"], d["country"], d.get("r"))
+        if country_map and country_map.exists():
+            pdf.set_font(FONT_NAME, "", 6.8)
+            pdf.set_text_color(*HEADER_COLOR)
+            pdf.cell(0, 3.2, "Country View — Enclosure Strength (R)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            y_map = pdf.get_y()
+            pdf.image(str(country_map), x=MARGIN + 25, y=y_map, w=CONTENT_WIDTH - 50, h=22)
+            pdf.set_y(y_map + 23)
+            pdf.set_font(FONT_NAME, "", 5)
+            pdf.set_text_color(95, 95, 95)
+            pdf.multi_cell(0, 2.1, "Country-only local view fitted to the national boundary; no regional comparison map is used on nation pages.")
+            pdf.ln(0.3)
+
+        pdf.ln(0.5)
         pdf.set_font(FONT_NAME, "", 8)
         pdf.set_text_color(*HEADER_COLOR)
         pdf.cell(0, 4, "RTLP Score Breakdown — 9 Indicators", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
@@ -1424,7 +1366,7 @@ def build_back_matter(data: dict) -> Path:
         ("UN region / regional summary", "One of the 22 geographic groupings used for aggregates, focused choropleths, member-nations tables (with R / G0 / population / capital exclusions + REGIONAL TOTAL row), and 9-lever breakdowns."),
         ("Member-nations table", "The compact table on each regional summary page that lists every country in the region together with its R, G0, population, and capital exclusions, plus a bottom row of regional totals."),
         ("Viridis", "The perceptually uniform sequential colormap (dark low-R → yellow high-R) used consistently for every enclosure-strength choropleth in the atlas."),
-        ("Fitbounds / regional zoom", "The per-nation choropleth view that automatically zooms to the target country plus the rest of its UN region, using the same Mollweide projection and Viridis scale as the global map."),
+        ("Country view", "The country-only choropleth on each nation page, fitted to the national boundary and shaded by enclosure strength R without using the regional context map."),
     ]
 
     if detailed_all and "components" in detailed_all[0]:

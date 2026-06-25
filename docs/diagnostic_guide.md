@@ -82,7 +82,7 @@ When the same reform is also described as "**this specific change would return r
 - International partners can target technical assistance and conditionality to the precise indicator rather than generic "rule of law" programs.
 - Domestic media has a concrete number to report instead of another abstract abuse story.
 
-The 3-year trend plots in each nation profile are there for exactly this reason: they show whether the economic drag is stable, growing with the economy (even if R is flat), or — in the best cases — beginning to shrink as governance improves.
+The three-position text trend in each nation profile is there for exactly this reason: it shows whether capital exclusions are stable, growing with the economy (even if R is flat), or beginning to shrink as protections improve.
 
 Awareness does not automatically produce reform. But it changes the *default*. It makes continued acceptance of a low R a visible, quantifiable choice rather than an invisible background condition.
 

@@ -130,7 +130,7 @@ python3 -m src.generate_enclosure_map --year 2026
 
 # 3. Generate the print-ready PDF ebook (four modular parts + concatenated release)
 #    Because the maps were generated in step 2, the PDFs will contain the actual choropleths
-#    (global map in front matter, per-region maps, per-nation regional zooms) instead of placeholders.
+#    (global map in front matter, per-region maps, per-nation country views) instead of placeholders.
 python3 -m src.generate_atlas_ebook
 
 # 4. (Optional for the launch web companion) Generate the self-contained HTML atlas
