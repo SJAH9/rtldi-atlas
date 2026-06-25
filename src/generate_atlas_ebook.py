@@ -1334,6 +1334,40 @@ def build_back_matter(data: dict) -> Path:
         "No proprietary or restricted data were used."
     )
 
+    # ========== REPOSITORY / ATLAS SUITE ==========
+    pdf.add_page()
+    pdf.chapter_title("RTLDI Atlas Suite and Public Repository")
+    pdf.body_text(
+        "This PDF atlas was produced by the RTLDI Atlas Suite, the open repository that contains the "
+        "canonical data crosswalks, Python build pipeline, choropleth map generation, PDF ebook generator, "
+        "and self-contained HTML atlas generator used for the public release.\n\n"
+        "Repository: https://github.com/SJAH9/rtldi-atlas\n\n"
+        "Users of this atlas are invited to download the RTLDI Atlas Suite and reproduce the published "
+        "RTLP scores and RTLDI capital-exclusion projections directly from the public-release V-Dem and "
+        "World Bank datasets. The suite is designed so NGOs, researchers, policymakers, analysts, and "
+        "investors can rerun the atlas as new public data releases become available."
+    )
+    pdf.body_text(
+        "The same tools can also be used to generate an RTLDI Atlas from proprietary, internal, or field "
+        "data. The implementation separates the conceptual nine-lever RTLDI model from the data crosswalk: "
+        "if an organization has its own trusted country, regional, sectoral, or subnational indicators, it "
+        "can map those fields into the required nine binary RTLP components and then use the existing suite "
+        "to compute R, per-capita ΔG, total capital exclusions, lever-level attribution, regional summaries, "
+        "maps, spreadsheets, PDF reports, and HTML outputs."
+    )
+    pdf.body_text(
+        "For public-data runs, use the documented V-Dem and World Bank workflow. For proprietary-data runs, "
+        "implement a clear data crosswalk, preserve the nine RTLP component meanings, document all thresholds, "
+        "and keep the output labels tied to the same canonical RTLDI equation. This keeps forks comparable "
+        "while allowing local datasets to improve coverage, timeliness, or granularity."
+    )
+    pdf.small_text(
+        "The official public atlas has one canonical pipeline: src.build_atlas produces the master atlas table; "
+        "src.generate_atlas_ebook.prepare_atlas_data() prepares the shared print/web data; and the PDF/HTML "
+        "generators consume that same prepared data. Forks should preserve this single-pipeline discipline or "
+        "clearly identify themselves as experimental derivatives."
+    )
+
     # ========== NESTED CAUSAL MODELLING (short note) ==========
     pdf.add_page()
     pdf.chapter_title("Nested Causal Modelling")
