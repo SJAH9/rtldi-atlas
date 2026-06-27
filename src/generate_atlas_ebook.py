@@ -82,6 +82,12 @@ FONT_NAME = "ArialUnicode"
 
 # Colors
 HEADER_COLOR = (31, 78, 121)  # dark blue
+ACCENT_COLOR = (16, 126, 101)
+INK = (24, 32, 43)
+MUTED = (91, 103, 112)
+RULE = (198, 209, 218)
+PANEL_BG = (247, 250, 252)
+PANEL_ALT = (235, 244, 241)
 YES_COLOR = (0, 128, 0)
 NO_COLOR = (180, 0, 0)
 LIGHT_GRAY = (240, 240, 240)
@@ -120,40 +126,68 @@ class RTLDIAtlasPDF(FPDF):
 
     def header(self):
         if self.page_no() > 1:
-            self.set_font(FONT_NAME, "", 8)
-            self.set_text_color(100, 100, 100)
-            self.cell(0, 8, "RTLDI ATLAS 2026 | Right to Life Deficit Index — Capital Exclusions", align="C")
-            self.ln(4)
-            self.set_draw_color(*HEADER_COLOR)
-            self.line(MARGIN, 12, PAGE_WIDTH - MARGIN, 12)
-            self.ln(3)
+            self.set_y(7)
+            self.set_font(FONT_NAME, "", 7.5)
+            self.set_text_color(*MUTED)
+            self.cell(0, 4, "RTLDI ATLAS 2026", align="L")
+            self.set_x(MARGIN)
+            self.cell(0, 4, "Right to Life Deficit Index | Capital Exclusions", align="R")
+            self.set_draw_color(*RULE)
+            self.line(MARGIN, 13, PAGE_WIDTH - MARGIN, 13)
+            self.ln(7)
 
     def footer(self):
         self.set_y(-12)
         self.set_font(FONT_NAME, "", 8)
-        self.set_text_color(100, 100, 100)
-        self.cell(0, 10, f"Page {self.page_no()} | Based on Sid J.A. Hubbard, Causality and Attraction v3 (DOI 10.5281/zenodo.19468550) | Data: V-Dem 2024 + World Bank (2026 baseline)", align="C")
+        self.set_text_color(*MUTED)
+        self.cell(0, 10, f"Page {self.page_no()} | Hubbard, Causality and Attraction v3 | V-Dem 2024 + World Bank 2026 baseline", align="C")
 
     def chapter_title(self, title):
-        self.set_font(FONT_NAME, "", 14)
-        self.set_text_color(*HEADER_COLOR)
+        self.set_font(FONT_NAME, "", 15)
+        self.set_text_color(*INK)
         self.multi_cell(0, 7, title, align="L")
-        self.ln(2)
-        self.set_draw_color(*HEADER_COLOR)
-        self.line(MARGIN, self.get_y(), PAGE_WIDTH - MARGIN, self.get_y())
-        self.ln(4)
+        self.set_draw_color(*ACCENT_COLOR)
+        self.set_line_width(0.8)
+        self.line(MARGIN, self.get_y() + 1, MARGIN + 32, self.get_y() + 1)
+        self.set_draw_color(*RULE)
+        self.set_line_width(0.2)
+        self.line(MARGIN + 34, self.get_y() + 1, PAGE_WIDTH - MARGIN, self.get_y() + 1)
+        self.ln(6)
 
     def body_text(self, text, size=10):
         self.set_font(FONT_NAME, "", size)
-        self.set_text_color(*BLACK)
+        self.set_text_color(*INK)
         self.multi_cell(0, 5, text)
         self.ln(2)
 
     def small_text(self, text):
         self.set_font(FONT_NAME, "", 8)
-        self.set_text_color(60, 60, 60)
+        self.set_text_color(*MUTED)
         self.multi_cell(0, 4, text)
         self.ln(1)
+
+    def section_label(self, text, color=ACCENT_COLOR):
+        self.set_font(FONT_NAME, "", 7)
+        self.set_text_color(*color)
+        self.cell(0, 4, text.upper(), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+    def metric_card(self, x, y, w, h, label, value, note="", fill=PANEL_BG):
+        self.set_fill_color(*fill)
+        self.set_draw_color(*RULE)
+        self.rect(x, y, w, h, style="DF")
+        self.set_xy(x + 2.2, y + 2.2)
+        self.set_font(FONT_NAME, "", 6.2)
+        self.set_text_color(*MUTED)
+        self.multi_cell(w - 4.4, 2.7, label.upper())
+        self.set_xy(x + 2.2, y + 9)
+        self.set_font(FONT_NAME, "", 13)
+        self.set_text_color(*INK)
+        self.cell(w - 4.4, 5, value)
+        if note:
+            self.set_xy(x + 2.2, y + h - 5)
+            self.set_font(FONT_NAME, "", 5.8)
+            self.set_text_color(*MUTED)
+            self.cell(w - 4.4, 3, note)
 
 def load_detailed_data():
     path = Path("data/processed/rtl_di_nation_breakdown_2026.json")
@@ -539,25 +573,41 @@ def build_front_matter(data: dict) -> Path:
 
     # ========== TITLE PAGE ==========
     pdf.add_page()
-    pdf.set_font(FONT_NAME, "", 28)
+    pdf.set_fill_color(247, 250, 252)
+    pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, style="F")
+    pdf.set_fill_color(*HEADER_COLOR)
+    pdf.rect(0, 0, 18, PAGE_HEIGHT, style="F")
+    pdf.set_fill_color(*ACCENT_COLOR)
+    pdf.rect(18, 0, 4, PAGE_HEIGHT, style="F")
+    pdf.set_y(42)
+    pdf.set_x(34)
+    pdf.set_font(FONT_NAME, "", 34)
+    pdf.set_text_color(*INK)
+    pdf.cell(0, 13, "RTLDI ATLAS 2026", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_x(34)
+    pdf.set_font(FONT_NAME, "", 15)
     pdf.set_text_color(*HEADER_COLOR)
-    pdf.ln(30)
-    pdf.cell(0, 12, "RTLDI ATLAS 2026", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font(FONT_NAME, "", 14)
-    pdf.ln(5)
-    pdf.cell(0, 8, "Right to Life Deficit Index", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 8, "for United Nations Member States", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.ln(8)
+    pdf.cell(0, 8, "Right to Life Deficit Index for United Nations Member States", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_x(34)
     pdf.set_font(FONT_NAME, "", 11)
-    pdf.set_text_color(60, 60, 60)
-    pdf.multi_cell(0, 6, "Identifying Capital Exclusions — Lost Potential GDP Due to Missing Protections\n(Contextually Bounded)\n\n2026 Edition", align="C")
-    pdf.ln(15)
+    pdf.set_text_color(*MUTED)
+    pdf.multi_cell(145, 5.4, "Identifying capital exclusions: lost potential GDP associated with missing foundational protections. Contextually bounded with a 25% institutional cap.")
+
+    card_y = 104
+    card_w = 42
+    gap = 5
+    pdf.metric_card(34, card_y, card_w, 28, "Global capital exclusions", format_money(global_total_lost), "annual, capped", PANEL_ALT)
+    pdf.metric_card(34 + card_w + gap, card_y, card_w, 28, "UN member states", "193", "22 regions")
+    pdf.metric_card(34 + (card_w + gap) * 2, card_y, card_w, 28, "Coefficient eta", "0.30", "population-weighted")
+
+    pdf.set_xy(34, 157)
     pdf.set_font(FONT_NAME, "", 9)
-    pdf.multi_cell(0, 5, "Based on the framework in\nSid J.A. Hubbard\nCausality and Attraction: A Continuum of Steady States (Version 3, May 2026)\nDOI: 10.5281/zenodo.19468550", align="C")
-    pdf.ln(10)
+    pdf.set_text_color(*INK)
+    pdf.multi_cell(142, 5, "Based on Sid J.A. Hubbard, Causality and Attraction: A Continuum of Steady States (Version 3, May 2026), DOI 10.5281/zenodo.19468550")
+    pdf.set_xy(34, 179)
     pdf.set_font(FONT_NAME, "", 8)
-    pdf.cell(0, 5, "Data: V-Dem (2024) + World Bank (latest GDP baseline as of 2026)", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 5, "Prepared for NGOs, researchers, and policymakers", align="C")
+    pdf.set_text_color(*MUTED)
+    pdf.multi_cell(142, 4.4, "Data: V-Dem 2024 components + latest World Bank GDP baseline as of 2026. Prepared for NGOs, researchers, policymakers, analysts, and public-interest users.")
 
     # ========== EXECUTIVE DESCRIPTION ==========
     pdf.add_page()
@@ -722,9 +772,7 @@ def build_front_matter(data: dict) -> Path:
 
     # Global Capital Exclusions table — placed after the body text / graphic area and before the interpretive world description
     pdf.set_x(MARGIN)
-    pdf.set_font(FONT_NAME, "", 10)
-    pdf.set_text_color(*HEADER_COLOR)
-    pdf.cell(0, 5, "Global Capital Exclusions by Lever", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.section_label("Global capital exclusions by lever")
     pdf.ln(0.5)
 
     # Clean table header
@@ -747,7 +795,7 @@ def build_front_matter(data: dict) -> Path:
         desc = indicator_descs[i] if i < len(indicator_descs) else ""
 
         zebra = (rank % 2 == 0)
-        pdf.set_fill_color(247, 248, 250) if zebra else (255, 255, 255)
+        pdf.set_fill_color(*PANEL_BG) if zebra else (255, 255, 255)
 
         pdf.set_font(FONT_NAME, "", 7.5)
         pdf.set_text_color(*BLACK)
@@ -781,10 +829,16 @@ def build_front_matter(data: dict) -> Path:
 
     # Prominent planet total
     pdf.set_x(MARGIN)
+    pdf.set_fill_color(*PANEL_ALT)
+    pdf.set_draw_color(*RULE)
+    y_total = pdf.get_y()
+    pdf.rect(MARGIN, y_total, CONTENT_WIDTH, 17, style="DF")
+    pdf.set_xy(MARGIN + 3, y_total + 2.2)
     pdf.set_font(FONT_NAME, "", 9)
     pdf.set_text_color(*HEADER_COLOR)
     total_t = global_total_lost / 1e12
-    pdf.multi_cell(0, 4, f"The total global capital exclusions — lost potential GDP sitting outside the economy because the nine protections are not present — is estimated at ${total_t:,.2f} trillion. This is the capital the world can bring back in by activating the levers.")
+    pdf.multi_cell(CONTENT_WIDTH - 6, 4, f"Total global capital exclusions: ${total_t:,.2f} trillion. This is lost potential GDP sitting outside the economy because the nine protections are not present.")
+    pdf.set_y(y_total + 19)
 
     pdf.ln(0.5)
     pdf.set_x(MARGIN)
@@ -937,19 +991,19 @@ def build_regions(data: dict) -> Path:
 
     for reg_name, reg_sum in sorted_regions:
         pdf.add_page()
-        pdf.set_font(FONT_NAME, "", 12)
-        pdf.set_text_color(*HEADER_COLOR)
-        pdf.cell(0, 5, f"{reg_name} Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.set_font(FONT_NAME, "", 8)
-        pdf.set_text_color(70, 70, 70)
-        stats = (
-            f"Countries: {reg_sum['n_countries']}  |  "
-            f"Population: {reg_sum['total_pop']/1e6:,.1f} million  |  "
-            f"Pop-weighted Avg R: {reg_sum['weighted_r']:.3f}  |  "
-            f"Total Annual Capital Exclusions: ${reg_sum['total_lost_gdp']/1e9:,.2f} billion"
-        )
-        pdf.cell(0, 4, stats, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(0.5)
+        pdf.section_label("UN regional summary", HEADER_COLOR)
+        pdf.set_font(FONT_NAME, "", 16)
+        pdf.set_text_color(*INK)
+        pdf.cell(0, 7, f"{reg_name}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(1)
+
+        metric_y = pdf.get_y()
+        metric_w = (CONTENT_WIDTH - 9) / 4
+        pdf.metric_card(MARGIN, metric_y, metric_w, 22, "Countries", str(reg_sum["n_countries"]))
+        pdf.metric_card(MARGIN + metric_w + 3, metric_y, metric_w, 22, "Population", f"{reg_sum['total_pop']/1e6:,.1f}m")
+        pdf.metric_card(MARGIN + (metric_w + 3) * 2, metric_y, metric_w, 22, "Weighted R", f"{reg_sum['weighted_r']:.2f}", fill=PANEL_ALT)
+        pdf.metric_card(MARGIN + (metric_w + 3) * 3, metric_y, metric_w, 22, "Capital exclusions", f"${reg_sum['total_lost_gdp']/1e9:,.1f}B")
+        pdf.set_y(metric_y + 25)
 
         members = reg_sum.get("members", [])
         n = reg_sum['n_countries']
@@ -992,7 +1046,7 @@ def build_regions(data: dict) -> Path:
             # Flow the two descriptive paragraphs on the left of the map (enlarged for readability)
             left_w = CONTENT_WIDTH - map_w - 5
             pdf.set_xy(MARGIN, y_map)
-            pdf.set_font(FONT_NAME, "", 8)
+            pdf.set_font(FONT_NAME, "", 7.7)
             pdf.set_text_color(40, 40, 40)
             if para1:
                 pdf.multi_cell(left_w, 3.3, para1)
@@ -1005,7 +1059,7 @@ def build_regions(data: dict) -> Path:
 
             # Compact map caption under the flowed area
             pdf.set_font(FONT_NAME, "", 5.5)
-            pdf.set_text_color(85, 85, 85)
+            pdf.set_text_color(*MUTED)
             pdf.multi_cell(0, 2.2,
                 "Mollweide projection (equal-area, same Viridis R scale as global choropleth).")
             pdf.ln(0.3)
@@ -1021,11 +1075,9 @@ def build_regions(data: dict) -> Path:
             pdf.ln(0.5)
 
         # Member nations table — now beneath the (flowed) text and map, above the RTLP breakdown
-        members_sorted = sorted(reg_sum.get("members", []), key=lambda x: x.get("r", 0) or 0, reverse=True)
+        members_sorted = sorted(reg_sum.get("members", []), key=lambda x: x.get("total_deficit_usd", 0) or 0, reverse=True)
         if members_sorted:
-            pdf.set_font(FONT_NAME, "", 6.5)
-            pdf.set_text_color(*HEADER_COLOR)
-            pdf.cell(0, 3.5, "Member Nations (RTLP R, G0 per capita, Population, capital exclusions) — sorted by capital exclusions", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            pdf.section_label("Member nations sorted by capital exclusions", HEADER_COLOR)
             pdf.ln(0.2)
             tcols = [36, 9, 15, 16, 20]
             thdrs = ["Country", "R", "G0 ($)", "Pop", "Capital Exclusions ($)"]
@@ -1076,7 +1128,7 @@ def build_regions(data: dict) -> Path:
                 pdf.cell(tcols[4], 2.5, lstr, border=1, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
             pdf.set_font(FONT_NAME, "", 5.5)
-            pdf.set_fill_color(200, 200, 200)
+            pdf.set_fill_color(*PANEL_ALT)
             pdf.set_text_color(*BLACK)
             totp = reg_sum["total_pop"]
             totl = reg_sum["total_lost_gdp"]
@@ -1091,9 +1143,7 @@ def build_regions(data: dict) -> Path:
             pdf.set_fill_color(240, 240, 240)
             pdf.ln(0.6)
 
-        pdf.set_font(FONT_NAME, "", 7.5)
-        pdf.set_text_color(*HEADER_COLOR)
-        pdf.cell(0, 4, "RTLP Indicator Breakdown for the Region", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.section_label("RTLP indicator breakdown for the region", HEADER_COLOR)
         pdf.ln(0.2)
 
         for ind in reg_sum.get("indicators", []):
@@ -1103,9 +1153,16 @@ def build_regions(data: dict) -> Path:
             pdf.set_text_color(*BLACK)
             line = f"{ind['num']}. {ind['name']}: {pct:.0f}% Yes ({ind['n_yes']}/{ind['n_countries']}) | avg raw {ind['avg_raw']:.2f}"
             pdf.cell(0, 2.8, line, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            bar_x = MARGIN + 2
+            bar_y = pdf.get_y() - 0.2
+            bar_w = 34
+            pdf.set_fill_color(228, 234, 240)
+            pdf.rect(bar_x, bar_y, bar_w, 1.4, style="F")
+            pdf.set_fill_color(*ACCENT_COLOR)
+            pdf.rect(bar_x, bar_y, bar_w * max(0, min(100, pct)) / 100.0, 1.4, style="F")
             pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_text_color(70, 70, 70)
-            pdf.set_x(MARGIN + 2)
+            pdf.set_x(MARGIN + 39)
             pdf.multi_cell(0, 2.4,
                 f"Associated capital exclusions: ${lost_b:,.2f} billion ({(lost_b * 1e9 / reg_sum['total_lost_gdp'] * 100) if reg_sum['total_lost_gdp'] > 0 else 0:.0f}% of region total). {ind['desc']}"
             )
@@ -1157,11 +1214,12 @@ def build_nations(data: dict) -> Path:
         iso2 = iso2_lookup.get(d["iso3"], "")
         yes_count = sum(c['bin'] for c in d['components'])
 
-        pdf.set_font(FONT_NAME, "", 13)
-        pdf.set_text_color(*HEADER_COLOR)
+        pdf.section_label("Nation profile", HEADER_COLOR)
+        pdf.set_font(FONT_NAME, "", 16)
+        pdf.set_text_color(*INK)
         pdf.cell(0, 7, f"{d['country']} ({d['iso3']})", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.set_font(FONT_NAME, "", 9)
-        pdf.set_text_color(80, 80, 80)
+        pdf.set_text_color(*MUTED)
         flag_text = f"  |  Flag code: {iso2}" if iso2 else ""
         pdf.cell(0, 5, f"UN Region: {d.get('un_region', 'N/A')}  |  RTLP R = {d['r']:.3f} ({yes_count}/9)  |  V-Dem year: {d['vdem_year']}  |  G0 year: {d['g0_year']}{flag_text}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(2)
@@ -1181,22 +1239,22 @@ def build_nations(data: dict) -> Path:
             g0_series.get(d["iso3"], {})
         )
 
-        pdf.set_fill_color(245, 245, 245)
-        pdf.set_draw_color(*HEADER_COLOR)
-        pdf.rect(MARGIN, pdf.get_y(), CONTENT_WIDTH, 30, style="DF")
-        y_start = pdf.get_y() + 1
-        pdf.set_xy(MARGIN + 2, y_start)
-        pdf.set_font(FONT_NAME, "", 7.4)
-        pdf.set_text_color(*BLACK)
-        pdf.multi_cell(CONTENT_WIDTH - 4, 3.25,
-            f"National Summary (2026 GDP baseline)\n"
-            f"G0 (GDP per capita): ${g0:,.0f}   |   "
-            f"Per-capita capital exclusions (ΔG): ${dpc:,.0f}   |   "
-            f"Total annual capital exclusions: ${tot/1e9:,.2f} billion   |   "
-            f"Population: {pop_str}\n"
-            f"{trend_text}"
-        )
-        pdf.set_y(y_start + 31)
+        metric_y = pdf.get_y()
+        metric_w = (CONTENT_WIDTH - 9) / 4
+        pdf.metric_card(MARGIN, metric_y, metric_w, 22, "GDP per capita G0", f"${g0:,.0f}")
+        pdf.metric_card(MARGIN + metric_w + 3, metric_y, metric_w, 22, "Capital exclusions / cap", f"${dpc:,.0f}", fill=PANEL_ALT)
+        pdf.metric_card(MARGIN + (metric_w + 3) * 2, metric_y, metric_w, 22, "Annual total", f"${tot/1e9:,.2f}B")
+        pdf.metric_card(MARGIN + (metric_w + 3) * 3, metric_y, metric_w, 22, "Population", pop_str)
+        pdf.set_y(metric_y + 25)
+        trend_y = pdf.get_y()
+        pdf.set_fill_color(*PANEL_BG)
+        pdf.set_draw_color(*RULE)
+        pdf.rect(MARGIN, trend_y, CONTENT_WIDTH, 16, style="DF")
+        pdf.set_xy(MARGIN + 2.5, trend_y + 2)
+        pdf.set_font(FONT_NAME, "", 6.8)
+        pdf.set_text_color(*INK)
+        pdf.multi_cell(CONTENT_WIDTH - 5, 3.1, trend_text)
+        pdf.set_y(trend_y + 18)
 
         country_map = get_nation_country_map(d["iso3"], d["country"], d.get("r"))
         if country_map and country_map.exists():
@@ -1204,17 +1262,17 @@ def build_nations(data: dict) -> Path:
             pdf.set_text_color(*HEADER_COLOR)
             pdf.cell(0, 3.2, "Country View — Enclosure Strength (R)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             y_map = pdf.get_y()
-            pdf.image(str(country_map), x=MARGIN + 25, y=y_map, w=CONTENT_WIDTH - 50, h=22)
-            pdf.set_y(y_map + 23)
+            map_w = CONTENT_WIDTH - 60
+            map_h = map_w * (180 / 380)
+            pdf.image(str(country_map), x=MARGIN + 30, y=y_map, w=map_w, h=map_h)
+            pdf.set_y(y_map + map_h + 1)
             pdf.set_font(FONT_NAME, "", 5)
             pdf.set_text_color(95, 95, 95)
             pdf.multi_cell(0, 2.1, "Country-only local view fitted to the national boundary; no regional comparison map is used on nation pages.")
             pdf.ln(0.3)
 
         pdf.ln(0.5)
-        pdf.set_font(FONT_NAME, "", 8)
-        pdf.set_text_color(*HEADER_COLOR)
-        pdf.cell(0, 4, "RTLP Score Breakdown — 9 Indicators", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.section_label("RTLP score breakdown - 9 indicators", HEADER_COLOR)
         pdf.ln(0.5)
 
         for c in d['components']:

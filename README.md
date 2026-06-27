@@ -15,6 +15,12 @@ The **RTLDI Atlas** in this repository (code, data processing pipeline, document
 
 All releases (including the full PDF ebook as an asset) are available on the [GitHub Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
 
+## Web Atlas
+
+The repository is configured for GitHub Pages. The root `index.html` redirects to the generated HTML atlas at `outputs/html-atlas/index.html`, so the Pages site opens directly into the atlas instead of the source repository layout.
+
+Use GitHub Pages with the repository root as the static site source. The HTML atlas, regional map assets, interactive global map, and linked PDF remain available under the same relative paths used locally.
+
 ### v2026.7 (Current — Capital exclusions focus)
 
 **RTLDI** = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Extended via population-weighted regression (25% conservative cap) to quantify **capital exclusions** — the lost potential GDP (on the order of 15 trillion dollars globally) where capital is excluded from the economy because the nine protections required for it to operate are not present.

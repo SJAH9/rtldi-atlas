@@ -118,7 +118,13 @@ def get_global_svg(df: pd.DataFrame, out_path: Path) -> Path:
         oceancolor="rgba(230,240,250,0.4)",
     )
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.write_image(str(out_path), format="svg", width=1200, height=620)
+    try:
+        fig.write_image(str(out_path), format="svg", width=1200, height=620)
+    except Exception as exc:
+        if out_path.exists():
+            print(f"  Reusing existing global SVG after export failure: {str(exc).splitlines()[0]}")
+            return out_path
+        raise
     return out_path
 
 def get_regional_svg(region_name: str, members: List[dict], all_df: pd.DataFrame, out_path: Path) -> Path:
@@ -147,7 +153,13 @@ def get_regional_svg(region_name: str, members: List[dict], all_df: pd.DataFrame
     )
     fig.update_geos(fitbounds="locations", visible=False)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.write_image(str(out_path), format="svg", width=900, height=520)
+    try:
+        fig.write_image(str(out_path), format="svg", width=900, height=520)
+    except Exception as exc:
+        if out_path.exists():
+            print(f"  Reusing existing regional SVG for {region_name} after export failure: {str(exc).splitlines()[0]}")
+            return out_path
+        raise
     return out_path
 
 def build_html_atlas(data: Dict[str, Any]) -> Path:
@@ -316,51 +328,65 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
             r_str = f"{m.get('r', 0):.2f}"
             lost_str = format_usd(lost)
             member_rows += f'<tr><td class="px-2 py-0.5">{m["country"]}</td><td class="px-2 py-0.5 text-right tabular-nums">{r_str}</td><td class="px-2 py-0.5 text-right tabular-nums">{lost_str}</td></tr>'
-        total_row = f'<tr class="font-semibold border-t border-slate-700 bg-slate-800"><td class="px-2 py-0.5">REGIONAL TOTAL ({n} countries)</td><td></td><td class="px-2 py-0.5 text-right tabular-nums">{format_usd(total_lost)}</td></tr>'
+        total_row = f'<tr class="font-semibold border-t border-slate-300 bg-slate-50 text-slate-950"><td class="px-2 py-1">REGIONAL TOTAL ({n} countries)</td><td></td><td class="px-2 py-1 text-right tabular-nums">{format_usd(total_lost)}</td></tr>'
         # 9 indicators breakdown
         ind_html = ""
         weakest = None
         for ind in reg.get("indicators", []):
             pct = int(round(ind.get("frac_yes", 0) * 100))
             lost_b = ind.get("attributable", 0) / 1e9
-            ind_html += f'<div class="flex justify-between py-px"><span>{ind["name"]}</span><span class="tabular-nums">{pct}% • ${lost_b:.1f}B</span></div>'
+            ind_html += f'''<div class="py-1">
+  <div class="flex justify-between gap-3 text-[12px]"><span class="font-medium text-slate-700">{ind["name"]}</span><span class="tabular-nums text-slate-500">{pct}% yes • ${lost_b:.1f}B</span></div>
+  <div class="mt-1 h-1.5 bg-slate-100 overflow-hidden"><div class="h-1.5 bg-teal-600" style="width:{pct}%"></div></div>
+</div>'''
             if not weakest or ind.get("frac_yes", 1) < weakest.get("frac_yes", 1):
                 weakest = ind
         univ_html = ""
         if weakest and weakest.get("frac_yes", 1) < 0.35:
-            univ_html = f'<div class="mt-1 text-xs text-red-400">Opportunity area: {weakest["name"]} (implemented in {int(weakest.get("frac_yes",0)*100)}% of countries in region)</div>'
+            univ_html = f'<div class="mt-3 border-l-2 border-red-500 bg-red-50 px-3 py-2 text-xs text-red-800">Opportunity area: {weakest["name"]} (implemented in {int(weakest.get("frac_yes",0)*100)}% of countries in region)</div>'
         # descriptions (reframed, matching updated PDF)
-        para_html = f'<p class="text-sm mt-1 leading-snug">{reg.get("para1", "")}</p>'
+        para_html = f'<p class="text-sm mt-1 leading-6 text-slate-700">{reg.get("para1", "")}</p>'
         if reg.get("para2"):
-            para_html += f'<p class="text-sm mt-2 leading-snug">{reg.get("para2", "")}</p>'
-        block = f'''<div class="region-summary mb-10 p-5 border border-slate-700 rounded-3xl bg-slate-900" id="reg-{reg["slug"]}">
-  <h3 class="text-2xl font-semibold mb-1">{reg_name}</h3>
-  <div class="text-sm text-slate-400 mb-3">{n} countries • {pop_str} • Weighted R {reg["weighted_r"]:.2f} • Capital Exclusions {total_lost_str}</div>
-  <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            para_html += f'<p class="text-sm mt-3 leading-6 text-slate-700">{reg.get("para2", "")}</p>'
+        block = f'''<section class="region-summary mb-8 border border-slate-200 bg-white" id="reg-{reg["slug"]}">
+  <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
+    <h3 class="text-2xl font-semibold tracking-tight text-slate-950">{reg_name}</h3>
+    <div class="mt-2 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+      <div class="bg-white border border-slate-200 px-3 py-2"><span class="block text-slate-500">Countries</span><span class="tabular-nums font-semibold text-slate-950">{n}</span></div>
+      <div class="bg-white border border-slate-200 px-3 py-2"><span class="block text-slate-500">Population</span><span class="tabular-nums font-semibold text-slate-950">{pop_str}</span></div>
+      <div class="bg-white border border-slate-200 px-3 py-2"><span class="block text-slate-500">Weighted R</span><span class="tabular-nums font-semibold text-teal-700">{reg["weighted_r"]:.2f}</span></div>
+      <div class="bg-white border border-slate-200 px-3 py-2"><span class="block text-slate-500">Capital Exclusions</span><span class="tabular-nums font-semibold text-slate-950">{total_lost_str}</span></div>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 p-5">
     <div class="lg:col-span-3 map-container">
-      <img src="maps/{reg["slug"]}.svg" alt="{reg_name} choropleth (vector SVG)" class="w-full rounded border border-slate-600">
-      <div class="text-[10px] text-slate-400 mt-1">Vector SVG • Viridis R scale (same as global and print regions.pdf)</div>
+      <img src="maps/{reg["slug"]}.svg" alt="{reg_name} choropleth (vector SVG)" class="w-full border border-slate-200 bg-white">
+      <div class="text-[10px] text-slate-500 mt-1">Vector SVG • Viridis R scale, matching the print atlas.</div>
     </div>
     <div class="lg:col-span-2 text-sm">
       {para_html}
     </div>
   </div>
-  <div class="mt-4">
-    <div class="text-sm font-medium mb-1">9-Levers Breakdown + Associated Capital Exclusions</div>
-    <div class="text-xs leading-tight">{ind_html}</div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 px-5 pb-5">
+    <div>
+      <div class="text-sm font-semibold mb-2 text-slate-950">9-Lever Breakdown</div>
+      <div>{ind_html}</div>
     {univ_html}
-  </div>
-  <div class="mt-4">
-    <div class="text-sm font-medium mb-1">Member Nations Table (ending in REGIONAL TOTAL)</div>
-    <table class="w-full text-xs">
-      <thead class="text-slate-400"><tr><th class="text-left py-0.5">Country</th><th class="text-right py-0.5">R</th><th class="text-right py-0.5">Capital Exclusions</th></tr></thead>
-      <tbody class="text-slate-200">
+    </div>
+    <div>
+      <div class="text-sm font-semibold mb-2 text-slate-950">Member Nations</div>
+      <div class="max-h-72 overflow-auto border border-slate-200">
+      <table class="w-full text-xs">
+      <thead class="sticky top-0 bg-slate-50 text-slate-500"><tr><th class="text-left px-2 py-1">Country</th><th class="text-right px-2 py-1">R</th><th class="text-right px-2 py-1">Capital Exclusions</th></tr></thead>
+      <tbody class="divide-y divide-slate-100 text-slate-700">
         {member_rows}
         {total_row}
       </tbody>
     </table>
+      </div>
+    </div>
   </div>
-</div>'''
+</section>'''
         region_summary_blocks.append(block)
     region_summaries_html = "\n".join(region_summary_blocks)
 
@@ -376,68 +402,67 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
   :root {{ --font-sans: Inter, system-ui, sans-serif; }}
   body {{ font-family: var(--font-sans); }}
-  .heading {{ font-family: 'Space Grotesk', Inter, system-ui, sans-serif; font-weight: 600; letter-spacing: -.02em; }}
+  .heading {{ font-family: 'Space Grotesk', Inter, system-ui, sans-serif; font-weight: 600; }}
   .stat {{ font-variant-numeric: tabular-nums; }}
-  .data-table th {{ position: sticky; top: 0; background: #fff; z-index: 10; }}
-  .r-high {{ background-color: #052e16; color: #86efac; }}
-  .r-mid  {{ background-color: #422006; color: #fde047; }}
-  .r-low  {{ background-color: #450a0a; color: #fda4af; }}
-  .lever-bar {{ height: 10px; background: linear-gradient(to right, #64748b, #0ea47a); border-radius: 9999px; transition: width .4s ease; }}
-  .map-container svg, .map-container img {{ max-width: 100%; height: auto; border: 1px solid #334155; border-radius: 8px; background: #0f172a; }}
-  .section-title {{ font-size: 1.05rem; letter-spacing: -.015em; }}
+  .data-table th {{ position: sticky; top: 0; background: #f8fafc; z-index: 10; }}
+  .r-high {{ background-color: #f0fdf4; }}
+  .r-mid  {{ background-color: #fffbeb; }}
+  .r-low  {{ background-color: #fff1f2; }}
+  .lever-bar {{ height: 10px; background: linear-gradient(to right, #0f766e, #14b8a6); transition: width .4s ease; }}
+  .map-container svg, .map-container img {{ max-width: 100%; height: auto; }}
+  .section-title {{ font-size: 1.05rem; }}
 </style>
 </head>
-<body class="bg-slate-950 text-slate-200">
-<div class="max-w-screen-xl mx-auto">
+<body class="bg-slate-100 text-slate-900">
+<div class="max-w-screen-xl mx-auto bg-white min-h-screen shadow-sm">
   <!-- Header -->
-  <header class="border-b border-slate-800 bg-slate-950 sticky top-0 z-50">
-    <div class="px-6 py-4 flex items-center justify-between">
+  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50">
+    <div class="px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
       <div>
         <div class="flex items-center gap-x-3">
-          <div class="w-9 h-9 bg-emerald-600 rounded-xl flex items-center justify-center text-white text-xl font-semibold">R</div>
+          <div class="w-9 h-9 bg-teal-700 flex items-center justify-center text-white text-xl font-semibold">R</div>
           <div>
-            <span class="heading text-2xl font-semibold tracking-tighter">RTLDI ATLAS 2026</span>
-            <span class="ml-2 text-xs px-2 py-0.5 bg-emerald-900 text-emerald-400 rounded-full font-medium">Right to Life Deficit Index</span>
+            <span class="heading text-2xl font-semibold">RTLDI ATLAS 2026</span>
+            <span class="ml-2 text-xs px-2 py-0.5 bg-teal-50 text-teal-800 border border-teal-100 font-medium">Right to Life Deficit Index</span>
           </div>
         </div>
-        <div class="text-[11px] text-slate-400 mt-0.5">Front Matter + 22 Regional Summaries • Same data as the print atlas • Self-contained • Dark theme</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">Front matter + 22 regional summaries • Same data as the print atlas • Self-contained</div>
       </div>
       <div class="flex items-center gap-x-2 text-sm">
-        <a href="../atlas/RTLDI_ATLAS_2026_ebook.pdf" class="px-3 py-1.5 rounded-xl border border-slate-700 hover:bg-slate-900 transition">Download Print PDF</a>
-        <a href="global_interactive.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-500 transition">Global Interactive Map</a>
-        <button id="theme-toggle" class="px-3 py-1.5 rounded-xl border border-slate-700 hover:bg-slate-900 transition text-lg leading-none" title="Toggle dark/light">🌙</button>
-        <span class="text-[10px] text-slate-500">V-Dem 2024 + WB 2026 G₀</span>
+        <a href="../atlas/RTLDI_ATLAS_2026_ebook.pdf" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Print PDF</a>
+        <a href="global_interactive.html" target="_blank" class="px-3 py-1.5 bg-teal-700 text-white hover:bg-teal-800 transition">Interactive Map</a>
+        <span class="hidden sm:inline text-[10px] text-slate-500">V-Dem 2024 + WB 2026 G0</span>
       </div>
     </div>
   </header>
 
   <!-- Hero / Global Snapshot -->
   <div class="px-6 pt-8 pb-6">
-    <div class="max-w-3xl">
-      <h1 class="heading text-5xl tracking-tighter font-semibold">Right to Life Deficit Index</h1>
-      <p class="mt-3 text-xl text-slate-300">RTLDI (Right to Life Deficit Index) extended to measure capital exclusions — the lost potential GDP where capital is kept out of the economy because the nine protections necessary for it to operate are absent. The global total is on the order of 15 trillion dollars in excluded capital waiting to be brought back in.</p>
+    <div class="max-w-4xl border-l-4 border-teal-700 pl-5">
+      <h1 class="heading text-5xl font-semibold text-slate-950">Right to Life Deficit Index</h1>
+      <p class="mt-3 text-xl text-slate-600 leading-8">RTLDI extended to measure capital exclusions: the lost potential GDP where capital is kept out of the economy because the nine protections necessary for it to operate are absent.</p>
     </div>
 
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-sm">
-        <div class="text-xs uppercase tracking-widest text-slate-400">Global Capital Exclusions (lost potential GDP, capped)</div>
-        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-white">{format_usd(global_total_lost)}</div>
-        <div class="text-emerald-400 text-sm mt-1">Every year, recurring</div>
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-slate-50 border border-slate-200 p-5">
+        <div class="text-xs uppercase tracking-wider text-slate-500">Global Capital Exclusions</div>
+        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">{format_usd(global_total_lost)}</div>
+        <div class="text-teal-700 text-sm mt-1">annual, capped</div>
       </div>
-      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-sm">
-        <div class="text-xs uppercase tracking-widest text-slate-400">Population-weighted Enclosure Strength (R)</div>
-        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-white">{data.get('weighted_r', 0.21):.2f}</div>
-        <div class="text-sm mt-1">0 = no protections • 1 = full set of 9</div>
+      <div class="bg-slate-50 border border-slate-200 p-5">
+        <div class="text-xs uppercase tracking-wider text-slate-500">Population-weighted R</div>
+        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">{data.get('weighted_r', 0.21):.2f}</div>
+        <div class="text-sm mt-1 text-slate-500">0 none • 1 full set</div>
       </div>
-      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-sm">
-        <div class="text-xs uppercase tracking-widest text-slate-400">UN Member States</div>
-        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-white">193</div>
-        <div class="text-sm mt-1">22 UN regions</div>
+      <div class="bg-slate-50 border border-slate-200 p-5">
+        <div class="text-xs uppercase tracking-wider text-slate-500">UN Member States</div>
+        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">193</div>
+        <div class="text-sm mt-1 text-slate-500">22 UN regions</div>
       </div>
-      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-sm">
-        <div class="text-xs uppercase tracking-widest text-slate-400">Conservative Marginal Coefficient (η)</div>
-        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-white">0.30</div>
-        <div class="text-sm mt-1">25% institutional cap applied (raw data suggested ~0.33)</div>
+      <div class="bg-slate-50 border border-slate-200 p-5">
+        <div class="text-xs uppercase tracking-wider text-slate-500">Coefficient eta</div>
+        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">0.30</div>
+        <div class="text-sm mt-1 text-slate-500">25% institutional cap</div>
       </div>
     </div>
   </div>
@@ -456,8 +481,8 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
   <!-- Front Matter Explanatory: How to Use + The Nine Levers (replicates the key front matter pages) -->
   <div class="px-6 pb-8">
     <div class="max-w-3xl mb-6">
-      <div class="section-title font-semibold mb-2 text-emerald-400">How to Use the Atlas Data</div>
-      <div class="prose prose-sm max-w-none text-slate-300">
+      <div class="section-title font-semibold mb-2 text-teal-800">How to Use the Atlas Data</div>
+      <div class="text-sm max-w-none text-slate-700 leading-6">
         <p>The RTLDI (Right to Life Deficit Index) extended here quantifies capital exclusions — the lost potential GDP that results when the nine protections required for capital to operate safely are not present. Use the R score and the 9-component breakdowns as practical economic intelligence to see where bringing specific protections online can bring excluded capital back into the economy.</p>
         <p class="mt-2"><strong>For policymakers:</strong> Filter by your region. Look at the current level of each lever and the volume of capital currently excluded in your jurisdiction. The levers are low-cost relative to the scale of excluded GDP they correspond to.</p>
         <p class="mt-2"><strong>For investors and analysts:</strong> Higher R is associated with less capital being excluded from the economy. The nine levers are not outcomes of wealth — they are conditions that allow capital to operate and scale to be realized.</p>
@@ -466,17 +491,17 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     </div>
 
     <div>
-      <div class="section-title font-semibold mb-3 text-emerald-400">The Nine Levers</div>
+      <div class="section-title font-semibold mb-3 text-teal-800">The Nine Levers</div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">1. Legal Protections</span><br>Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.</div>
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">2. Independent Judiciary</span><br>Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.</div>
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">3. Law Enforcement Accountability</span><br>Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.</div>
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">4. Protection Against Arbitrary Detention</span><br>Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.</div>
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">5. Freedom from Torture and Inhumane Treatment</span><br>Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training — an investment toward realizing greater scale.</div>
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">6. Civilian Protection in Conflict Zones</span><br>Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.</div>
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">7. Access to Justice</span><br>Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.</div>
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">8. Freedom of Expression &amp; Whistleblower Protections</span><br>Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low — mainly passing and enforcing the law.</div>
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3"><span class="font-semibold">9. Commitment to Basic Human Security</span><br>Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">1. Legal Protections</span><br>Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">2. Independent Judiciary</span><br>Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">3. Law Enforcement Accountability</span><br>Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">4. Protection Against Arbitrary Detention</span><br>Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">5. Freedom from Torture and Inhumane Treatment</span><br>Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training — an investment toward realizing greater scale.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">6. Civilian Protection in Conflict Zones</span><br>Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">7. Access to Justice</span><br>Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">8. Freedom of Expression &amp; Whistleblower Protections</span><br>Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low — mainly passing and enforcing the law.</div>
+        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">9. Commitment to Basic Human Security</span><br>Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.</div>
       </div>
       <div class="text-xs text-slate-400 mt-2">Each lever is a simple binary condition. When present, it removes a barrier that otherwise excludes capital from the economy. The nine come from the source document and are extended here via population-weighted regression so the scale of capital exclusions (lost potential GDP) becomes visible. Activating them is how excluded capital can be brought back in.</div>
     </div>
@@ -489,13 +514,13 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
       <div class="text-xs text-slate-400">Live client-side filtering &amp; sorting • Same numbers as the print atlas</div>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+    <div class="bg-white border border-slate-200 overflow-hidden">
       <div class="p-3 border-b flex flex-wrap gap-2 items-center bg-slate-50">
-        <input id="search" type="text" placeholder="Search country or ISO..." class="flex-1 min-w-[180px] px-3 py-1.5 text-sm border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-300">
-        <select id="region-filter" class="px-3 py-1.5 text-sm border border-slate-200 rounded-2xl bg-white">
+        <input id="search" type="text" placeholder="Search country or ISO..." class="flex-1 min-w-[180px] px-3 py-1.5 text-sm border border-slate-300 focus:outline-none focus:border-teal-500">
+        <select id="region-filter" class="px-3 py-1.5 text-sm border border-slate-300 bg-white">
           <option value="">All regions</option>
         </select>
-        <button onclick="resetFilters()" class="px-3 py-1 text-xs rounded-2xl border border-slate-200 hover:bg-white">Reset</button>
+        <button onclick="resetFilters()" class="px-3 py-1.5 text-xs border border-slate-300 hover:bg-white">Reset</button>
       </div>
       <div class="overflow-auto max-h-[520px]">
         <table id="nations-table" class="w-full text-sm">
@@ -514,7 +539,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
           <tbody class="divide-y divide-slate-100 text-[13px]"></tbody>
         </table>
       </div>
-      <div class="px-3 py-2 text-[10px] text-slate-400 border-t bg-slate-900 border-slate-700">R color: &lt;{LOW_R} red tint • {LOW_R}–{HIGH_R} yellow • &gt;{HIGH_R} green tint. Numbers use the same 25% contextual cap as the print edition.</div>
+      <div class="px-3 py-2 text-[10px] text-slate-500 border-t bg-slate-50">R color: &lt;{LOW_R} red tint • {LOW_R}–{HIGH_R} yellow • &gt;{HIGH_R} green tint. Numbers use the same 25% contextual cap as the print edition.</div>
     </div>
   </div>
 
@@ -526,7 +551,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
   </div>
 
   <footer class="px-6 pb-10 text-[10px] text-slate-400">
-    Self-contained HTML atlas (dark theme) • Data &amp; methodology identical to RTLDI_ATLAS_2026_ebook.pdf • Generated from the same 2026 rule (V-Dem 2024 + World Bank 2026 G₀) and 0.30 Conservative Marginal Coefficient with 25% cap (population-weighted regression).
+    Self-contained HTML atlas • Data &amp; methodology identical to RTLDI_ATLAS_2026_ebook.pdf • Generated from the same 2026 rule (V-Dem 2024 + World Bank 2026 G₀) and 0.30 Conservative Marginal Coefficient with 25% cap (population-weighted regression).
     Vector maps are SVG exports from the identical plotly choropleth code used for the print edition. The RTLDI is extended here to quantify capital exclusions (lost potential GDP where capital is excluded because the nine protections are absent). Global total ~15T.
   </footer>
 </div>
@@ -541,34 +566,6 @@ const ATLAS = {{
 
 const LOW_R = {LOW_R};
 const HIGH_R = {HIGH_R};
-
-// ================== DARK THEME (default dark, toggle persists) ==================
-function applyTheme(isDark) {{
-  const root = document.documentElement;
-  if (isDark) {{
-    root.classList.add('dark');
-  }} else {{
-    root.classList.remove('dark');
-  }}
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  const btn = document.getElementById('theme-toggle');
-  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
-}}
-
-function initTheme() {{
-  const saved = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isDark = saved ? (saved === 'dark') : prefersDark; // default to dark if no pref
-  applyTheme(isDark);
-
-  const btn = document.getElementById('theme-toggle');
-  if (btn) {{
-    btn.addEventListener('click', () => {{
-      const nowDark = !document.documentElement.classList.contains('dark');
-      applyTheme(nowDark);
-    }});
-  }}
-}}
 
 // Client-side helpers (executed in browser)
 function formatPop(n) {{
@@ -599,15 +596,15 @@ function renderGlobalBars() {{
     const w = Math.max(4, (lost / maxLost) * 100);
 
     const el = document.createElement('div');
-    el.className = 'bg-white border border-slate-100 rounded-2xl p-3 flex gap-3 items-center';
+    el.className = 'bg-white border border-slate-200 p-3 flex gap-3 items-center';
     el.innerHTML = `
       <div class="flex-1 min-w-0">
         <div class="flex justify-between text-xs">
           <div class="font-medium truncate pr-2">${{name}}</div>
-          <div class="tabular-nums text-emerald-700 font-medium">${{(lost/1e9).toFixed(1)}}B</div>
+          <div class="tabular-nums text-teal-700 font-medium">${{(lost/1e9).toFixed(1)}}B</div>
         </div>
         <div class="mt-1.5 h-2 bg-slate-100 rounded-full overflow-hidden">
-          <div class="h-2 bg-gradient-to-r from-emerald-600 to-teal-500" style="width:${{w}}%"></div>
+          <div class="h-2 bg-teal-700" style="width:${{w}}%"></div>
         </div>
       </div>
       <div class="text-[10px] text-slate-400 w-9 text-right tabular-nums">${{pct.toFixed(0)}}%</div>
@@ -634,7 +631,7 @@ function renderNationsTable(filtered) {{
 
   rows.forEach((n, idx) => {{
     const tr = document.createElement('tr');
-    tr.className = 'hover:bg-slate-50 ' + getRClass(n.r);
+    tr.className = 'hover:outline hover:outline-1 hover:outline-slate-300 cursor-pointer ' + getRClass(n.r);
     const popStr = n.pop >= 1e9 ? (n.pop/1e9).toFixed(2)+'B' : n.pop >= 1e6 ? (n.pop/1e6).toFixed(1)+'M' : (n.pop/1e3).toFixed(0)+'k';
     tr.innerHTML = `
       <td class="px-3 py-1.5 font-mono text-[11px] text-slate-400">${{n.rank || (idx+1)}}</td>
@@ -736,7 +733,6 @@ let currentRegion = null;
 // ================== BOOT ==================
 function boot() {{
   initTailwind();
-  initTheme();
   renderGlobalBars();
   initNationTable();
   // Region summaries are static full blocks (matching PDF); nation table interactivity remains.
@@ -750,7 +746,7 @@ function boot() {{
   }});
 
   // Initial table render already done in initNationTable
-  console.log('%c[RTLDI HTML Atlas] Self-contained front+regions ready (dark theme, full breakdowns). Data matches print atlas.', 'color:#166534');
+  console.log('%c[RTLDI HTML Atlas] Self-contained front+regions ready. Data matches print atlas.', 'color:#166534');
 }}
 
 window.resetFilters = resetFilters;
