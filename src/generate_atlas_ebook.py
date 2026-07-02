@@ -56,6 +56,11 @@ import pandas as pd
 from typing import Optional, Dict, Any, List
 import argparse
 import sys
+from src.map_geometry import (
+    add_metropolitan_france_trace,
+    apply_european_france_bounds,
+    split_france_for_metropolitan_display,
+)
 
 # PDF concatenation (PyPDF2 is already available in the env; pypdf is a modern alternative)
 try:
@@ -304,13 +309,14 @@ def get_nation_country_map(iso3: str, country: str, r: float) -> Optional[Path]:
     out_dir = Path("outputs/figures/nation_country_maps")
     out_dir.mkdir(parents=True, exist_ok=True)
     p = out_dir / f"{iso3}_country.png"
-    if p.exists():
+    if p.exists() and iso3 != "FRA":
         return p
 
     focus_df = pd.DataFrame([{"iso3": iso3, "r": float(r or 0.0), "country": country}])
+    map_df, france = split_france_for_metropolitan_display(focus_df)
 
     fig = px.choropleth(
-        focus_df,
+        map_df,
         locations="iso3",
         locationmode="ISO-3",
         color="r",
@@ -319,12 +325,17 @@ def get_nation_country_map(iso3: str, country: str, r: float) -> Optional[Path]:
         hover_name="country",
         hover_data={"r": ":.3f"},
     )
+    add_metropolitan_france_trace(fig, france)
 
-    fig.update_geos(
-        fitbounds="locations",
-        visible=False,
-        projection_type="natural earth",
-    )
+    if france:
+        fig.update_geos(visible=False, projection_type="natural earth")
+        apply_european_france_bounds(fig, kind="france")
+    else:
+        fig.update_geos(
+            fitbounds="locations",
+            visible=False,
+            projection_type="natural earth",
+        )
 
     fig.update_layout(
         coloraxis_colorbar=dict(
@@ -353,7 +364,7 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
     out_dir.mkdir(parents=True, exist_ok=True)
     slug = region_name.lower().replace(" ", "_").replace("/", "_").replace(",", "")
     p = out_dir / f"{slug}.png"
-    if p.exists():
+    if p.exists() and region_name != "Western Europe":
         return p
     focus = [n for n in all_nations if (n.get("un_region") or "") == region_name]
     if not focus:
@@ -362,8 +373,9 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
         {"iso3": n["iso3"], "r": float(n.get("r", 0.0)), "country": n.get("country", n["iso3"])}
         for n in focus
     ])
+    map_df, france = split_france_for_metropolitan_display(focus_df)
     fig = px.choropleth(
-        focus_df,
+        map_df,
         locations="iso3",
         locationmode="ISO-3",
         color="r",
@@ -372,8 +384,8 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
         hover_name="country",
         hover_data={"r": ":.3f"},
     )
+    add_metropolitan_france_trace(fig, france)
     fig.update_geos(
-        fitbounds="locations",
         showcoastlines=True,
         coastlinecolor="rgba(180,180,180,0.6)",
         showland=True,
@@ -382,6 +394,10 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
         oceancolor="rgba(230,242,255,0.6)",
         projection_type="mollweide",
     )
+    if france and region_name == "Western Europe":
+        apply_european_france_bounds(fig, kind="western_europe")
+    else:
+        fig.update_geos(fitbounds="locations")
     fig.update_layout(
         coloraxis_colorbar=dict(
             title=dict(text="R", font=dict(size=7)),

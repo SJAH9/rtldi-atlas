@@ -43,6 +43,11 @@ except Exception:
 # Reuse the exact data prep (capped deltas, regional aggregates, global 9-ind losses, etc.)
 # This guarantees the HTML and the print PDF are derived from identical numbers.
 from src.generate_atlas_ebook import prepare_atlas_data, ETA
+from src.map_geometry import (
+    add_metropolitan_france_trace,
+    apply_european_france_bounds,
+    split_france_for_metropolitan_display,
+)
 
 # Consistent with the PDF (Viridis, same R encoding)
 R_SCALE = [[0.0, "#440154"], [0.25, "#3b528b"], [0.5, "#21918c"], [0.75, "#5ec962"], [1.0, "#fde725"]]
@@ -90,8 +95,9 @@ def get_global_svg(df: pd.DataFrame, out_path: Path) -> Path:
     """Global choropleth SVG (vector, same aesthetic as print)."""
     if not HAS_PLOTLY:
         return out_path
+    map_df, france = split_france_for_metropolitan_display(df)
     fig = px.choropleth(
-        df,
+        map_df,
         locations="iso3",
         color="r",
         locationmode="ISO-3",
@@ -105,6 +111,7 @@ def get_global_svg(df: pd.DataFrame, out_path: Path) -> Path:
         },
         title="Enclosure Strength (R) — Global",
     )
+    add_metropolitan_france_trace(fig, france)
     fig.update_layout(
         margin=dict(l=0, r=0, t=30, b=0),
         coloraxis_colorbar=dict(title="R (0–1)", len=0.6),
@@ -135,9 +142,10 @@ def get_regional_svg(region_name: str, members: List[dict], all_df: pd.DataFrame
     focus_df = all_df[all_df["iso3"].isin(isos)].copy()
     if focus_df.empty:
         return out_path
+    map_df, france = split_france_for_metropolitan_display(focus_df)
 
     fig = px.choropleth(
-        focus_df,
+        map_df,
         locations="iso3",
         color="r",
         locationmode="ISO-3",
@@ -147,11 +155,16 @@ def get_regional_svg(region_name: str, members: List[dict], all_df: pd.DataFrame
         hover_data={"r": ":.2f", "total_deficit_usd": ":.0f"},
         title=f"{region_name} — Enclosure Strength (R)",
     )
+    add_metropolitan_france_trace(fig, france)
     fig.update_layout(
         margin=dict(l=0, r=0, t=25, b=0),
         coloraxis_colorbar=dict(title="R", len=0.5),
     )
-    fig.update_geos(fitbounds="locations", visible=False)
+    if france and region_name == "Western Europe":
+        fig.update_geos(visible=False)
+        apply_european_france_bounds(fig, kind="western_europe")
+    else:
+        fig.update_geos(fitbounds="locations", visible=False)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         fig.write_image(str(out_path), format="svg", width=900, height=520)

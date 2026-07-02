@@ -36,6 +36,7 @@ from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
+from src.map_geometry import add_metropolitan_france_trace, split_france_for_metropolitan_display
 
 # Default output base (committed as demo per .gitignore whitelist)
 DEFAULT_ATLAS_CSV = "outputs/atlas/rtl_di_atlas_un_members_2026.csv"
@@ -79,8 +80,9 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
         f"<sub>RTLDI ATLAS {atlas_year} | R = Right-to-Life Protection score (0 = weakest, 1 = strongest)</sub>"
     )
 
+    map_df, france = split_france_for_metropolitan_display(df)
     fig = px.choropleth(
-        df,
+        map_df,
         locations="iso3",
         locationmode="ISO-3",
         color="r",
@@ -106,6 +108,7 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
             "population": "Population",
         },
     )
+    add_metropolitan_france_trace(fig, france)
 
     # Improve geo aesthetics and projection.
     # Using "mollweide" (equal-area pseudocylindrical) for better area preservation
@@ -641,7 +644,8 @@ function bindMapClicks() {{
   }}
   graph.on('plotly_click', event => {{
     const point = event && event.points && event.points[0];
-    if (point && point.location) renderCountry(point.location);
+    const iso3 = point && (point.location || (point.customdata && point.customdata[0]));
+    if (iso3) renderCountry(iso3);
   }});
 }}
 document.addEventListener('DOMContentLoaded', bindMapClicks);
