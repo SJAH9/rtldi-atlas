@@ -21,7 +21,41 @@ The repository is configured for GitHub Pages. The root `index.html` redirects t
 
 Use GitHub Pages with the repository root as the static site source. The HTML atlas, regional map assets, interactive global map, and linked PDF remain available under the same relative paths used locally.
 
-### v2026.7 (Current — Capital exclusions focus)
+### v2026.8.2 (Current — Eurozone report)
+
+This release adds a focused **RTLDI 2026 Eurozone Capital Exclusion Map** as a scoped derivative of the UN member-state atlas.
+
+- New Eurozone PDF: `outputs/atlas/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf`.
+- New Eurozone data outputs: `outputs/atlas/rtl_di_atlas_eurozone_2026.csv` and `outputs/atlas/rtl_di_atlas_eurozone_summary_2026.json`.
+- Scope: 21 euro-area member states as of 2026, including Bulgaria from January 1, 2026; excludes non-EU microstates using the euro by monetary agreement.
+- Uses the canonical global atlas model: `eta = 0.30` with the 25% contextual cap, so the Eurozone figures remain directly comparable to the main UN atlas.
+- Current Eurozone total capital exclusions: approximately `$887.1B` annually.
+
+Generate it after the main atlas data exists:
+```bash
+python -m src.generate_eurozone_atlas
+```
+
+See the [full Releases page](https://github.com/SJAH9/rtldi-atlas/releases) for v2026.8.1 and earlier.
+
+### v2026.8.1 (France map geometry fix)
+
+Patch release correcting France map geometry in Plotly choropleths:
+
+- France no longer appears as a colored territory in South America on the global interactive map.
+- Western Europe, France-only, and Eurozone fitted map views stay framed in Europe instead of being distorted by French Guiana.
+- The print atlas PDF and HTML atlas map bundle were regenerated from the corrected map generator.
+
+### v2026.8 (Redesigned web and PDF)
+
+Refreshed the RTLDI Atlas presentation across print, HTML, and the interactive map:
+
+- Redesigned full PDF visual system and regenerated the 237-page print atlas.
+- Rebuilt the HTML atlas into a cleaner analytical interface.
+- Upgraded the global interactive map from hover-only exploration to click-driven national detail.
+- Added the root GitHub Pages landing redirect.
+
+### v2026.7 (Capital exclusions focus)
 
 **RTLDI** = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Extended via population-weighted regression (25% conservative cap) to quantify **capital exclusions** — the lost potential GDP (on the order of 15 trillion dollars globally) where capital is excluded from the economy because the nine protections required for it to operate are not present.
 
@@ -144,11 +178,15 @@ python3 -m src.generate_atlas_ebook
 #    Produces outputs/html-atlas/index.html (open directly in a browser) plus vector SVG
 #    choropleths (global + 22 regions) in outputs/html-atlas/maps/.
 python3 -m src.generate_html_atlas
+
+# 5. (Optional focused report) Generate the Eurozone capital exclusion report
+#    using the canonical global eta=0.30 and the same 25% cap as the UN atlas.
+python3 -m src.generate_eurozone_atlas
 ```
 
 The HTML atlas is not a separate data product. It is generated from the same canonical pipeline as the PDF (`src.generate_atlas_ebook.prepare_atlas_data()`), and its nation table must contain the same 193 UN Member States as the master 2026 atlas table. Do not substitute a separately computed frontend JSON or alternate scoring pipeline for official releases.
 
-**Exact expected outputs for a successful full reproduction (matching the released v2026.7 asset):**
+**Exact expected outputs for a successful full reproduction (matching the current release):**
 - `outputs/atlas/rtl_di_atlas_un_members_2026.csv` and `.xlsx`
 - `outputs/atlas/rtl_di_atlas_summary_2026.json`
 - `data/processed/rtl_di_nation_breakdown_2026.json` (and .csv)
@@ -161,6 +199,9 @@ The HTML atlas is not a separate data product. It is generated from the same can
 - `outputs/html-atlas/index.html` (self-contained front + regions edition with capital exclusions framing)
 - `outputs/html-atlas/maps/global.svg` + 22 regional `*.svg` (vector choropleths)
 - `outputs/html-atlas/data.json` (the embedded data for the HTML)
+- `outputs/atlas/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf` (focused Eurozone report)
+- `outputs/atlas/rtl_di_atlas_eurozone_2026.csv`
+- `outputs/atlas/rtl_di_atlas_eurozone_summary_2026.json`
 
 **Verification checklist** (run these after the commands above to confirm you have reproduced the release):
 - The four main PDFs exist and `RTLDI_ATLAS_2026_ebook.pdf` is the largest.
@@ -174,6 +215,7 @@ The HTML atlas is not a separate data product. It is generated from the same can
   - Short Malthus note in the back matter.
   - Alphabetical index of terms that includes the 9 levers.
   - All 193 nation profiles and 22 regional summaries.
+- Open the Eurozone PDF and confirm it states the canonical global eta (`0.30`), the 25% cap, and the 21 euro-area member-state scope.
 - No placeholder text like "[Global map could not be embedded]" appears.
 
 If you skip the `generate_enclosure_map` step, the PDFs will still contain all text, tables, and the modelling section, but the choropleth images will be missing or replaced by placeholders. This is why the map step is required to match the released version.
