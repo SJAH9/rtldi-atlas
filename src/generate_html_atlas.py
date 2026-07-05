@@ -424,6 +424,54 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
   .lever-bar {{ height: 10px; background: linear-gradient(to right, #0f766e, #14b8a6); transition: width .4s ease; }}
   .map-container svg, .map-container img {{ max-width: 100%; height: auto; }}
   .section-title {{ font-size: 1.05rem; }}
+  body, body * {{ transition: background-color .35s ease, border-color .35s ease, color .35s ease; }}
+  body.night-mode {{ background: #08111f !important; color: #e5edf7 !important; }}
+  body.night-mode .max-w-screen-xl,
+  body.night-mode .bg-white,
+  body.night-mode .bg-slate-50,
+  body.night-mode .bg-slate-100,
+  body.night-mode .bg-teal-50,
+  body.night-mode header {{
+    background-color: #111827 !important;
+  }}
+  body.night-mode .border,
+  body.night-mode .border-b,
+  body.night-mode .border-t,
+  body.night-mode .border-l-4,
+  body.night-mode .border-slate-100,
+  body.night-mode .border-slate-200,
+  body.night-mode .border-slate-300,
+  body.night-mode .border-teal-100 {{
+    border-color: #334155 !important;
+  }}
+  body.night-mode .text-slate-950,
+  body.night-mode .text-slate-900,
+  body.night-mode .text-slate-800,
+  body.night-mode .text-slate-700 {{
+    color: #e5edf7 !important;
+  }}
+  body.night-mode .text-slate-600,
+  body.night-mode .text-slate-500,
+  body.night-mode .text-slate-400 {{
+    color: #94a3b8 !important;
+  }}
+  body.night-mode .text-teal-800,
+  body.night-mode .text-teal-700 {{
+    color: #5eead4 !important;
+  }}
+  body.night-mode input,
+  body.night-mode select,
+  body.night-mode button {{
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #e5edf7 !important;
+  }}
+  body.night-mode .r-high {{ background-color: #123524 !important; }}
+  body.night-mode .r-mid {{ background-color: #3a2c0a !important; }}
+  body.night-mode .r-low {{ background-color: #3b1118 !important; }}
+  body.night-mode .divide-y > :not([hidden]) ~ :not([hidden]) {{ border-color: #1f2937 !important; }}
+  body.night-mode .shadow-sm {{ box-shadow: 0 0 0 1px rgba(51,65,85,.7) !important; }}
+  body.night-mode .map-container img {{ background: #0f172a !important; border-color: #334155 !important; }}
 </style>
 </head>
 <body class="bg-slate-100 text-slate-900">
@@ -579,6 +627,36 @@ const ATLAS = {{
 
 const LOW_R = {LOW_R};
 const HIGH_R = {HIGH_R};
+
+// Automatic solar theme. Uses browser-local timezone and a privacy-preserving
+// timezone-level sunrise/sunset estimate; no geolocation prompt is required.
+function dayOfYear(date) {{
+  const start = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date - start) / 86400000);
+}}
+
+function estimateHemisphere(timeZone) {{
+  if (/Australia|Pacific\\/Auckland|Pacific\\/Fiji|Pacific\\/Port_Moresby|America\\/(Argentina|Santiago|Montevideo|Sao_Paulo|Asuncion)|Africa\\/(Johannesburg|Maseru|Mbabane|Maputo)|Indian\\/(Mauritius|Reunion)/.test(timeZone)) return -1;
+  return 1;
+}}
+
+function estimatedSolarWindow(now = new Date()) {{
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  const doy = dayOfYear(now);
+  const hemisphere = estimateHemisphere(timeZone);
+  const seasonal = Math.cos((2 * Math.PI * (doy - 172)) / 365) * hemisphere;
+  const daylightHours = Math.max(9, Math.min(15, 12 + 3.4 * seasonal));
+  const sunrise = 12 - daylightHours / 2;
+  const sunset = 12 + daylightHours / 2;
+  return {{ sunrise, sunset }};
+}}
+
+function applyAutomaticTheme() {{
+  const now = new Date();
+  const hour = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+  const solar = estimatedSolarWindow(now);
+  document.body.classList.toggle('night-mode', hour < solar.sunrise || hour >= solar.sunset);
+}}
 
 // Client-side helpers (executed in browser)
 function formatPop(n) {{
@@ -745,6 +823,8 @@ let currentRegion = null;
 
 // ================== BOOT ==================
 function boot() {{
+  applyAutomaticTheme();
+  window.setInterval(applyAutomaticTheme, 5 * 60 * 1000);
   initTailwind();
   renderGlobalBars();
   initNationTable();

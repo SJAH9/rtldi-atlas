@@ -266,18 +266,34 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     --accent: #107e65;
     --blue: #1f4e79;
   }}
+  body.night-mode {{
+    --ink: #e5edf7;
+    --muted: #94a3b8;
+    --rule: #334155;
+    --panel: #0f172a;
+    --accent: #14b8a6;
+    --blue: #5eead4;
+  }}
   * {{ box-sizing: border-box; }}
   body {{
     margin: 0;
     background: #eef2f5;
     color: var(--ink);
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    transition: background-color .35s ease, color .35s ease;
+  }}
+  body.night-mode {{
+    background: #08111f;
   }}
   .shell {{
     width: min(1440px, 100%);
     margin: 0 auto;
     background: #fff;
     min-height: 100vh;
+    transition: background-color .35s ease;
+  }}
+  body.night-mode .shell {{
+    background: #111827;
   }}
   header {{
     position: sticky;
@@ -290,6 +306,10 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     align-items: center;
     justify-content: space-between;
     gap: 16px;
+  }}
+  body.night-mode header {{
+    background: rgba(17,24,39,.96);
+    border-color: var(--rule);
   }}
   h1 {{
     margin: 0;
@@ -318,6 +338,11 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     font-size: 13px;
     text-decoration: none;
   }}
+  body.night-mode .button {{
+    background: #0f172a;
+    border-color: var(--rule);
+    color: var(--ink);
+  }}
   .button.primary {{
     background: var(--accent);
     border-color: var(--accent);
@@ -328,6 +353,10 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     border: 1px solid #d8e0e7;
     background: #fff;
     overflow: hidden;
+  }}
+  body.night-mode .map-frame {{
+    background: #0f172a;
+    border-color: var(--rule);
   }}
   #rtldi-map {{
     width: 100% !important;
@@ -344,10 +373,19 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     color: var(--muted);
     background: #f8fafc;
   }}
+  body.night-mode .hint {{
+    background: #0f172a;
+    border-color: var(--rule);
+  }}
   #country-panel {{
     margin-top: 18px;
     border: 1px solid #d8e0e7;
     background: #fff;
+  }}
+  body.night-mode #country-panel,
+  body.night-mode .component {{
+    background: #111827;
+    border-color: var(--rule);
   }}
   .empty {{
     padding: 28px;
@@ -361,6 +399,10 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 12px;
+  }}
+  body.night-mode .panel-head {{
+    background: #0f172a;
+    border-color: var(--rule);
   }}
   .panel-title {{
     margin: 0;
@@ -380,6 +422,9 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     background: #edf7f4;
     padding: 10px 12px;
     text-align: right;
+  }}
+  body.night-mode .r-badge {{
+    background: #123524;
   }}
   .r-badge span {{
     display: block;
@@ -404,6 +449,12 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     background: var(--panel);
     padding: 12px;
     min-height: 78px;
+  }}
+  body.night-mode .metric,
+  body.night-mode .summary-box,
+  body.night-mode .rank-list {{
+    background: var(--panel);
+    border-color: var(--rule);
   }}
   .metric label {{
     display: block;
@@ -492,6 +543,9 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     border-top: 1px solid #edf2f7;
     font-size: 13px;
   }}
+  body.night-mode .rank-row {{
+    border-color: #1f2937;
+  }}
   .rank-row:first-child {{ border-top: 0; }}
   .rank-row button {{
     border: 0;
@@ -533,6 +587,48 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
 </div>
 <script>
 const COUNTRY_DATA = {countries_json};
+
+// Automatic solar theme. Uses browser-local timezone and a privacy-preserving
+// timezone-level sunrise/sunset estimate; no geolocation prompt is required.
+function dayOfYear(date) {{
+  const start = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date - start) / 86400000);
+}}
+function estimateHemisphere(timeZone) {{
+  if (/Australia|Pacific\\/Auckland|Pacific\\/Fiji|Pacific\\/Port_Moresby|America\\/(Argentina|Santiago|Montevideo|Sao_Paulo|Asuncion)|Africa\\/(Johannesburg|Maseru|Mbabane|Maputo)|Indian\\/(Mauritius|Reunion)/.test(timeZone)) return -1;
+  return 1;
+}}
+function estimatedSolarWindow(now = new Date()) {{
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  const doy = dayOfYear(now);
+  const hemisphere = estimateHemisphere(timeZone);
+  const seasonal = Math.cos((2 * Math.PI * (doy - 172)) / 365) * hemisphere;
+  const daylightHours = Math.max(9, Math.min(15, 12 + 3.4 * seasonal));
+  const sunrise = 12 - daylightHours / 2;
+  const sunset = 12 + daylightHours / 2;
+  return {{ sunrise, sunset }};
+}}
+function applyMapTheme() {{
+  const now = new Date();
+  const hour = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+  const solar = estimatedSolarWindow(now);
+  const night = hour < solar.sunrise || hour >= solar.sunset;
+  document.body.classList.toggle('night-mode', night);
+  const graph = document.getElementById('rtldi-map');
+  if (graph && window.Plotly) {{
+    Plotly.relayout(graph, {{
+      'paper_bgcolor': night ? '#111827' : 'white',
+      'plot_bgcolor': night ? '#111827' : 'white',
+      'geo.bgcolor': night ? '#111827' : 'white',
+      'geo.landcolor': night ? 'rgba(30,41,59,0.95)' : 'rgba(245,245,245,0.9)',
+      'geo.oceancolor': night ? 'rgba(15,23,42,0.95)' : 'rgba(230,242,255,0.6)',
+      'geo.lakecolor': night ? 'rgba(15,23,42,0.95)' : 'rgba(230,242,255,0.6)',
+      'geo.coastlinecolor': night ? 'rgba(148,163,184,0.5)' : 'rgba(180,180,180,0.6)',
+      'geo.framecolor': night ? 'rgba(100,116,139,0.55)' : 'rgba(150,150,150,0.5)',
+      'font.color': night ? '#e5edf7' : '#2a3f5f'
+    }});
+  }}
+}}
 
 function money(value) {{
   if (value === null || value === undefined || Number.isNaN(Number(value))) return 'N/A';
@@ -648,7 +744,57 @@ function bindMapClicks() {{
     if (iso3) renderCountry(iso3);
   }});
 }}
-document.addEventListener('DOMContentLoaded', bindMapClicks);
+
+function bindMapMotion() {{
+  const graph = document.getElementById('rtldi-map');
+  if (!graph || !graph.on || !window.Plotly) {{
+    window.setTimeout(bindMapMotion, 100);
+    return;
+  }}
+  let rotationLon = 0;
+  let lastFrame = performance.now();
+  let pausedUntil = 0;
+  let isAutoRelayout = false;
+  const idleMs = 180000;
+  const degreesPerSecond = 1.5;
+
+  function pauseMotion() {{
+    const current = graph.layout && graph.layout.geo && graph.layout.geo.projection && graph.layout.geo.projection.rotation;
+    if (current && Number.isFinite(Number(current.lon))) rotationLon = Number(current.lon);
+    pausedUntil = performance.now() + idleMs;
+  }}
+  ['plotly_click', 'plotly_selected'].forEach(name => graph.on(name, pauseMotion));
+  graph.on('plotly_relayout', () => {{
+    if (!isAutoRelayout) pauseMotion();
+  }});
+  ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(name => {{
+    graph.addEventListener(name, pauseMotion, {{ passive: true }});
+  }});
+
+  function tick(now) {{
+    const elapsed = Math.min(0.25, (now - lastFrame) / 1000);
+    lastFrame = now;
+    if (now >= pausedUntil) {{
+      rotationLon = (rotationLon + degreesPerSecond * elapsed) % 360;
+      isAutoRelayout = true;
+      const relayout = Plotly.relayout(graph, {{'geo.projection.rotation.lon': rotationLon}});
+      if (relayout && typeof relayout.finally === 'function') {{
+        relayout.finally(() => window.setTimeout(() => {{ isAutoRelayout = false; }}, 0));
+      }} else {{
+        window.setTimeout(() => {{ isAutoRelayout = false; }}, 0);
+      }}
+    }}
+    window.requestAnimationFrame(tick);
+  }}
+  window.requestAnimationFrame(tick);
+}}
+
+document.addEventListener('DOMContentLoaded', () => {{
+  applyMapTheme();
+  window.setInterval(applyMapTheme, 5 * 60 * 1000);
+  bindMapClicks();
+  bindMapMotion();
+}});
 </script>
 </body>
 </html>
