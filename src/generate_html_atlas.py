@@ -142,7 +142,8 @@ def get_regional_svg(region_name: str, members: List[dict], all_df: pd.DataFrame
     focus_df = all_df[all_df["iso3"].isin(isos)].copy()
     if focus_df.empty:
         return out_path
-    map_df, france = split_france_for_metropolitan_display(focus_df)
+    use_native_france = region_name == "Western Europe"
+    map_df, france = (focus_df, None) if use_native_france else split_france_for_metropolitan_display(focus_df)
 
     fig = px.choropleth(
         map_df,
@@ -160,7 +161,7 @@ def get_regional_svg(region_name: str, members: List[dict], all_df: pd.DataFrame
         margin=dict(l=0, r=0, t=25, b=0),
         coloraxis_colorbar=dict(title="R", len=0.5),
     )
-    if france and region_name == "Western Europe":
+    if use_native_france:
         fig.update_geos(visible=False)
         apply_european_france_bounds(fig, kind="western_europe")
     else:

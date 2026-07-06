@@ -269,15 +269,11 @@ def _get_eurozone_map(rows: list[dict]) -> Optional[Path]:
     if not HAS_PLOTLY:
         return _get_eurozone_point_map(rows)
     out = Path("outputs/figures/eurozone_choropleth_2026.png")
-    fallback = Path("outputs/figures/eurozone_capital_exclusion_point_map_2026.png")
-    if fallback.exists():
-        return _get_eurozone_point_map(rows)
     df = pd.DataFrame(
         [{"iso3": d["iso3"], "country": d["country"], "r": float(d.get("r") or 0)} for d in rows]
     )
-    map_df, france = split_france_for_metropolitan_display(df)
     fig = px.choropleth(
-        map_df,
+        df,
         locations="iso3",
         locationmode="ISO-3",
         color="r",
@@ -286,7 +282,6 @@ def _get_eurozone_map(rows: list[dict]) -> Optional[Path]:
         hover_name="country",
         hover_data={"r": ":.3f"},
     )
-    add_metropolitan_france_trace(fig, france)
     fig.update_geos(
         showcoastlines=True,
         coastlinecolor="rgba(180,180,180,0.7)",

@@ -373,7 +373,8 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
         {"iso3": n["iso3"], "r": float(n.get("r", 0.0)), "country": n.get("country", n["iso3"])}
         for n in focus
     ])
-    map_df, france = split_france_for_metropolitan_display(focus_df)
+    use_native_france = region_name == "Western Europe"
+    map_df, france = (focus_df, None) if use_native_france else split_france_for_metropolitan_display(focus_df)
     fig = px.choropleth(
         map_df,
         locations="iso3",
@@ -394,7 +395,7 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
         oceancolor="rgba(230,242,255,0.6)",
         projection_type="mollweide",
     )
-    if france and region_name == "Western Europe":
+    if use_native_france:
         apply_european_france_bounds(fig, kind="western_europe")
     else:
         fig.update_geos(fitbounds="locations")

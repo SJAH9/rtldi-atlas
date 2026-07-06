@@ -330,6 +330,43 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     flex-wrap: wrap;
     justify-content: flex-end;
   }}
+  .map-controls {{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }}
+  .control {{
+    min-height: 34px;
+    border: 1px solid #cbd5df;
+    background: #fff;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 9px;
+    font-size: 12px;
+    line-height: 1;
+  }}
+  body.night-mode .control {{
+    background: #0f172a;
+    border-color: var(--rule);
+    color: var(--ink);
+  }}
+  .control input {{
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--accent);
+  }}
+  .control select {{
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    padding: 1px 0;
+  }}
   .button {{
     border: 1px solid #cbd5df;
     background: #fff;
@@ -381,6 +418,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     margin-top: 18px;
     border: 1px solid #d8e0e7;
     background: #fff;
+    scroll-margin-top: 160px;
   }}
   body.night-mode #country-panel,
   body.night-mode .component {{
@@ -559,6 +597,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
   .num {{ font-variant-numeric: tabular-nums; }}
   @media (max-width: 860px) {{
     header {{ align-items: flex-start; flex-direction: column; }}
+    .actions, .map-controls {{ justify-content: flex-start; }}
     .metrics, .detail-grid {{ grid-template-columns: 1fr; }}
     .panel-head {{ grid-template-columns: 1fr; }}
     .r-badge {{ text-align: left; }}
@@ -573,6 +612,16 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
       <div class="subhead">Click a country to load its national data, capital exclusions, and nine-lever breakdown below the map.</div>
     </div>
     <div class="actions">
+      <div class="map-controls" aria-label="Map controls">
+        <label class="control"><input id="auto-rotate-toggle" type="checkbox" checked> Auto rotate</label>
+        <label class="control">Night mode
+          <select id="night-mode-control">
+            <option value="auto" selected>Auto</option>
+            <option value="on">On</option>
+            <option value="off">Off</option>
+          </select>
+        </label>
+      </div>
       <a class="button" href="../html-atlas/index.html">HTML Atlas</a>
       <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf">Print PDF</a>
     </div>
@@ -587,6 +636,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
 </div>
 <script>
 const COUNTRY_DATA = {countries_json};
+let mapThemeMode = 'auto';
 
 // Automatic solar theme. Uses browser-local timezone and a privacy-preserving
 // timezone-level sunrise/sunset estimate; no geolocation prompt is required.
@@ -612,7 +662,8 @@ function applyMapTheme() {{
   const now = new Date();
   const hour = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
   const solar = estimatedSolarWindow(now);
-  const night = hour < solar.sunrise || hour >= solar.sunset;
+  const autoNight = hour < solar.sunrise || hour >= solar.sunset;
+  const night = mapThemeMode === 'on' || (mapThemeMode === 'auto' && autoNight);
   document.body.classList.toggle('night-mode', night);
   const graph = document.getElementById('rtldi-map');
   if (graph && window.Plotly) {{
@@ -628,6 +679,15 @@ function applyMapTheme() {{
       'font.color': night ? '#e5edf7' : '#2a3f5f'
     }});
   }}
+}}
+function bindThemeControl() {{
+  const control = document.getElementById('night-mode-control');
+  if (!control) return;
+  control.value = mapThemeMode;
+  control.addEventListener('change', () => {{
+    mapThemeMode = control.value;
+    applyMapTheme();
+  }});
 }}
 
 function money(value) {{
@@ -730,7 +790,20 @@ function renderCountry(iso3) {{
   panel.querySelectorAll('button[data-iso]').forEach(button => {{
     button.addEventListener('click', () => renderCountry(button.dataset.iso));
   }});
-  panel.scrollIntoView({{behavior: 'smooth', block: 'start'}});
+  scrollCountryPanelIntoView();
+}}
+function scrollCountryPanelIntoView() {{
+  const panel = document.getElementById('country-panel');
+  const title = panel ? panel.querySelector('.panel-title') : null;
+  if (!panel) return;
+  window.requestAnimationFrame(() => {{
+    const header = document.querySelector('header');
+    const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+    const anchor = title || panel;
+    const anchorTop = anchor.getBoundingClientRect().top + window.scrollY;
+    const target = anchorTop - headerBottom - 24;
+    window.scrollTo({{top: Math.max(0, target), behavior: 'smooth'}});
+  }});
 }}
 function bindMapClicks() {{
   const graph = document.getElementById('rtldi-map');
@@ -752,37 +825,90 @@ function bindMapMotion() {{
     return;
   }}
   let rotationLon = 0;
-  let lastFrame = performance.now();
-  let pausedUntil = 0;
+  let centerLon = 0;
+  let baseRotationLon = 0;
+  let baseCenterLon = 0;
+  let baseWallTime = Date.now();
+  let mapPaused = false;
   let isAutoRelayout = false;
-  const idleMs = 180000;
-  const degreesPerSecond = 1.5;
+  let autoRotateEnabled = true;
+  const earthRotationDegreesPerMs = 360 / 86164090.5;
+  const toggle = document.getElementById('auto-rotate-toggle');
+
+  function finishAutoRelayout(relayout) {{
+    isAutoRelayout = true;
+    const result = Plotly.relayout(graph, relayout);
+    if (result && typeof result.finally === 'function') {{
+      result.finally(() => window.setTimeout(() => {{ isAutoRelayout = false; }}, 0));
+    }} else {{
+      window.setTimeout(() => {{ isAutoRelayout = false; }}, 0);
+    }}
+  }}
+
+  function wrapLongitude(lon) {{
+    return ((((lon + 180) % 360) + 360) % 360) - 180;
+  }}
+
+  function rememberMapPosition() {{
+    const geo = graph.layout && graph.layout.geo ? graph.layout.geo : {{}};
+    const rotation = geo.projection && geo.projection.rotation ? geo.projection.rotation : {{}};
+    const center = geo.center || {{}};
+    if (Number.isFinite(Number(rotation.lon))) rotationLon = Number(rotation.lon);
+    if (Number.isFinite(Number(center.lon))) centerLon = Number(center.lon);
+  }}
+
+  function anchorRotationToBrowserTime() {{
+    rememberMapPosition();
+    baseRotationLon = rotationLon;
+    baseCenterLon = centerLon;
+    baseWallTime = Date.now();
+  }}
 
   function pauseMotion() {{
-    const current = graph.layout && graph.layout.geo && graph.layout.geo.projection && graph.layout.geo.projection.rotation;
-    if (current && Number.isFinite(Number(current.lon))) rotationLon = Number(current.lon);
-    pausedUntil = performance.now() + idleMs;
+    anchorRotationToBrowserTime();
+    mapPaused = true;
+  }}
+
+  function resumeMotion() {{
+    anchorRotationToBrowserTime();
+    mapPaused = false;
+  }}
+
+  if (toggle) {{
+    autoRotateEnabled = toggle.checked;
+    toggle.addEventListener('change', () => {{
+      autoRotateEnabled = toggle.checked;
+      if (autoRotateEnabled) anchorRotationToBrowserTime();
+    }});
   }}
   ['plotly_click', 'plotly_selected'].forEach(name => graph.on(name, pauseMotion));
   graph.on('plotly_relayout', () => {{
-    if (!isAutoRelayout) pauseMotion();
+    if (!isAutoRelayout) {{
+      anchorRotationToBrowserTime();
+    }}
   }});
-  ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(name => {{
+  ['pointerenter', 'focusin'].forEach(name => {{
     graph.addEventListener(name, pauseMotion, {{ passive: true }});
   }});
+  ['pointerleave', 'focusout'].forEach(name => {{
+    graph.addEventListener(name, resumeMotion, {{ passive: true }});
+  }});
+  graph.addEventListener('touchstart', pauseMotion, {{ passive: true }});
+  ['touchend', 'touchcancel'].forEach(name => {{
+    graph.addEventListener(name, resumeMotion, {{ passive: true }});
+  }});
 
-  function tick(now) {{
-    const elapsed = Math.min(0.25, (now - lastFrame) / 1000);
-    lastFrame = now;
-    if (now >= pausedUntil) {{
-      rotationLon = (rotationLon + degreesPerSecond * elapsed) % 360;
-      isAutoRelayout = true;
-      const relayout = Plotly.relayout(graph, {{'geo.projection.rotation.lon': rotationLon}});
-      if (relayout && typeof relayout.finally === 'function') {{
-        relayout.finally(() => window.setTimeout(() => {{ isAutoRelayout = false; }}, 0));
-      }} else {{
-        window.setTimeout(() => {{ isAutoRelayout = false; }}, 0);
-      }}
+  anchorRotationToBrowserTime();
+
+  function tick() {{
+    if (autoRotateEnabled && !mapPaused) {{
+      const lonDelta = (Date.now() - baseWallTime) * earthRotationDegreesPerMs;
+      rotationLon = wrapLongitude(baseRotationLon + lonDelta);
+      centerLon = wrapLongitude(baseCenterLon + lonDelta);
+      finishAutoRelayout({{
+        'geo.projection.rotation.lon': rotationLon,
+        'geo.center.lon': centerLon
+      }});
     }}
     window.requestAnimationFrame(tick);
   }}
@@ -791,6 +917,7 @@ function bindMapMotion() {{
 
 document.addEventListener('DOMContentLoaded', () => {{
   applyMapTheme();
+  bindThemeControl();
   window.setInterval(applyMapTheme, 5 * 60 * 1000);
   bindMapClicks();
   bindMapMotion();
