@@ -21,7 +21,39 @@ The repository is configured for GitHub Pages. The root `index.html` redirects t
 
 Use GitHub Pages with the repository root as the static site source. The HTML atlas, regional map assets, interactive global map, and linked PDF remain available under the same relative paths used locally.
 
-### v2026.8.2 (Current — Eurozone report)
+Direct deployed atlas links:
+
+- [HTML Atlas](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/)
+- [Interactive Map](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/global_interactive.html)
+- [Full Data View](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/full_data.html)
+
+### v2026.8.3 (Current — cohesive atlas design and linked data views)
+
+This release brings the print atlas, web atlas, interactive map, full data view, and linked-data export into a more cohesive information-design language while preserving the canonical single data pipeline.
+
+- Redesigned print nation pages with stronger country headers, RTLP score badges, nine-lever status strips, cleaner metric hierarchy, and refreshed country-map styling.
+- Updated global, regional, and country choropleths with the shared RTLDI atlas R scale, softer ocean/land context, graticules, stronger boundary hierarchy, and small-state locator notes.
+- Improved the HTML atlas landing page and Full Data View so they share the same atlas visual language.
+- Full Data View now lists `RTLP` as the second column and keeps country names linked directly to the interactive country viewer.
+- Interactive map now opens country panels directly from `?country=ISO3`, `?iso3=ISO3`, or `#ISO3`.
+- RDF/XML linked open data export remains published as `outputs/html-atlas/rtldi_atlas_2026.rdf` and linked from the HTML pages.
+- Verified the atlas still generates from the data pipeline: 237-page PDF ebook, 194-page nation section, 193 Full Data rows, 193 country links, 193 RDF observations, and the page-8 global total of `$15.87T`.
+
+Deployed views:
+
+- [HTML Atlas](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/)
+- [Interactive Map](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/global_interactive.html)
+- [Full Data View](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/full_data.html)
+
+Generate the full current atlas:
+
+```bash
+python -m src.generate_enclosure_map
+python -m src.generate_atlas_ebook
+python -m src.generate_html_atlas
+```
+
+### v2026.8.2 (Eurozone report)
 
 This release adds a focused **RTLDI 2026 Eurozone Capital Exclusion Map** as a scoped derivative of the UN member-state atlas.
 

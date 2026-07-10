@@ -7,7 +7,7 @@ RTLDI = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Ex
 - Reuses prepare_atlas_data() so numbers, caps, 9-indicator breakdowns, region
   aggregates, and member lists are identical to the PDF.
 - Vector choropleth maps (SVG) for global + all 22 regions using the same
-  plotly code path (Mollweide-inspired or standard geo, Viridis R scale).
+  plotly code path (Mollweide-inspired or standard geo, RTLDI atlas R scale).
 - Single index.html with embedded data (JSON) + Tailwind via CDN (common
   pattern for rich self-contained data apps) + vanilla JS for all interactivity:
   live sortable/filterable/searchable 193-nation table, static regional
@@ -46,15 +46,17 @@ except Exception:
 from src.generate_atlas_ebook import prepare_atlas_data, ETA
 from src.lever_display import LEVER_DISPLAY, format_compact_usd, lever_description, lever_long_description, lever_name, lever_short
 from src.map_geometry import (
+    RTLDI_COLOR_SCALE,
+    add_map_context_note,
     add_metropolitan_france_trace,
     add_small_country_markers,
+    apply_atlas_choropleth_style,
+    apply_atlas_geo_style,
     apply_european_france_bounds,
     split_france_for_metropolitan_display,
 )
 from src.generate_rdf_atlas import write_rdf_atlas
 
-# Consistent with the PDF (Viridis, same R encoding)
-R_SCALE = [[0.0, "#440154"], [0.25, "#3b528b"], [0.5, "#21918c"], [0.75, "#5ec962"], [1.0, "#fde725"]]
 LOW_R = 0.35
 HIGH_R = 0.65
 
@@ -86,7 +88,7 @@ def get_global_svg(df: pd.DataFrame, out_path: Path) -> Path:
         locations="iso3",
         color="r",
         locationmode="ISO-3",
-        color_continuous_scale="Viridis",
+        color_continuous_scale=RTLDI_COLOR_SCALE,
         range_color=(0, 1),
         hover_name="country",
         hover_data={
@@ -96,20 +98,24 @@ def get_global_svg(df: pd.DataFrame, out_path: Path) -> Path:
         },
         title="Enclosure Strength (R) — Global",
     )
+    apply_atlas_choropleth_style(fig)
     add_metropolitan_france_trace(fig, france)
-    add_small_country_markers(fig, map_df, marker_size=5)
+    marker_count = add_small_country_markers(fig, map_df, marker_size=5)
     fig.update_layout(
-        margin=dict(l=0, r=0, t=30, b=0),
-        coloraxis_colorbar=dict(title="R (0–1)", len=0.6),
+        margin=dict(l=0, r=0, t=34, b=8),
+        paper_bgcolor="#ffffff",
+        plot_bgcolor="#ffffff",
+        coloraxis_colorbar=dict(
+            title=dict(text="RTLP R<br>(0–1)", font=dict(size=10)),
+            len=0.56,
+            thickness=10,
+            tickvals=[0, 0.25, 0.5, 0.75, 1],
+        ),
+        title=dict(font=dict(size=15, color="#20384a"), x=0.02, xanchor="left"),
     )
-    fig.update_geos(
-        showcoastlines=True,
-        coastlinecolor="rgba(0,0,0,0.2)",
-        showland=True,
-        landcolor="rgba(240,240,240,0.6)",
-        showocean=True,
-        oceancolor="rgba(230,240,250,0.4)",
-    )
+    apply_atlas_geo_style(fig, projection_type="mollweide")
+    if marker_count:
+        add_map_context_note(fig, f"{marker_count} small states shown with locator points.")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         fig.write_image(str(out_path), format="svg", width=1200, height=620)
@@ -136,23 +142,34 @@ def get_regional_svg(region_name: str, members: List[dict], all_df: pd.DataFrame
         locations="iso3",
         color="r",
         locationmode="ISO-3",
-        color_continuous_scale="Viridis",
+        color_continuous_scale=RTLDI_COLOR_SCALE,
         range_color=(0, 1),
         hover_name="country",
         hover_data={"r": ":.2f", "total_deficit_usd": ":.0f"},
         title=f"{region_name} — Enclosure Strength (R)",
     )
+    apply_atlas_choropleth_style(fig)
     add_metropolitan_france_trace(fig, france)
-    add_small_country_markers(fig, map_df, marker_size=10, show_text=True)
+    marker_count = add_small_country_markers(fig, map_df, marker_size=10, show_text=True)
     fig.update_layout(
-        margin=dict(l=0, r=0, t=25, b=0),
-        coloraxis_colorbar=dict(title="R", len=0.5),
+        margin=dict(l=0, r=0, t=30, b=6),
+        paper_bgcolor="#ffffff",
+        plot_bgcolor="#ffffff",
+        coloraxis_colorbar=dict(
+            title=dict(text="R", font=dict(size=10)),
+            len=0.48,
+            thickness=10,
+            tickvals=[0, 0.5, 1],
+        ),
+        title=dict(font=dict(size=15, color="#20384a"), x=0.02, xanchor="left"),
     )
+    apply_atlas_geo_style(fig, show_grid=True)
     if use_native_france:
-        fig.update_geos(visible=False)
         apply_european_france_bounds(fig, kind="western_europe")
     else:
-        fig.update_geos(fitbounds="locations", visible=False)
+        fig.update_geos(fitbounds="locations")
+    if marker_count:
+        add_map_context_note(fig, f"Locator layer: {marker_count} small states labeled by ISO3.")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         fig.write_image(str(out_path), format="svg", width=900, height=520)
@@ -376,7 +393,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
   <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 p-5">
     <div class="lg:col-span-3 map-container">
       <img src="maps/{reg["slug"]}.svg" alt="{reg_name} choropleth (vector SVG)" class="w-full border border-slate-200 bg-white">
-      <div class="text-[10px] text-slate-500 mt-1">Vector SVG • Viridis R scale, matching the print atlas.</div>
+      <div class="text-[10px] text-slate-500 mt-1">Vector SVG • RTLDI atlas R scale, matching the print atlas.</div>
     </div>
     <div class="lg:col-span-2 text-sm">
       {para_html}
@@ -416,6 +433,8 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
             capital_exclusion = safe_float(d.get("total_deficit_usd"))
             annual_potential_gdp = annual_gdp + capital_exclusion
             components = d.get("components", [])
+            iso3 = escape(str(d.get("iso3", "")))
+            country_name = escape(str(d.get("country", d.get("iso3", ""))))
             lever_cells = []
             for i in range(8, -1, -1):
                 value = ""
@@ -424,14 +443,14 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
                 lever_cells.append(f'<td class="num lever">{value}</td>')
             rows.append(
                 "<tr>"
-                f'<td class="country">{escape(str(d.get("country", d.get("iso3", ""))))}</td>'
+                f'<td class="country"><a href="global_interactive.html?country={iso3}" class="country-link">{country_name}</a></td>'
+                f'<td class="num score">{safe_float(d.get("r")):.3f}</td>'
                 f'<td class="num">${capital_exclusion:,.0f}</td>'
                 f'<td class="num">${annual_potential_gdp:,.0f}</td>'
                 f'<td class="num">${annual_gdp:,.0f}</td>'
                 f'<td class="num">${per_capita_potential:,.0f}</td>'
                 f'<td class="num">${gdp_per_capita:,.0f}</td>'
                 f'{"".join(lever_cells)}'
-                f'<td class="num score">{safe_float(d.get("r")):.3f}</td>'
                 f'<td>{escape(str(d.get("un_region", "")))}</td>'
                 "</tr>"
             )
@@ -484,6 +503,22 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     justify-content: space-between;
     gap: 16px;
   }}
+  .brand-row {{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }}
+  .brand-mark {{
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 21px;
+  }}
   h1 {{
     margin: 0;
     font-size: 24px;
@@ -520,6 +555,8 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     border-color: var(--accent);
     color: #fff;
   }}
+  .button:hover {{ background: #f7fafc; }}
+  .button.primary:hover {{ background: #0f6f5b; }}
   main {{ padding: 28px 24px 40px; }}
   .title-block {{
     border-left: 4px solid var(--accent);
@@ -543,6 +580,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     overflow: auto;
     max-height: calc(100vh - 250px);
     background: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
   }}
   table {{
     width: 100%;
@@ -559,18 +597,31 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     position: sticky;
     top: 0;
     z-index: 1;
-    background: #f7fafc;
+    background: #eef6f4;
     color: #475569;
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: .04em;
   }}
   td {{ font-size: 14px; }}
+  th:first-child, td:first-child {{
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    box-shadow: 1px 0 0 #e3e8ee;
+  }}
+  th:first-child {{ z-index: 3; background: #e6f2ef; }}
+  td:first-child {{ background: #fff; }}
+  tr:nth-child(even) td:first-child {{ background: #fbfdff; }}
   .country {{ font-weight: 650; color: #0f172a; }}
+  .country-link {{ color: #0f766e; text-decoration: none; }}
+  .country-link:hover {{ text-decoration: underline; text-underline-offset: 3px; }}
   .num {{ text-align: right; font-variant-numeric: tabular-nums; }}
   .score {{ font-weight: 650; color: #0f766e; }}
   .lever {{ text-align: center; }}
   tr:nth-child(even) td {{ background: #fbfdff; }}
+  tbody tr:hover td {{ background: #f0fdfa; }}
+  tbody tr:hover td:first-child {{ background: #eefbf7; }}
   .note {{
     margin-top: 10px;
     color: var(--muted);
@@ -586,9 +637,12 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
 <body>
 <div class="shell">
   <header>
-    <div>
-      <h1>RTLDI ATLAS 2026 Full Data View</h1>
-      <div class="subhead">All 193 UN member states, alphabetized by nation.</div>
+    <div class="brand-row">
+      <div class="brand-mark">R</div>
+      <div>
+        <h1>RTLDI ATLAS 2026 Full Data View</h1>
+        <div class="subhead">All 193 UN member states, alphabetized by nation.</div>
+      </div>
     </div>
     <div class="actions">
       <a class="button" href="index.html">HTML Atlas</a>
@@ -606,13 +660,13 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
         <thead>
           <tr>
             <th>Nation</th>
+            <th>RTLP</th>
             <th>Capital exclusion USD</th>
             <th>Annual potential GDP</th>
             <th>Annual GDP</th>
             <th>Per capita potential</th>
             <th>GDP per capita</th>
             {lever_headers}
-            <th>RTLP</th>
             <th>UN Region</th>
           </tr>
         </thead>
@@ -806,14 +860,14 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-white border border-slate-200 p-5 flex flex-col gap-4">
+      <div class="bg-white border border-slate-200 border-l-4 border-l-teal-700 p-5 flex flex-col gap-4">
         <div>
           <div class="font-semibold text-slate-950">Interactive Map</div>
           <div class="text-sm text-slate-500 mt-1">Click a country to load national data, capital exclusions, and the nine-lever breakdown below the map.</div>
         </div>
         <a href="global_interactive.html" target="_blank" class="inline-flex items-center justify-center px-4 py-2 bg-teal-700 text-white hover:bg-teal-800 transition mt-auto">Open Interactive Map</a>
       </div>
-      <div class="bg-white border border-slate-200 p-5 flex flex-col gap-4">
+      <div class="bg-white border border-slate-200 border-l-4 border-l-teal-700 p-5 flex flex-col gap-4">
         <div>
           <div class="font-semibold text-slate-950">Full Data View</div>
           <div class="text-sm text-slate-500 mt-1">Open the complete alphabetized table for all UN member states, computed RTLP scores, nine levers, GDP, potential GDP, and capital exclusions.</div>

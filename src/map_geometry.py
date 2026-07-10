@@ -12,6 +12,22 @@ except Exception:  # pragma: no cover - only used when Plotly is installed
     sample_colorscale = None
 
 
+RTLDI_COLOR_SCALE = [
+    [0.00, "#2b003f"],
+    [0.18, "#5a174e"],
+    [0.36, "#2f5f78"],
+    [0.56, "#1f9b8a"],
+    [0.76, "#7fcf6b"],
+    [1.00, "#f4d35e"],
+]
+
+ATLAS_OCEAN = "#eaf3f7"
+ATLAS_LAND = "#f5f2ea"
+ATLAS_GRID = "rgba(55, 74, 92, 0.16)"
+ATLAS_COAST = "rgba(43, 55, 68, 0.42)"
+ATLAS_BORDER = "rgba(255, 255, 255, 0.78)"
+
+
 # Plotly's built-in ISO-3 geometry for FRA includes French Guiana. The atlas is
 # scored at the UN member-state level, but the European print/web maps should
 # display metropolitan France so the fitted map bounds do not jump to South
@@ -103,8 +119,65 @@ def split_france_for_metropolitan_display(df: pd.DataFrame) -> tuple[pd.DataFram
 
 def _r_color(r: float) -> str:
     if sample_colorscale:
-        return sample_colorscale("Viridis", [max(0.0, min(1.0, float(r)))])[0]
+        return sample_colorscale(RTLDI_COLOR_SCALE, [max(0.0, min(1.0, float(r)))])[0]
     return "#35b779"
+
+
+def apply_atlas_geo_style(fig, *, projection_type: str | None = None, show_grid: bool = True) -> None:
+    """Apply the shared RTLDI atlas cartographic style to a Plotly geo figure."""
+    geo_kwargs = dict(
+        showcoastlines=True,
+        coastlinecolor=ATLAS_COAST,
+        coastlinewidth=0.65,
+        showland=True,
+        landcolor=ATLAS_LAND,
+        showocean=True,
+        oceancolor=ATLAS_OCEAN,
+        showlakes=True,
+        lakecolor=ATLAS_OCEAN,
+        showcountries=True,
+        countrycolor="rgba(255,255,255,0.62)",
+        countrywidth=0.35,
+        lataxis_showgrid=show_grid,
+        lonaxis_showgrid=show_grid,
+        lataxis_gridcolor=ATLAS_GRID,
+        lonaxis_gridcolor=ATLAS_GRID,
+        lataxis_gridwidth=0.35,
+        lonaxis_gridwidth=0.35,
+        framecolor="rgba(43,55,68,0.30)",
+        bgcolor="rgba(255,255,255,0)",
+    )
+    if projection_type:
+        geo_kwargs["projection_type"] = projection_type
+    fig.update_geos(**geo_kwargs)
+
+
+def apply_atlas_choropleth_style(fig) -> None:
+    """Style choropleth traces so polygons remain primary but feel less default."""
+    fig.update_traces(
+        selector=dict(type="choropleth"),
+        marker_line_color=ATLAS_BORDER,
+        marker_line_width=0.32,
+        hoverlabel=dict(bgcolor="#102a34", font_color="#ffffff", bordercolor="#102a34"),
+    )
+
+
+def add_map_context_note(fig, text: str, *, x: float = 0.012, y: float = 0.018) -> None:
+    """Add a small cartographic note inside the map frame."""
+    fig.add_annotation(
+        text=text,
+        x=x,
+        y=y,
+        xref="paper",
+        yref="paper",
+        showarrow=False,
+        align="left",
+        font=dict(size=9, color="#415466"),
+        bgcolor="rgba(255,255,255,0.72)",
+        bordercolor="rgba(198,209,218,0.70)",
+        borderwidth=0.5,
+        borderpad=3,
+    )
 
 
 def add_metropolitan_france_trace(fig, france: Optional[dict], *, showlegend: bool = False) -> None:
@@ -140,10 +213,10 @@ def add_small_country_markers(
     marker_opacity: float = 0.95,
     show_text: bool = False,
     showlegend: bool = False,
-) -> None:
+) -> int:
     """Overlay visible/clickable markers for countries that render too small."""
     if df.empty or "iso3" not in df.columns:
-        return
+        return 0
     rows = []
     for _, row in df.iterrows():
         iso3 = str(row.get("iso3", "")).upper()
@@ -160,7 +233,7 @@ def add_small_country_markers(
             "total_deficit_usd": float(row.get("total_deficit_usd") or 0.0),
         })
     if not rows:
-        return
+        return 0
     marker_df = pd.DataFrame(rows)
     fig.add_scattergeo(
         lon=marker_df["lon"],
@@ -172,11 +245,11 @@ def add_small_country_markers(
         marker=dict(
             size=marker_size,
             color=marker_df["r"],
-            colorscale="Viridis",
+            colorscale=RTLDI_COLOR_SCALE,
             cmin=0,
             cmax=1,
             opacity=marker_opacity,
-            line=dict(color="rgba(255,255,255,0.9)", width=0.8),
+            line=dict(color="rgba(255,255,255,0.96)", width=1.0),
             showscale=False,
         ),
         textposition="top center",
@@ -189,6 +262,7 @@ def add_small_country_markers(
         ),
         showlegend=showlegend,
     )
+    return len(rows)
 
 
 def apply_european_france_bounds(fig, *, kind: str) -> None:

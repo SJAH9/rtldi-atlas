@@ -58,7 +58,11 @@ import argparse
 import sys
 from src.lever_display import format_compact_usd, lever_description, lever_name, lever_short
 from src.map_geometry import (
+    RTLDI_COLOR_SCALE,
+    add_small_country_markers,
     add_metropolitan_france_trace,
+    apply_atlas_choropleth_style,
+    apply_atlas_geo_style,
     apply_european_france_bounds,
     split_france_for_metropolitan_display,
 )
@@ -304,8 +308,6 @@ def get_nation_country_map(iso3: str, country: str, r: float) -> Optional[Path]:
     out_dir = Path("outputs/figures/nation_country_maps")
     out_dir.mkdir(parents=True, exist_ok=True)
     p = out_dir / f"{iso3}_country.png"
-    if p.exists() and iso3 != "FRA":
-        return p
 
     focus_df = pd.DataFrame([{"iso3": iso3, "r": float(r or 0.0), "country": country}])
     map_df, france = split_france_for_metropolitan_display(focus_df)
@@ -315,21 +317,21 @@ def get_nation_country_map(iso3: str, country: str, r: float) -> Optional[Path]:
         locations="iso3",
         locationmode="ISO-3",
         color="r",
-        color_continuous_scale="Viridis",
+        color_continuous_scale=RTLDI_COLOR_SCALE,
         range_color=[0.0, 1.0],
         hover_name="country",
         hover_data={"r": ":.3f"},
     )
+    apply_atlas_choropleth_style(fig)
     add_metropolitan_france_trace(fig, france)
+    add_small_country_markers(fig, map_df, marker_size=7, show_text=True)
+    apply_atlas_geo_style(fig, projection_type="natural earth", show_grid=False)
 
     if france:
-        fig.update_geos(visible=False, projection_type="natural earth")
         apply_european_france_bounds(fig, kind="france")
     else:
         fig.update_geos(
             fitbounds="locations",
-            visible=False,
-            projection_type="natural earth",
         )
 
     fig.update_layout(
@@ -339,7 +341,7 @@ def get_nation_country_map(iso3: str, country: str, r: float) -> Optional[Path]:
             thickness=6,
         ),
         title=dict(text=f"{country} — country-only view (R={float(r or 0.0):.2f})", font=dict(size=8)),
-        margin=dict(l=1, r=1, t=16, b=1),
+        margin=dict(l=1, r=1, t=16, b=4),
         height=180,
         width=380,
         paper_bgcolor="white",
@@ -359,8 +361,6 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
     out_dir.mkdir(parents=True, exist_ok=True)
     slug = region_name.lower().replace(" ", "_").replace("/", "_").replace(",", "")
     p = out_dir / f"{slug}.png"
-    if p.exists() and region_name != "Western Europe":
-        return p
     focus = [n for n in all_nations if (n.get("un_region") or "") == region_name]
     if not focus:
         return None
@@ -375,21 +375,15 @@ def get_regional_choropleth(region_name: str, all_nations: list) -> Optional[Pat
         locations="iso3",
         locationmode="ISO-3",
         color="r",
-        color_continuous_scale="Viridis",
+        color_continuous_scale=RTLDI_COLOR_SCALE,
         range_color=[0.0, 1.0],
         hover_name="country",
         hover_data={"r": ":.3f"},
     )
+    apply_atlas_choropleth_style(fig)
     add_metropolitan_france_trace(fig, france)
-    fig.update_geos(
-        showcoastlines=True,
-        coastlinecolor="rgba(180,180,180,0.6)",
-        showland=True,
-        landcolor="rgba(245,245,245,0.9)",
-        showocean=True,
-        oceancolor="rgba(230,242,255,0.6)",
-        projection_type="mollweide",
-    )
+    add_small_country_markers(fig, map_df, marker_size=7, show_text=True)
+    apply_atlas_geo_style(fig, projection_type="mollweide", show_grid=True)
     if use_native_france:
         apply_european_france_bounds(fig, kind="western_europe")
     else:
@@ -773,7 +767,7 @@ def build_front_matter(data: dict) -> Path:
         pdf.set_font(FONT_NAME, "", 6.5)
         pdf.set_text_color(85, 85, 85)
         pdf.multi_cell(left_w, 3.2,
-            "Mollweide equal-area projection. Primary anchor for accuracy and nested wholeness (source Ch. 2). Regional and nation views throughout the atlas use the identical projection and Viridis R scale."
+            "Mollweide equal-area projection. Primary anchor for accuracy and nested wholeness (source Ch. 2). Regional and nation views throughout the atlas use the same RTLDI atlas R scale."
         )
 
         # Advance past the full map height
@@ -992,7 +986,7 @@ def build_regions(data: dict) -> Path:
     pdf.body_text(
         "The 193 UN Member States are grouped into 22 geographic regions. Below are one-page overviews for each region, "
         "aggregating the RTLDI metrics. For each region we show a choropleth of enclosure strength (R) for its member "
-        "countries (zoomed to the region using the same Viridis scale as the global map), key aggregates (population-weighted "
+        "countries (zoomed to the region using the same RTLDI atlas scale as the global map), key aggregates (population-weighted "
         "average R, total annual capital exclusions), and a breakdown of the 9 RTLP indicators. The breakdown reports the percentage "
         "of countries in the region scoring 'Yes' on each indicator and the estimated portion of the region's total capital exclusions "
         "attributable to shortfalls on that indicator (using the current η=0.30 scaled by each country's contextual 25% cap)."
@@ -1073,7 +1067,7 @@ def build_regions(data: dict) -> Path:
             pdf.set_font(FONT_NAME, "", 5.5)
             pdf.set_text_color(*MUTED)
             pdf.multi_cell(0, 2.2,
-                "Mollweide projection (equal-area, same Viridis R scale as global choropleth).")
+                "Mollweide projection (equal-area, same RTLDI atlas R scale as global choropleth).")
             pdf.ln(0.3)
         else:
             # Fallback: full-width larger text if no map
@@ -1228,16 +1222,6 @@ def build_nations(data: dict) -> Path:
         iso2 = iso2_lookup.get(d["iso3"], "")
         yes_count = sum(c['bin'] for c in d['components'])
 
-        pdf.section_label("Nation profile", HEADER_COLOR)
-        pdf.set_font(FONT_NAME, "", 16)
-        pdf.set_text_color(*INK)
-        pdf.cell(0, 7, f"{d['country']} ({d['iso3']})", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.set_font(FONT_NAME, "", 9)
-        pdf.set_text_color(*MUTED)
-        flag_text = f"  |  Flag code: {iso2}" if iso2 else ""
-        pdf.cell(0, 5, f"UN Region: {d.get('un_region', 'N/A')}  |  RTLP R = {d['r']:.3f} ({yes_count}/9)  |  V-Dem year: {d['vdem_year']}  |  G0 year: {d['g0_year']}{flag_text}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(2)
-
         g0 = d.get('g0') or 0
         dpc = d.get('delta_g_per_capita') or 0
         tot = d.get('total_deficit_usd') or 0
@@ -1253,11 +1237,72 @@ def build_nations(data: dict) -> Path:
             g0_series.get(d["iso3"], {})
         )
 
+        hero_y = pdf.get_y()
+        hero_h = 34
+        r_score = float(d.get("r") or 0)
+        pdf.set_fill_color(247, 250, 252)
+        pdf.set_draw_color(*RULE)
+        pdf.rect(MARGIN, hero_y, CONTENT_WIDTH, hero_h, style="DF")
+        pdf.set_fill_color(*ACCENT_COLOR)
+        pdf.rect(MARGIN, hero_y, 3.0, hero_h, style="F")
+
+        pdf.set_xy(MARGIN + 6, hero_y + 4.0)
+        pdf.set_font(FONT_NAME, "", 6.8)
+        pdf.set_text_color(*ACCENT_COLOR)
+        pdf.cell(0, 3.2, "NATION PROFILE", new_x=XPos.LMARGIN, new_y=YPos.TOP)
+        pdf.set_xy(MARGIN + 6, hero_y + 8.0)
+        pdf.set_font(FONT_NAME, "", 18)
+        pdf.set_text_color(*INK)
+        pdf.cell(120, 7.0, f"{d['country']} ({d['iso3']})")
+
+        pdf.set_xy(PAGE_WIDTH - MARGIN - 32, hero_y + 4.5)
+        pdf.set_fill_color(255, 255, 255)
+        pdf.set_draw_color(*RULE)
+        pdf.rect(PAGE_WIDTH - MARGIN - 32, hero_y + 4.0, 26, 20, style="DF")
+        pdf.set_xy(PAGE_WIDTH - MARGIN - 29, hero_y + 6.0)
+        pdf.set_font(FONT_NAME, "", 5.8)
+        pdf.set_text_color(*MUTED)
+        pdf.cell(20, 3.0, "RTLP SCORE", align="C")
+        pdf.set_xy(PAGE_WIDTH - MARGIN - 29, hero_y + 10.2)
+        pdf.set_font(FONT_NAME, "", 13)
+        pdf.set_text_color(*ACCENT_COLOR)
+        pdf.cell(20, 5.5, f"{r_score:.2f}", align="C")
+        pdf.set_xy(PAGE_WIDTH - MARGIN - 29, hero_y + 16.0)
+        pdf.set_font(FONT_NAME, "", 5.6)
+        pdf.set_text_color(*MUTED)
+        pdf.cell(20, 3.0, f"{yes_count}/9 levers", align="C")
+
+        pdf.set_xy(MARGIN + 6, hero_y + 18.3)
+        pdf.set_font(FONT_NAME, "", 7.7)
+        pdf.set_text_color(*MUTED)
+        flag_text = f" | Flag code: {iso2}" if iso2 else ""
+        pdf.cell(0, 4, f"{d.get('un_region', 'N/A')} | V-Dem {d['vdem_year']} | GDP baseline {d['g0_year']}{flag_text}")
+
+        strip_x = MARGIN + 6
+        strip_y = hero_y + 25.4
+        box_w = 9.2
+        for comp_idx, comp in enumerate(d["components"]):
+            x = strip_x + comp_idx * (box_w + 1.6)
+            is_yes = comp.get("bin", 0) == 1
+            pdf.set_fill_color(*(YES_COLOR if is_yes else NO_COLOR))
+            pdf.set_draw_color(255, 255, 255)
+            pdf.rect(x, strip_y, box_w, 5.0, style="DF")
+            pdf.set_xy(x, strip_y + 1.0)
+            pdf.set_font(FONT_NAME, "", 5.4)
+            pdf.set_text_color(255, 255, 255)
+            pdf.cell(box_w, 2.5, str(comp_idx + 1), align="C")
+        pdf.set_xy(strip_x + 9 * (box_w + 1.6) + 2.5, strip_y + .3)
+        pdf.set_font(FONT_NAME, "", 6.0)
+        pdf.set_text_color(*MUTED)
+        pdf.cell(0, 3.4, "Nine RTLP levers: green present, red absent")
+
+        pdf.set_y(hero_y + hero_h + 4)
+
         metric_y = pdf.get_y()
         metric_w = (CONTENT_WIDTH - 9) / 4
         pdf.metric_card(MARGIN, metric_y, metric_w, 22, "GDP per capita G0", f"${g0:,.0f}")
         pdf.metric_card(MARGIN + metric_w + 3, metric_y, metric_w, 22, "Capital exclusions / cap", f"${dpc:,.0f}", fill=PANEL_ALT)
-        pdf.metric_card(MARGIN + (metric_w + 3) * 2, metric_y, metric_w, 22, "Annual total", f"${tot/1e9:,.2f}B")
+        pdf.metric_card(MARGIN + (metric_w + 3) * 2, metric_y, metric_w, 22, "Capital exclusions", format_money(tot))
         pdf.metric_card(MARGIN + (metric_w + 3) * 3, metric_y, metric_w, 22, "Population", pop_str)
         pdf.set_y(metric_y + 25)
         trend_y = pdf.get_y()
@@ -1462,7 +1507,7 @@ def build_back_matter(data: dict) -> Path:
         ("Crosswalk", "The explicit mapping from the nine verbatim RTLP questions to observable V-Dem variables and World Bank statistics, with defined binarization thresholds."),
         ("2026-fresh G0", "The most recent published GDP per capita values used as the dynamic baseline for the 2026 edition (even when RTLP components are from 2024)."),
         ("Mollweide", "Equal-area pseudocylindrical map projection used for all choropleths (global, regional, and per-nation zooms) to ensure visual area corresponds to geographic reality."),
-        ("Choropleth", "Thematic map in which countries or regions are shaded by enclosure strength R (0–1) using the Viridis colormap; primary visual for the global, regional, and focus views."),
+        ("Choropleth", "Thematic map in which countries or regions are shaded by enclosure strength R (0–1) using the RTLDI atlas scale; primary visual for the global, regional, and focus views."),
         ("Economic Intelligence (tool)", "The use of R scores, component breakdowns, and attributable capital exclusions figures as practical information for governments, businesses, and analysts to identify high-leverage institutional opportunities."),
         ("Trend (3-year)", "The per-nation GDP-driven RTLDI plots (R held fixed at 2024 values) that illustrate recent dynamics in capital exclusions alongside the regional and global maps."),
         ("Attributable capital exclusions", "The share of a country or region's total capital exclusions (lost potential GDP) that is directly traceable to the current implementation level of one specific protection (sum of η/9 × G₀ × pop over countries where the protection is not fully present, with current η≈0.30 from population-weighted cross-section)."),
@@ -1475,7 +1520,7 @@ def build_back_matter(data: dict) -> Path:
 
         ("UN region / regional summary", "One of the 22 geographic groupings used for aggregates, focused choropleths, member-nations tables (with R / G0 / population / capital exclusions + REGIONAL TOTAL row), and 9-lever breakdowns."),
         ("Member-nations table", "The compact table on each regional summary page that lists every country in the region together with its R, G0, population, and capital exclusions, plus a bottom row of regional totals."),
-        ("Viridis", "The perceptually uniform sequential colormap (dark low-R → yellow high-R) used consistently for every enclosure-strength choropleth in the atlas."),
+        ("RTLDI atlas R scale", "The shared perceptual color scale used for every enclosure-strength choropleth in the atlas: deep low-R tones through teal midrange values to warm high-R values."),
         ("Country view", "The country-only choropleth on each nation page, fitted to the national boundary and shaded by enclosure strength R without using the regional context map."),
     ]
 

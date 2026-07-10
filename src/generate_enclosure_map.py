@@ -37,7 +37,15 @@ from pathlib import Path
 import pandas as pd
 import plotly.express as px
 from src.lever_display import lever_long_description, lever_name
-from src.map_geometry import add_metropolitan_france_trace, add_small_country_markers, split_france_for_metropolitan_display
+from src.map_geometry import (
+    RTLDI_COLOR_SCALE,
+    add_map_context_note,
+    add_metropolitan_france_trace,
+    add_small_country_markers,
+    apply_atlas_choropleth_style,
+    apply_atlas_geo_style,
+    split_france_for_metropolitan_display,
+)
 
 # Default output base (committed as demo per .gitignore whitelist)
 DEFAULT_ATLAS_CSV = "outputs/atlas/rtl_di_atlas_un_members_2026.csv"
@@ -87,7 +95,7 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
         locations="iso3",
         locationmode="ISO-3",
         color="r",
-        color_continuous_scale="Viridis",
+        color_continuous_scale=RTLDI_COLOR_SCALE,
         range_color=[0.0, 1.0],
         hover_name="country",
         hover_data={
@@ -109,8 +117,9 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
             "population": "Population",
         },
     )
+    apply_atlas_choropleth_style(fig)
     add_metropolitan_france_trace(fig, france)
-    add_small_country_markers(fig, map_df, marker_size=6)
+    marker_count = add_small_country_markers(fig, map_df, marker_size=6)
 
     # Improve geo aesthetics and projection.
     # Using "mollweide" (equal-area pseudocylindrical) for better area preservation
@@ -118,20 +127,7 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
     # Note: True Dymaxion (icosahedral/butterfly) or Goode's interrupted homolosine
     # are not supported in Plotly's built-in geo projections. Mollweide is a strong
     # low-distortion choice for thematic maps of enclosure strength.
-    fig.update_geos(
-        showcoastlines=True,
-        coastlinecolor="rgba(180,180,180,0.6)",
-        showland=True,
-        landcolor="rgba(245,245,245,0.9)",
-        showocean=True,
-        oceancolor="rgba(230,242,255,0.6)",
-        showlakes=True,
-        lakecolor="rgba(230,242,255,0.6)",
-        projection_type="mollweide",
-        lataxis_showgrid=False,
-        lonaxis_showgrid=False,
-        framecolor="rgba(150,150,150,0.5)",
-    )
+    apply_atlas_geo_style(fig, projection_type="mollweide", show_grid=True)
 
     # Colorbar styling
     fig.update_layout(
@@ -150,6 +146,8 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
         paper_bgcolor="white",
         plot_bgcolor="white",
     )
+    if marker_count:
+        add_map_context_note(fig, f"{marker_count} small states are shown with locator points so their country records remain visible and clickable.")
 
     # Prominent data vintage + source footnote (visible in static exports)
     # Positioned below the map area
@@ -833,6 +831,25 @@ function bindMapClicks() {{
   }});
 }}
 
+function requestedCountryIso() {{
+  const params = new URLSearchParams(window.location.search);
+  const value = params.get('country') || params.get('iso3') || window.location.hash.replace(/^#/, '');
+  const iso3 = String(value || '').trim().toUpperCase();
+  return /^[A-Z]{{3}}$/.test(iso3) ? iso3 : '';
+}}
+
+function renderRequestedCountry(attempt = 0) {{
+  const iso3 = requestedCountryIso();
+  if (!iso3) return;
+  if (COUNTRY_DATA[iso3]) {{
+    renderCountry(iso3);
+    return;
+  }}
+  if (attempt < 20) {{
+    window.setTimeout(() => renderRequestedCountry(attempt + 1), 100);
+  }}
+}}
+
 function bindMapMotion() {{
   const graph = document.getElementById('rtldi-map');
   if (!graph || !graph.on || !window.Plotly) {{
@@ -936,6 +953,7 @@ document.addEventListener('DOMContentLoaded', () => {{
   window.setInterval(applyMapTheme, 5 * 60 * 1000);
   bindMapClicks();
   bindMapMotion();
+  renderRequestedCountry();
 }});
 </script>
 </body>
