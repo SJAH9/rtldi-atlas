@@ -37,7 +37,7 @@ from pathlib import Path
 import pandas as pd
 import plotly.express as px
 from src.lever_display import lever_long_description, lever_name
-from src.map_geometry import add_metropolitan_france_trace, split_france_for_metropolitan_display
+from src.map_geometry import add_metropolitan_france_trace, add_small_country_markers, split_france_for_metropolitan_display
 
 # Default output base (committed as demo per .gitignore whitelist)
 DEFAULT_ATLAS_CSV = "outputs/atlas/rtl_di_atlas_un_members_2026.csv"
@@ -110,6 +110,7 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
         },
     )
     add_metropolitan_france_trace(fig, france)
+    add_small_country_markers(fig, map_df, marker_size=6)
 
     # Improve geo aesthetics and projection.
     # Using "mollweide" (equal-area pseudocylindrical) for better area preservation
@@ -143,7 +144,7 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
             thickness=12,
         ),
         title=dict(text=title, x=0.5, xanchor="center", font=dict(size=16)),
-        margin=dict(l=10, r=10, t=70, b=95),
+        margin=dict(l=10, r=10, t=70, b=120),
         height=820,
         width=1380,
         paper_bgcolor="white",
@@ -153,14 +154,15 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
     # Prominent data vintage + source footnote (visible in static exports)
     # Positioned below the map area
     note = (
-        "R from 8 V-Dem components (crosswalk, year=2024) + 1 World Bank socioeconomic indicator (#9) + 2026-fresh G₀ (GDP per capita current US$). "
+        "R from 8 V-Dem components (crosswalk, year=2024) + 1 World Bank socioeconomic indicator (#9) + 2026-fresh G₀ (GDP per capita current US$).<br>"
         "GDP is the more dynamic variable; V-Dem RTLP components use the file's latest available year (2024). "
-        "ΔG = 0.05 × (1 − R) × G₀ per Hubbard (2026V3). Source: 10.5281/zenodo.19468550 | 193 UN Member States."
+        "ΔG = 0.05 × (1 − R) × G₀ per Hubbard (2026V3).<br>"
+        "Source: 10.5281/zenodo.19468550 | 193 UN Member States."
     )
     fig.add_annotation(
         text=note,
         x=0.5,
-        y=-0.035,
+        y=-0.055,
         xref="paper",
         yref="paper",
         showarrow=False,
@@ -176,7 +178,7 @@ def make_choropleth(df: pd.DataFrame, atlas_year: int = 2026) -> px.choropleth:
     fig.add_annotation(
         text="RTLDI ATLAS 2026 — generated from exact equations in Causality and Attraction v3 (Hubbard)",
         x=0.99,
-        y=0.005,
+        y=-0.105,
         xref="paper",
         yref="paper",
         showarrow=False,

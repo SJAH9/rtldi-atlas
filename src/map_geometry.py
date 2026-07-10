@@ -72,6 +72,24 @@ METROPOLITAN_FRANCE_LAT = [
 ]
 
 
+# Plotly country polygons are hard to see or click for tiny island states in
+# regional fitted maps. These centroids add a linked marker fallback while the
+# choropleth polygons remain the primary map layer.
+SMALL_COUNTRY_POINTS = {
+    "ATG": (-61.80, 17.06), "BHR": (50.55, 26.07), "BRB": (-59.54, 13.19),
+    "BRN": (114.73, 4.54), "BHS": (-77.40, 25.03), "COM": (43.33, -11.65),
+    "CPV": (-23.62, 15.12), "CYP": (33.43, 35.13), "DMA": (-61.37, 15.41),
+    "FJI": (178.07, -17.71), "FSM": (158.22, 6.89), "GRD": (-61.68, 12.12),
+    "KIR": (173.00, 1.42), "KNA": (-62.78, 17.36), "LCA": (-60.98, 13.91),
+    "MDV": (73.51, 4.18), "MLT": (14.38, 35.94), "MHL": (171.18, 7.13),
+    "MUS": (57.55, -20.28), "NRU": (166.93, -0.52), "PLW": (134.58, 7.50),
+    "SGP": (103.82, 1.35), "SLB": (160.16, -9.65), "STP": (6.61, 0.19),
+    "SYC": (55.45, -4.62), "TON": (184.80, -21.18), "TTO": (-61.22, 10.69),
+    "TUV": (179.20, -8.52), "VCT": (-61.29, 12.98), "VUT": (166.96, -15.38),
+    "WSM": (187.90, -13.76),
+}
+
+
 def split_france_for_metropolitan_display(df: pd.DataFrame) -> tuple[pd.DataFrame, Optional[dict]]:
     """Return choropleth rows without FRA plus the France row for custom drawing."""
     if "iso3" not in df.columns:
@@ -109,6 +127,65 @@ def add_metropolitan_france_trace(fig, france: Optional[dict], *, showlegend: bo
             "<b>%{text}</b><br>"
             "iso3=%{customdata[0]}<br>"
             "R=%{customdata[1]:.3f}<extra></extra>"
+        ),
+        showlegend=showlegend,
+    )
+
+
+def add_small_country_markers(
+    fig,
+    df: pd.DataFrame,
+    *,
+    marker_size: int = 8,
+    marker_opacity: float = 0.95,
+    show_text: bool = False,
+    showlegend: bool = False,
+) -> None:
+    """Overlay visible/clickable markers for countries that render too small."""
+    if df.empty or "iso3" not in df.columns:
+        return
+    rows = []
+    for _, row in df.iterrows():
+        iso3 = str(row.get("iso3", "")).upper()
+        point = SMALL_COUNTRY_POINTS.get(iso3)
+        if not point:
+            continue
+        lon, lat = point
+        rows.append({
+            "iso3": iso3,
+            "country": row.get("country", iso3),
+            "r": float(row.get("r") or 0.0),
+            "lon": lon,
+            "lat": lat,
+            "total_deficit_usd": float(row.get("total_deficit_usd") or 0.0),
+        })
+    if not rows:
+        return
+    marker_df = pd.DataFrame(rows)
+    fig.add_scattergeo(
+        lon=marker_df["lon"],
+        lat=marker_df["lat"],
+        mode="markers+text" if show_text else "markers",
+        name="Small states",
+        text=marker_df["iso3"] if show_text else marker_df["country"],
+        customdata=marker_df[["iso3", "country", "r", "total_deficit_usd"]].values,
+        marker=dict(
+            size=marker_size,
+            color=marker_df["r"],
+            colorscale="Viridis",
+            cmin=0,
+            cmax=1,
+            opacity=marker_opacity,
+            line=dict(color="rgba(255,255,255,0.9)", width=0.8),
+            showscale=False,
+        ),
+        textposition="top center",
+        textfont=dict(size=9, color="#1f2f46"),
+        hovertemplate=(
+            "<b>%{customdata[1]}</b><br>"
+            "iso3=%{customdata[0]}<br>"
+            "R=%{customdata[2]:.3f}<br>"
+            "Capital exclusions=%{customdata[3]:,.0f} USD<extra></extra>"
         ),
         showlegend=showlegend,
     )

@@ -47,6 +47,7 @@ from src.generate_atlas_ebook import prepare_atlas_data, ETA
 from src.lever_display import LEVER_DISPLAY, format_compact_usd, lever_description, lever_long_description, lever_name, lever_short
 from src.map_geometry import (
     add_metropolitan_france_trace,
+    add_small_country_markers,
     apply_european_france_bounds,
     split_france_for_metropolitan_display,
 )
@@ -96,6 +97,7 @@ def get_global_svg(df: pd.DataFrame, out_path: Path) -> Path:
         title="Enclosure Strength (R) — Global",
     )
     add_metropolitan_france_trace(fig, france)
+    add_small_country_markers(fig, map_df, marker_size=5)
     fig.update_layout(
         margin=dict(l=0, r=0, t=30, b=0),
         coloraxis_colorbar=dict(title="R (0–1)", len=0.6),
@@ -141,6 +143,7 @@ def get_regional_svg(region_name: str, members: List[dict], all_df: pd.DataFrame
         title=f"{region_name} — Enclosure Strength (R)",
     )
     add_metropolitan_france_trace(fig, france)
+    add_small_country_markers(fig, map_df, marker_size=10, show_text=True)
     fig.update_layout(
         margin=dict(l=0, r=0, t=25, b=0),
         coloraxis_colorbar=dict(title="R", len=0.5),
