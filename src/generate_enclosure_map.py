@@ -36,6 +36,7 @@ from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
+from src.lever_display import lever_long_description, lever_name
 from src.map_geometry import add_metropolitan_france_trace, split_france_for_metropolitan_display
 
 # Default output base (committed as demo per .gitignore whitelist)
@@ -215,12 +216,12 @@ def build_country_payload(df: pd.DataFrame) -> dict:
         for comp in detail.get("components", []):
             components.append({
                 "num": _clean_value(comp.get("num")),
-                "name": _clean_value(comp.get("name")),
+                "name": lever_name(comp.get("num"), _clean_value(comp.get("name"))),
                 "raw": _clean_value(comp.get("raw")),
                 "thresh": _clean_value(comp.get("thresh")),
                 "bin": int(comp.get("bin", 0) or 0),
                 "yes": _clean_value(comp.get("yes")),
-                "desc": _clean_value(comp.get("desc")),
+                "desc": lever_long_description(comp.get("num"), _clean_value(comp.get("desc"))),
             })
 
         payload[iso3] = {
@@ -257,6 +258,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RTLDI ATLAS {atlas_year} — Interactive Map Explorer</title>
+<link rel="alternate" type="application/rdf+xml" title="RTLDI Atlas 2026 RDF/XML" href="rtldi_atlas_2026.rdf">
 <style>
   :root {{
     --ink: #18202b;
@@ -280,6 +282,8 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     background: #eef2f5;
     color: var(--ink);
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16.5px;
+    line-height: 1.55;
     transition: background-color .35s ease, color .35s ease;
   }}
   body.night-mode {{
@@ -321,7 +325,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
   .subhead {{
     margin-top: 4px;
     color: var(--muted);
-    font-size: 12px;
+    font-size: 14px;
   }}
   .actions {{
     display: flex;
@@ -346,7 +350,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     align-items: center;
     gap: 7px;
     padding: 6px 9px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1;
   }}
   body.night-mode .control {{
@@ -372,7 +376,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     background: #fff;
     color: var(--ink);
     padding: 8px 10px;
-    font-size: 13px;
+    font-size: 15px;
     text-decoration: none;
   }}
   body.night-mode .button {{
@@ -451,7 +455,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
   .panel-meta {{
     margin-top: 6px;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 15px;
   }}
   .r-badge {{
     align-self: start;
@@ -467,7 +471,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
   .r-badge span {{
     display: block;
     color: var(--muted);
-    font-size: 11px;
+    font-size: 13px;
     text-transform: uppercase;
   }}
   .r-badge strong {{
@@ -497,7 +501,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
   .metric label {{
     display: block;
     color: var(--muted);
-    font-size: 11px;
+    font-size: 13px;
     text-transform: uppercase;
     margin-bottom: 10px;
   }}
@@ -514,7 +518,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
   }}
   .section-label {{
     color: var(--blue);
-    font-size: 12px;
+    font-size: 14px;
     text-transform: uppercase;
     margin-bottom: 8px;
   }}
@@ -531,11 +535,18 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     display: flex;
     justify-content: space-between;
     gap: 12px;
+    font-size: 15px;
+  }}
+  .component-num {{
+    color: var(--teal);
     font-size: 13px;
+    letter-spacing: .04em;
+    margin-bottom: 3px;
+    text-transform: uppercase;
   }}
   .status {{
     flex: 0 0 auto;
-    font-size: 11px;
+    font-size: 13px;
     text-transform: uppercase;
     padding: 2px 6px;
     border: 1px solid #d8e0e7;
@@ -553,13 +564,13 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
   .component-desc {{
     margin-top: 5px;
     color: var(--muted);
-    font-size: 12px;
-    line-height: 1.4;
+    font-size: 14px;
+    line-height: 1.5;
   }}
   .raw {{
     margin-top: 5px;
     color: #64748b;
-    font-size: 11px;
+    font-size: 12.5px;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }}
   .summary-box {{
@@ -623,6 +634,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
         </label>
       </div>
       <a class="button" href="../html-atlas/index.html">HTML Atlas</a>
+      <a class="button" href="../html-atlas/full_data.html">Full Data View</a>
       <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.1">Print PDF</a>
     </div>
   </header>
@@ -748,8 +760,9 @@ function renderCountry(iso3) {{
   const yesCount = (country.components || []).filter(c => c.bin).length;
   const components = (country.components || []).map(c => `
     <div class="component">
+      <div class="component-num">Lever ${{escapeHtml(c.num)}}</div>
       <div class="component-top">
-        <strong>${{escapeHtml(c.num)}}. ${{escapeHtml(c.name)}}</strong>
+        <strong>${{escapeHtml(c.name)}}</strong>
         <span class="status ${{c.bin ? 'yes' : 'no'}}">${{c.bin ? 'Yes' : 'No'}}</span>
       </div>
       <div class="component-desc">${{escapeHtml(c.desc || '')}}</div>

@@ -29,6 +29,7 @@ from __future__ import annotations
 import json
 import shutil
 from collections import defaultdict
+from html import escape
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -43,11 +44,13 @@ except Exception:
 # Reuse the exact data prep (capped deltas, regional aggregates, global 9-ind losses, etc.)
 # This guarantees the HTML and the print PDF are derived from identical numbers.
 from src.generate_atlas_ebook import prepare_atlas_data, ETA
+from src.lever_display import LEVER_DISPLAY, format_compact_usd, lever_description, lever_long_description, lever_name, lever_short
 from src.map_geometry import (
     add_metropolitan_france_trace,
     apply_european_france_bounds,
     split_france_for_metropolitan_display,
 )
+from src.generate_rdf_atlas import write_rdf_atlas
 
 # Consistent with the PDF (Viridis, same R encoding)
 R_SCALE = [[0.0, "#440154"], [0.25, "#3b528b"], [0.5, "#21918c"], [0.75, "#5ec962"], [1.0, "#fde725"]]
@@ -57,27 +60,8 @@ HIGH_R = 0.65
 HTML_DIR = Path("outputs/html-atlas")
 MAPS_DIR = HTML_DIR / "maps"
 
-# Clean lever short names (from the launch-polished first-principles descriptions)
-LEVER_SHORT = {
-    1: "Legal Protections",
-    2: "Independent Judiciary",
-    3: "Law Enforcement Accountability",
-    4: "Protection Against Arbitrary Detention",
-    5: "Freedom from Torture & Inhumane Treatment",
-    6: "Civilian Protection in Conflict",
-    7: "Access to Justice",
-    8: "Freedom of Expression & Whistleblowers",
-    9: "Socioeconomic Conditions (Food/Health/Shelter)",
-}
-
 def format_usd(n: float) -> str:
-    if n >= 1e12:
-        return f"${n/1e12:,.2f}T"
-    if n >= 1e9:
-        return f"${n/1e9:,.1f}B"
-    if n >= 1e6:
-        return f"${n/1e6:,.1f}M"
-    return f"${n:,.0f}"
+    return format_compact_usd(n)
 
 def format_pop(n: float) -> str:
     if n >= 1e9:
@@ -238,8 +222,8 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
         para1 = para2 = ""
         if inds:
             sorted_inds = sorted(inds, key=lambda x: x.get("frac_yes", 0), reverse=True)
-            strong_names = [i["name"].split(" (")[0][:40] for i in sorted_inds[:2] if i.get("frac_yes", 0) > 0.4]
-            weak_names = [i["name"].split(" (")[0][:40] for i in sorted_inds[-2:]]
+            strong_names = [lever_name(i["num"], i["name"]) for i in sorted_inds[:2] if i.get("frac_yes", 0) > 0.4]
+            weak_names = [lever_name(i["num"], i["name"]) for i in sorted_inds[-2:]]
             potential_b = sum(i.get("attributable_lost_gdp", 0) for i in sorted_inds[-3:]) / 1e9
             para1 = (
                 f"The {reg_name} region has a population-weighted average RTLP score of {reg_sum['weighted_r']:.2f}. "
@@ -261,7 +245,10 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
         for i in inds:
             region_inds.append({
                 "num": i["num"],
-                "name": LEVER_SHORT.get(i["num"], i.get("name", "")),
+                "name": lever_name(i["num"], i.get("name", "")),
+                "short": lever_short(i["num"], i.get("name", "")),
+                "desc": lever_description(i["num"], i.get("desc", "")),
+                "long_desc": lever_long_description(i["num"], i.get("desc", "")),
                 "frac_yes": round(i.get("frac_yes", 0), 3),
                 "n_yes": i.get("n_yes", 0),
                 "attributable": i.get("attributable_lost_gdp", 0),
@@ -319,8 +306,8 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     embed_global = {
         "total_lost": global_total_lost,
         "indicator_losts": global_indicator_losts,
-        "indicator_names": indicator_names,
-        "indicator_descs": indicator_descs,
+        "indicator_names": [lever_name(i + 1, name) for i, name in enumerate(indicator_names)],
+        "indicator_descs": [lever_description(i + 1, desc) for i, desc in enumerate(indicator_descs)],
     }
 
     def lever_loss_badge(num: int) -> str:
@@ -356,10 +343,13 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
         weakest = None
         for ind in reg.get("indicators", []):
             pct = int(round(ind.get("frac_yes", 0) * 100))
-            lost_b = ind.get("attributable", 0) / 1e9
-            ind_html += f'''<div class="py-1">
-  <div class="flex justify-between gap-3 text-[12px]"><span class="font-medium text-slate-700">{ind["name"]}</span><span class="tabular-nums text-slate-500">{pct}% yes • ${lost_b:.1f}B</span></div>
-  <div class="mt-1 h-1.5 bg-slate-100 overflow-hidden"><div class="h-1.5 bg-teal-600" style="width:{pct}%"></div></div>
+            ind_html += f'''<div class="lever-row">
+  <div class="flex items-start justify-between gap-3 text-[12px]"><span class="font-semibold text-slate-800">{ind["name"]}</span><span class="tabular-nums text-teal-700 font-semibold">{format_usd(ind.get("attributable", 0))}</span></div>
+  <div class="mt-1 flex items-center gap-2">
+    <div class="h-1.5 bg-slate-100 overflow-hidden flex-1"><div class="h-1.5 bg-teal-600" style="width:{pct}%"></div></div>
+    <span class="text-[10px] tabular-nums text-slate-500 w-12 text-right">{pct}% yes</span>
+  </div>
+  <div class="mt-1 text-[11px] leading-4 text-slate-500">{ind.get("desc", "")}</div>
 </div>'''
             if not weakest or ind.get("frac_yes", 1) < weakest.get("frac_yes", 1):
                 weakest = ind
@@ -412,18 +402,243 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
         region_summary_blocks.append(block)
     region_summaries_html = "\n".join(region_summary_blocks)
 
+    def full_data_rows_html() -> str:
+        rows = []
+        for d in sorted(detailed_all, key=lambda row: str(row.get("country", row.get("iso3", "")))):
+            gdp_per_capita = safe_float(d.get("g0"))
+            capital_exclusion_per_capita = safe_float(d.get("delta_g_per_capita"))
+            population = safe_float(d.get("population"))
+            per_capita_potential = gdp_per_capita + capital_exclusion_per_capita
+            annual_gdp = gdp_per_capita * population
+            capital_exclusion = safe_float(d.get("total_deficit_usd"))
+            annual_potential_gdp = annual_gdp + capital_exclusion
+            components = d.get("components", [])
+            lever_cells = []
+            for i in range(8, -1, -1):
+                value = ""
+                if len(components) > i:
+                    value = str(int(components[i].get("bin", 0) or 0))
+                lever_cells.append(f'<td class="num lever">{value}</td>')
+            rows.append(
+                "<tr>"
+                f'<td class="country">{escape(str(d.get("country", d.get("iso3", ""))))}</td>'
+                f'<td class="num">${capital_exclusion:,.0f}</td>'
+                f'<td class="num">${annual_potential_gdp:,.0f}</td>'
+                f'<td class="num">${annual_gdp:,.0f}</td>'
+                f'<td class="num">${per_capita_potential:,.0f}</td>'
+                f'<td class="num">${gdp_per_capita:,.0f}</td>'
+                f'{"".join(lever_cells)}'
+                f'<td class="num score">{safe_float(d.get("r")):.3f}</td>'
+                f'<td>{escape(str(d.get("un_region", "")))}</td>'
+                "</tr>"
+            )
+        return "\n".join(rows)
+
+    def build_full_data_html() -> str:
+        lever_headers = "".join(
+            f'<th title="{escape(meta["name"])}">L{num}</th>'
+            for num, meta in reversed(LEVER_DISPLAY.items())
+        )
+        return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The RTLDI Atlas of UN Member States - Data and computed RTLP scores</title>
+<link rel="alternate" type="application/rdf+xml" title="RTLDI Atlas 2026 RDF/XML" href="rtldi_atlas_2026.rdf">
+<style>
+  :root {{
+    --ink: #18202b;
+    --muted: #5b6770;
+    --rule: #c6d1da;
+    --panel: #f7fafc;
+    --accent: #107e65;
+  }}
+  * {{ box-sizing: border-box; }}
+  body {{
+    margin: 0;
+    background: #eef2f5;
+    color: var(--ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16.5px;
+    line-height: 1.55;
+  }}
+  .shell {{
+    width: min(1440px, 100%);
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+  }}
+  header {{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(255,255,255,.96);
+    border-bottom: 1px solid #d8e0e7;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }}
+  h1 {{
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.1;
+    font-weight: 650;
+    letter-spacing: 0;
+  }}
+  .subhead {{
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 14px;
+  }}
+  .actions {{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }}
+  .button {{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 7px 10px;
+    border: 1px solid #cbd5df;
+    background: #fff;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 14px;
+  }}
+  .button.primary {{
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }}
+  main {{ padding: 28px 24px 40px; }}
+  .title-block {{
+    border-left: 4px solid var(--accent);
+    padding-left: 18px;
+    max-width: 980px;
+    margin-bottom: 24px;
+  }}
+  .title-block h2 {{
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    line-height: 1;
+    letter-spacing: 0;
+  }}
+  .title-block p {{
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 18px;
+  }}
+  .table-wrap {{
+    border: 1px solid var(--rule);
+    overflow: auto;
+    max-height: calc(100vh - 250px);
+    background: #fff;
+  }}
+  table {{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1720px;
+  }}
+  th, td {{
+    border-bottom: 1px solid #e3e8ee;
+    padding: 8px 10px;
+    text-align: left;
+    white-space: nowrap;
+  }}
+  th {{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f7fafc;
+    color: #475569;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }}
+  td {{ font-size: 14px; }}
+  .country {{ font-weight: 650; color: #0f172a; }}
+  .num {{ text-align: right; font-variant-numeric: tabular-nums; }}
+  .score {{ font-weight: 650; color: #0f766e; }}
+  .lever {{ text-align: center; }}
+  tr:nth-child(even) td {{ background: #fbfdff; }}
+  .note {{
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 13px;
+  }}
+  @media (max-width: 760px) {{
+    header {{ align-items: flex-start; flex-direction: column; }}
+    .actions {{ justify-content: flex-start; }}
+    main {{ padding: 22px 16px 32px; }}
+  }}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div>
+      <h1>RTLDI ATLAS 2026 Full Data View</h1>
+      <div class="subhead">All 193 UN member states, alphabetized by nation.</div>
+    </div>
+    <div class="actions">
+      <a class="button" href="index.html">HTML Atlas</a>
+      <a class="button" href="global_interactive.html">Interactive Map</a>
+      <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.1">Print PDF</a>
+    </div>
+  </header>
+  <main>
+    <section class="title-block">
+      <h2>The RTLDI Atlas of UN Member States - Data and computed RTLP scores</h2>
+      <p>Single RTLP score, nine binary lever scores, GDP baseline, potential GDP, and annual capital exclusions in USD.</p>
+    </section>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nation</th>
+            <th>Capital exclusion USD</th>
+            <th>Annual potential GDP</th>
+            <th>Annual GDP</th>
+            <th>Per capita potential</th>
+            <th>GDP per capita</th>
+            {lever_headers}
+            <th>RTLP</th>
+            <th>UN Region</th>
+          </tr>
+        </thead>
+        <tbody>
+          {full_data_rows_html()}
+        </tbody>
+      </table>
+    </div>
+    <div class="note">Lever columns are binary computed RTLP components: 1 means the protection is present under the atlas threshold; 0 means it is absent. Annual GDP and annual potential GDP are computed from GDP per capita, population, and capped capital exclusions used by the print atlas.</div>
+  </main>
+</div>
+</body>
+</html>
+"""
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RTLDI ATLAS 2026 — HTML (Front + Regions)</title>
+<link rel="alternate" type="application/rdf+xml" title="RTLDI Atlas 2026 RDF/XML" href="rtldi_atlas_2026.rdf">
 <!-- RTLDI = Right to Life Deficit Index (extended to capital exclusions) -->
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
   :root {{ --font-sans: Inter, system-ui, sans-serif; }}
-  body {{ font-family: var(--font-sans); }}
+  html {{ font-size: 17px; }}
+  body {{ font-family: var(--font-sans); font-size: 1rem; line-height: 1.55; }}
   .heading {{ font-family: 'Space Grotesk', Inter, system-ui, sans-serif; font-weight: 600; }}
   .stat {{ font-variant-numeric: tabular-nums; }}
   .data-table th {{ position: sticky; top: 0; background: #f8fafc; z-index: 10; }}
@@ -432,7 +647,16 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
   .r-low  {{ background-color: #fff1f2; }}
   .lever-bar {{ height: 10px; background: linear-gradient(to right, #0f766e, #14b8a6); transition: width .4s ease; }}
   .map-container svg, .map-container img {{ max-width: 100%; height: auto; }}
-  .section-title {{ font-size: 1.05rem; }}
+  .section-title {{ font-size: 1.18rem; }}
+  .lever-row {{ border: 1px solid #e2e8f0; background: #fff; padding: .85rem; margin-bottom: .65rem; }}
+  .lever-card {{ display: flex; flex-direction: column; min-height: 100%; }}
+  .lever-card-kicker {{ font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: #0f766e; }}
+  .lever-card-body {{ font-size: .98rem; line-height: 1.55; }}
+  [class*="text-xs"] {{ font-size: .82rem !important; }}
+  [class*="text-sm"] {{ font-size: .96rem !important; }}
+  [class*="text-[10px]"] {{ font-size: .74rem !important; }}
+  [class*="text-[11px]"] {{ font-size: .78rem !important; }}
+  [class*="text-[12px]"] {{ font-size: .86rem !important; }}
   body, body * {{ transition: background-color .35s ease, border-color .35s ease, color .35s ease; }}
   body.night-mode {{ background: #08111f !important; color: #e5edf7 !important; }}
   body.night-mode .max-w-screen-xl,
@@ -440,6 +664,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
   body.night-mode .bg-slate-50,
   body.night-mode .bg-slate-100,
   body.night-mode .bg-teal-50,
+  body.night-mode .lever-row,
   body.night-mode header {{
     background-color: #111827 !important;
   }}
@@ -500,6 +725,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
       </div>
       <div class="flex items-center gap-x-2 text-sm">
         <a href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.1" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Print PDF</a>
+        <a href="full_data.html" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Full Data View</a>
         <a href="global_interactive.html" target="_blank" class="px-3 py-1.5 bg-teal-700 text-white hover:bg-teal-800 transition">Interactive Map</a>
         <span class="hidden sm:inline text-[10px] text-slate-500">V-Dem 2024 + WB 2026 G0</span>
       </div>
@@ -562,54 +788,35 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
 
     <div>
       <div class="section-title font-semibold mb-3 text-teal-800">The Nine Levers</div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">1. Legal Protections</span>{lever_loss_badge(1)}<div class="mt-2">Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.</div></div>
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">2. Independent Judiciary</span>{lever_loss_badge(2)}<div class="mt-2">Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.</div></div>
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">3. Law Enforcement Accountability</span>{lever_loss_badge(3)}<div class="mt-2">Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.</div></div>
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">4. Protection Against Arbitrary Detention</span>{lever_loss_badge(4)}<div class="mt-2">Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.</div></div>
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">5. Freedom from Torture and Inhumane Treatment</span>{lever_loss_badge(5)}<div class="mt-2">Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training — an investment toward realizing greater scale.</div></div>
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">6. Civilian Protection in Conflict Zones</span>{lever_loss_badge(6)}<div class="mt-2">Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.</div></div>
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">7. Access to Justice</span>{lever_loss_badge(7)}<div class="mt-2">Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.</div></div>
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">8. Freedom of Expression &amp; Whistleblower Protections</span>{lever_loss_badge(8)}<div class="mt-2">Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low — mainly passing and enforcing the law.</div></div>
-        <div class="bg-white border border-slate-200 p-3"><span class="font-semibold text-slate-950">9. Commitment to Basic Human Security</span>{lever_loss_badge(9)}<div class="mt-2">Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.</div></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+        {''.join(f'<div class="lever-card bg-white border border-slate-200 p-4"><div class="lever-card-kicker">Lever {num}</div><span class="font-semibold text-slate-950">{meta["name"]}</span>{lever_loss_badge(num)}<div class="lever-card-body mt-2 text-slate-600">{meta["long_description"]}</div></div>' for num, meta in LEVER_DISPLAY.items())}
       </div>
-      <div class="text-xs text-slate-400 mt-2">Each lever is a simple binary condition. When present, it removes a barrier that otherwise excludes capital from the economy. The nine come from the source document and are extended here via population-weighted regression so the scale of capital exclusions (lost potential GDP) becomes visible. Activating them is how excluded capital can be brought back in.</div>
+      <div class="text-xs text-slate-400 mt-3">Each lever is a simple binary condition. When present, it removes a barrier that otherwise excludes capital from the economy. The nine come from the source document and are extended here via population-weighted regression so the scale of capital exclusions (lost potential GDP) becomes visible. Activating them is how excluded capital can be brought back in.</div>
     </div>
   </div>
 
-  <!-- Interactive Nation Summary Table (exact same data as print front-matter table) -->
+  <!-- Data exploration links -->
   <div class="px-6 pb-10">
     <div class="flex items-center justify-between mb-3">
-      <div class="section-title font-semibold">All 193 UN Member States — Summary (by capital exclusions)</div>
-      <div class="text-xs text-slate-400">Live client-side filtering &amp; sorting • Same numbers as the print atlas</div>
+      <div class="section-title font-semibold">Explore the National Data</div>
+      <div class="text-xs text-slate-400">Static data view + interactive map</div>
     </div>
 
-    <div class="bg-white border border-slate-200 overflow-hidden">
-      <div class="p-3 border-b flex flex-wrap gap-2 items-center bg-slate-50">
-        <input id="search" type="text" placeholder="Search country or ISO..." class="flex-1 min-w-[180px] px-3 py-1.5 text-sm border border-slate-300 focus:outline-none focus:border-teal-500">
-        <select id="region-filter" class="px-3 py-1.5 text-sm border border-slate-300 bg-white">
-          <option value="">All regions</option>
-        </select>
-        <button onclick="resetFilters()" class="px-3 py-1.5 text-xs border border-slate-300 hover:bg-white">Reset</button>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white border border-slate-200 p-5 flex flex-col gap-4">
+        <div>
+          <div class="font-semibold text-slate-950">Interactive Map</div>
+          <div class="text-sm text-slate-500 mt-1">Click a country to load national data, capital exclusions, and the nine-lever breakdown below the map.</div>
+        </div>
+        <a href="global_interactive.html" target="_blank" class="inline-flex items-center justify-center px-4 py-2 bg-teal-700 text-white hover:bg-teal-800 transition mt-auto">Open Interactive Map</a>
       </div>
-      <div class="overflow-auto max-h-[520px]">
-        <table id="nations-table" class="w-full text-sm">
-          <thead class="text-xs uppercase text-slate-500 border-b">
-            <tr>
-              <th class="px-3 py-2 text-left w-8 cursor-pointer" data-sort="rank">#</th>
-              <th class="px-3 py-2 text-left cursor-pointer" data-sort="country">Country</th>
-              <th class="px-3 py-2 text-left cursor-pointer" data-sort="region">Region</th>
-              <th class="px-3 py-2 text-right cursor-pointer" data-sort="r">R</th>
-              <th class="px-3 py-2 text-right cursor-pointer" data-sort="g0">G₀ (USD)</th>
-              <th class="px-3 py-2 text-right cursor-pointer" data-sort="pop">Pop</th>
-              <th class="px-3 py-2 text-right cursor-pointer" data-sort="lost_per_cap">Capital Exclusions / cap</th>
-              <th class="px-3 py-2 text-right cursor-pointer" data-sort="total_lost">Capital Exclusions (USD)</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 text-[13px]"></tbody>
-        </table>
+      <div class="bg-white border border-slate-200 p-5 flex flex-col gap-4">
+        <div>
+          <div class="font-semibold text-slate-950">Full Data View</div>
+          <div class="text-sm text-slate-500 mt-1">Open the complete alphabetized table for all UN member states, computed RTLP scores, nine levers, GDP, potential GDP, and capital exclusions.</div>
+        </div>
+        <a href="full_data.html" class="inline-flex items-center justify-center px-4 py-2 border border-slate-300 text-slate-900 hover:bg-slate-50 transition mt-auto">Open Full Data View</a>
       </div>
-      <div class="px-3 py-2 text-[10px] text-slate-500 border-t bg-slate-50">R color: &lt;{LOW_R} red tint • {LOW_R}–{HIGH_R} yellow • &gt;{HIGH_R} green tint. Numbers use the same 25% contextual cap as the print edition.</div>
     </div>
   </div>
 
@@ -713,145 +920,24 @@ function renderGlobalBars() {{
   }}
 }}
 
-// ================== NATIONS TABLE (fully interactive in HTML/JS) ==================
-let currentSort = {{ key: 'total_lost', dir: 'desc' }};
-let currentFilter = {{ search: '', region: '' }};
-
-function getRClass(r) {{
-  if (r >= HIGH_R) return 'r-high';
-  if (r >= LOW_R) return 'r-mid';
-  return 'r-low';
-}}
-
-function renderNationsTable(filtered) {{
-  const tbody = document.querySelector('#nations-table tbody');
-  tbody.innerHTML = '';
-
-  const rows = filtered || ATLAS.nations;
-
-  rows.forEach((n, idx) => {{
-    const tr = document.createElement('tr');
-    tr.className = 'hover:outline hover:outline-1 hover:outline-slate-300 cursor-pointer ' + getRClass(n.r);
-    const popStr = n.pop >= 1e9 ? (n.pop/1e9).toFixed(2)+'B' : n.pop >= 1e6 ? (n.pop/1e6).toFixed(1)+'M' : (n.pop/1e3).toFixed(0)+'k';
-    tr.innerHTML = `
-      <td class="px-3 py-1.5 font-mono text-[11px] text-slate-400">${{n.rank || (idx+1)}}</td>
-      <td class="px-3 py-1.5 font-medium">${{n.country}}</td>
-      <td class="px-3 py-1.5 text-xs text-slate-500">${{n.region}}</td>
-      <td class="px-3 py-1.5 text-right font-medium tabular-nums">${{n.r.toFixed(2)}}</td>
-      <td class="px-3 py-1.5 text-right tabular-nums">${{Math.round(n.g0).toLocaleString()}}</td>
-      <td class="px-3 py-1.5 text-right text-xs tabular-nums">${{popStr}}</td>
-      <td class="px-3 py-1.5 text-right tabular-nums">${{n.lost_per_cap.toLocaleString()}}</td>
-      <td class="px-3 py-1.5 text-right font-medium tabular-nums">${{(n.total_lost/1e9).toFixed(1)}}B</td>
-    `;
-    tr.onclick = () => filterTableByRegion(n.region);
-    tbody.appendChild(tr);
-  }});
-}}
-
-function applyFilters() {{
-  let rows = [...ATLAS.nations];
-  const q = currentFilter.search.toLowerCase();
-  if (q) {{
-    rows = rows.filter(n => n.country.toLowerCase().includes(q) || n.iso3.toLowerCase().includes(q));
-  }}
-  if (currentFilter.region) {{
-    rows = rows.filter(n => n.region === currentFilter.region);
-  }}
-  // sort
-  const k = currentSort.key;
-  rows.sort((a, b) => {{
-    let va = a[k], vb = b[k];
-    if (k === 'country' || k === 'region') {{
-      va = (va || '').toString().toLowerCase();
-      vb = (vb || '').toString().toLowerCase();
-      return currentSort.dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
-    }}
-    return currentSort.dir === 'asc' ? (va - vb) : (vb - va);
-  }});
-  renderNationsTable(rows);
-}}
-
-function resetFilters() {{
-  currentFilter = {{ search: '', region: '' }};
-  document.getElementById('search').value = '';
-  document.getElementById('region-filter').value = '';
-  applyFilters();
-}}
-
-function filterTableByRegion(region) {{
-  currentFilter.region = region;
-  document.getElementById('region-filter').value = region;
-  applyFilters();
-  // scroll to table
-  document.querySelector('#nations-table').scrollIntoView({{ behavior: 'smooth', block: 'center' }});
-}}
-
-function initNationTable() {{
-  // populate region filter
-  const sel = document.getElementById('region-filter');
-  const regs = [...new Set(ATLAS.nations.map(n => n.region))].sort();
-  regs.forEach(r => {{
-    if (!r) return;
-    const o = document.createElement('option');
-    o.value = r; o.textContent = r;
-    sel.appendChild(o);
-  }});
-
-  sel.onchange = () => {{
-    currentFilter.region = sel.value;
-    applyFilters();
-  }};
-
-  const search = document.getElementById('search');
-  search.oninput = () => {{
-    currentFilter.search = search.value;
-    applyFilters();
-  }};
-
-  // column sorting
-  document.querySelectorAll('#nations-table th[data-sort]').forEach(th => {{
-    th.onclick = () => {{
-      const key = th.dataset.sort;
-      if (currentSort.key === key) {{
-        currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
-      }} else {{
-        currentSort = {{ key, dir: key === 'total_lost' || key === 'rank' ? 'desc' : 'asc' }};
-      }}
-      applyFilters();
-    }});
-  }});
-
-  renderNationsTable(ATLAS.nations);
-}}
-
 // ================== REGION EXPLORER (maps are local SVGs, everything else JS) ==================
 let currentRegion = null;
 
-// (Region summaries are now statically published in the HTML for fidelity to regions.pdf.
-// Interactive nation table region filtering remains available below.)
+// Region summaries are now statically published in the HTML for fidelity to regions.pdf.
 
 // ================== BOOT ==================
 function boot() {{
   applyAutomaticTheme();
   window.setInterval(applyAutomaticTheme, 5 * 60 * 1000);
   initTailwind();
-  renderGlobalBars();
-  initNationTable();
-  // Region summaries are static full blocks (matching PDF); nation table interactivity remains.
-
-  // Keyboard niceties
-  document.addEventListener('keydown', e => {{
-    if (e.key === '/' && document.activeElement.tagName === 'BODY') {{
-      e.preventDefault();
-      document.getElementById('search').focus();
-    }}
-  }});
-
-  // Initial table render already done in initNationTable
+  try {{
+    renderGlobalBars();
+  }} catch (error) {{
+    console.error('[RTLDI HTML Atlas] Interactive controls failed to initialize:', error);
+  }}
   console.log('%c[RTLDI HTML Atlas] Self-contained front+regions ready. Data matches print atlas.', 'color:#166534');
 }}
 
-window.resetFilters = resetFilters;
 document.addEventListener('DOMContentLoaded', boot);
 </script>
 </body>
@@ -861,6 +947,11 @@ document.addEventListener('DOMContentLoaded', boot);
     index_path = HTML_DIR / "index.html"
     index_path.write_text(html, encoding="utf-8")
 
+    full_data_path = HTML_DIR / "full_data.html"
+    full_data_path.write_text(build_full_data_html(), encoding="utf-8")
+
+    rdf_path = write_rdf_atlas(data, HTML_DIR / "rtldi_atlas_2026.rdf")
+
     # Also drop a tiny data.json for transparency / power users
     (HTML_DIR / "data.json").write_text(json.dumps({
         "global": embed_global,
@@ -869,8 +960,10 @@ document.addEventListener('DOMContentLoaded', boot);
     }, indent=2), encoding="utf-8")
 
     print(f"\nHTML atlas written to: {index_path}")
+    print(f"Full data view written to: {full_data_path}")
+    print(f"RDF/XML linked data written to: {rdf_path}")
     print(f"Vector maps (SVG): {MAPS_DIR} (global.svg + 22 regional *.svg)")
-    print("Open outputs/html-atlas/index.html in a browser. All interaction (table, regions, bars) runs in the client.")
+    print("Open outputs/html-atlas/index.html in a browser. The full data table is outputs/html-atlas/full_data.html.")
     return index_path
 
 def main():

@@ -56,6 +56,7 @@ import pandas as pd
 from typing import Optional, Dict, Any, List
 import argparse
 import sys
+from src.lever_display import format_compact_usd, lever_description, lever_name, lever_short
 from src.map_geometry import (
     add_metropolitan_france_trace,
     apply_european_france_bounds,
@@ -262,13 +263,7 @@ def load_iso2_lookup(path: str = "data/raw/un_member_states.csv") -> Dict[str, s
 
 
 def format_money(n: float) -> str:
-    if n >= 1e12:
-        return f"${n/1e12:,.2f}T"
-    if n >= 1e9:
-        return f"${n/1e9:,.1f}B"
-    if n >= 1e6:
-        return f"${n/1e6:,.1f}M"
-    return f"${n:,.0f}"
+    return format_compact_usd(n)
 
 
 def format_trend_text(iso3: str, r: float, population: float, g0_by_year: dict,
@@ -793,8 +788,8 @@ def build_front_matter(data: dict) -> Path:
     pdf.ln(0.5)
 
     # Clean table header
-    tcol = [7, 68, 32, 16]  # #, name, lost, pct
-    headers = ["#", "Indicator (RTLP)", "Annual Capital Exclusions", "% total"]
+    tcol = [7, 88, 30, 16]  # #, name, lost, pct
+    headers = ["#", "Lever", "Annual Capital Exclusions", "% total"]
     pdf.set_font(FONT_NAME, "", 7.5)
     pdf.set_fill_color(*HEADER_COLOR)
     pdf.set_text_color(255, 255, 255)
@@ -807,9 +802,9 @@ def build_front_matter(data: dict) -> Path:
     ind_tuples.sort(key=lambda x: x[1], reverse=True)
 
     for rank, (i, lost) in enumerate(ind_tuples):
-        name = indicator_names[i] if i < len(indicator_names) else f"Indicator {i+1}"
+        name = lever_short(i + 1, indicator_names[i] if i < len(indicator_names) else f"Lever {i+1}")
         pct = (lost / global_total_lost * 100) if global_total_lost > 0 else 0
-        desc = indicator_descs[i] if i < len(indicator_descs) else ""
+        desc = lever_description(i + 1, indicator_descs[i] if i < len(indicator_descs) else "")
 
         zebra = (rank % 2 == 0)
         pdf.set_fill_color(*PANEL_BG) if zebra else (255, 255, 255)
@@ -817,8 +812,8 @@ def build_front_matter(data: dict) -> Path:
         pdf.set_font(FONT_NAME, "", 7.5)
         pdf.set_text_color(*BLACK)
         pdf.cell(tcol[0], 4, str(i + 1), border=1, align="C", fill=zebra)
-        pdf.cell(tcol[1], 4, name[:38], border=1, fill=zebra)
-        lost_str = f"${lost/1e9:,.1f} bn"
+        pdf.cell(tcol[1], 4, name, border=1, fill=zebra)
+        lost_str = format_money(lost)
         pdf.cell(tcol[2], 4, lost_str, border=1, align="R", fill=zebra)
         pdf.cell(tcol[3], 4, f"{pct:.1f}%", border=1, align="C", fill=zebra, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
@@ -1029,8 +1024,8 @@ def build_regions(data: dict) -> Path:
         para2 = ""
         if inds:
             sorted_inds = sorted(inds, key=lambda x: x.get("frac_yes", 0), reverse=True)
-            strong_names = [i["name"].split(" (")[0] for i in sorted_inds[:2] if i.get("frac_yes", 0) > 0.4]
-            weak_names = [i["name"].split(" (")[0] for i in sorted_inds[-2:]]
+            strong_names = [lever_name(i["num"], i["name"]) for i in sorted_inds[:2] if i.get("frac_yes", 0) > 0.4]
+            weak_names = [lever_name(i["num"], i["name"]) for i in sorted_inds[-2:]]
             potential_b = sum(i.get("attributable_lost_gdp", 0) for i in sorted_inds[-3:]) / 1e9
             para1 = (
                 f"The {reg_name} region has a population-weighted average RTLP score of {reg_sum['weighted_r']:.2f}. "
@@ -1168,7 +1163,9 @@ def build_regions(data: dict) -> Path:
             lost_b = ind.get("attributable_lost_gdp", 0) / 1e9
             pdf.set_font(FONT_NAME, "", 6)
             pdf.set_text_color(*BLACK)
-            line = f"{ind['num']}. {ind['name']}: {pct:.0f}% Yes ({ind['n_yes']}/{ind['n_countries']}) | avg raw {ind['avg_raw']:.2f}"
+            name = lever_name(ind["num"], ind["name"])
+            desc = lever_description(ind["num"], ind["desc"])
+            line = f"Lever {ind['num']}: {name} | {pct:.0f}% Yes ({ind['n_yes']}/{ind['n_countries']})"
             pdf.cell(0, 2.8, line, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             bar_x = MARGIN + 2
             bar_y = pdf.get_y() - 0.2
@@ -1181,7 +1178,7 @@ def build_regions(data: dict) -> Path:
             pdf.set_text_color(70, 70, 70)
             pdf.set_x(MARGIN + 39)
             pdf.multi_cell(0, 2.4,
-                f"Associated capital exclusions: ${lost_b:,.2f} billion ({(lost_b * 1e9 / reg_sum['total_lost_gdp'] * 100) if reg_sum['total_lost_gdp'] > 0 else 0:.0f}% of region total). {ind['desc']}"
+                f"Annual exclusion: {format_money(ind.get('attributable_lost_gdp', 0))} ({(lost_b * 1e9 / reg_sum['total_lost_gdp'] * 100) if reg_sum['total_lost_gdp'] > 0 else 0:.0f}% of region total). Avg raw {ind['avg_raw']:.2f}. {desc}"
             )
             pdf.set_x(MARGIN)
 
@@ -1193,7 +1190,7 @@ def build_regions(data: dict) -> Path:
                 pdf.set_font(FONT_NAME, "", 6)
                 pdf.set_text_color(20, 20, 20)
                 pdf.multi_cell(0, 2.8,
-                    f"Critically, every single nation in the {reg_name} region is currently failing indicator {chosen['num']}. {chosen['name']}. "
+                    f"Critically, every single nation in the {reg_name} region is currently failing lever {chosen['num']}: {lever_name(chosen['num'], chosen['name'])}. "
                     f"The portion of the region's capital exclusions (after the 25% cap) associated with this lever is ${gain_b:,.2f} billion."
                 )
                 pdf.ln(0.3)
@@ -1289,26 +1286,64 @@ def build_nations(data: dict) -> Path:
             pdf.ln(0.3)
 
         pdf.ln(0.5)
-        pdf.section_label("RTLP score breakdown - 9 indicators", HEADER_COLOR)
-        pdf.ln(0.5)
+        pdf.section_label("Nine-lever RTLDI display", HEADER_COLOR)
+        pdf.ln(1.0)
 
-        for c in d['components']:
-            yes = c['yes']
-            color = YES_COLOR if yes == "Yes" else NO_COLOR
-            raw_str = str(c['raw'])[:50] if c['raw'] is not None else "N/A"
-            pdf.set_text_color(*BLACK)
-            pdf.set_font(FONT_NAME, "", 6.5)
-            status = f"[{yes}]"
-            pdf.set_text_color(*color)
-            pdf.cell(0, 3.1, f"{c['num']}. {c['name']} {status}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            pdf.set_text_color(80, 80, 80)
-            pdf.set_font(FONT_NAME, "", 5.5)
-            pdf.set_x(MARGIN + 3)
-            pdf.multi_cell(0, 2.6, f"raw: {raw_str} — {c['desc']}")
-            pdf.set_x(MARGIN)
+        card_gap = 3
+        row_gap = 2.0
+        card_cols = 2
+        card_w = (CONTENT_WIDTH - card_gap) / card_cols
+        card_h = 18.8
+        grid_y = pdf.get_y()
 
-        pdf.ln(0.5)
-        pdf.set_font(FONT_NAME, "", 5.5)
+        for idx, c in enumerate(d["components"]):
+            col = idx % card_cols
+            row = idx // card_cols
+            x = MARGIN + col * (card_w + card_gap)
+            y = grid_y + row * (card_h + row_gap)
+            yes = c["yes"]
+            is_yes = yes == "Yes"
+            name = lever_name(c["num"], c["name"])
+            desc = lever_description(c["num"], c["desc"])
+            raw_str = str(c["raw"])[:42] if c["raw"] is not None else "N/A"
+
+            fill = (244, 251, 247) if is_yes else (255, 247, 247)
+            accent = YES_COLOR if is_yes else NO_COLOR
+            pdf.set_fill_color(*fill)
+            pdf.set_draw_color(*RULE)
+            pdf.rect(x, y, card_w, card_h, style="DF")
+            pdf.set_fill_color(*accent)
+            pdf.rect(x, y, 1.7, card_h, style="F")
+
+            pdf.set_xy(x + 3, y + 2)
+            pdf.set_font(FONT_NAME, "", 6.2)
+            pdf.set_text_color(*ACCENT_COLOR)
+            pdf.cell(card_w - 6, 2.8, f"Lever {c['num']}", new_x=XPos.RIGHT, new_y=YPos.TOP)
+
+            badge_w = 11
+            pdf.set_xy(x + card_w - badge_w - 2.2, y + 1.8)
+            pdf.set_font(FONT_NAME, "", 5.9)
+            pdf.set_text_color(*accent)
+            pdf.cell(badge_w, 3.2, yes.upper(), border=1, align="C")
+
+            pdf.set_xy(x + 3, y + 5.2)
+            pdf.set_font(FONT_NAME, "", 7.0)
+            pdf.set_text_color(*INK)
+            pdf.multi_cell(card_w - badge_w - 7, 3.0, name, align="L")
+
+            pdf.set_xy(x + 3, y + 10.7)
+            pdf.set_font(FONT_NAME, "", 6.2)
+            pdf.set_text_color(*MUTED)
+            pdf.multi_cell(card_w - 6, 2.7, desc, align="L")
+
+            pdf.set_xy(x + 3, y + card_h - 4.0)
+            pdf.set_font(FONT_NAME, "", 5.8)
+            pdf.set_text_color(90, 100, 108)
+            pdf.cell(card_w - 6, 2.4, f"raw: {raw_str}")
+
+        rows_used = math.ceil(len(d["components"]) / card_cols)
+        pdf.set_y(grid_y + rows_used * (card_h + row_gap) - row_gap + 2.0)
+        pdf.set_font(FONT_NAME, "", 6.0)
         pdf.set_text_color(100, 100, 100)
         pdf.multi_cell(0, 2.8,
             "Note: [Yes] = contributes +1 to R. Raw = V-Dem/WB value (higher=stronger protection). Thresholds in Methodology. Partial coverage possible for some nations. "

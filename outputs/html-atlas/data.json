@@ -13,7 +13,7 @@
       1716636962731.328
     ],
     "indicator_names": [
-      "Existence of Legal Protections",
+      "Legal Protections",
       "Independent Judiciary",
       "Law Enforcement Accountability",
       "Protection Against Arbitrary Detention",
@@ -24,15 +24,15 @@
       "Socioeconomic Conditions"
     ],
     "indicator_descs": [
-      "Provisions explicitly protecting the right to life",
-      "Independent judiciary capable of upholding right-to-life laws",
-      "Law enforcement agencies accountable for unlawful killings",
-      "Arbitrary detention prohibited with legal recourse",
-      "Measures in place to prevent torture",
-      "Mechanisms protecting civilians in conflict areas",
-      "Fair access to remedies for right-to-life violations",
-      "Expression and whistleblower rights upheld",
-      "Access to healthcare, food, and shelter adequate to sustain life"
+      "Ordinary law applies consistently to state agents and everyone else.",
+      "Courts can uphold right-to-life laws, including against the state.",
+      "Law enforcement agencies are accountable for unlawful killings and violence.",
+      "Arbitrary detention is prohibited with real legal recourse.",
+      "Measures are in place to prevent torture and inhumane treatment.",
+      "Mechanisms protect civilians during conflict.",
+      "Ordinary people can bring serious claims and have them heard fairly.",
+      "Expression and whistleblower rights are protected from retaliation.",
+      "A minimum floor against extreme deprivation is maintained."
     ]
   },
   "regions": {
@@ -48,6 +48,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.2,
           "n_yes": 1,
           "attributable": 583967290837.3534
@@ -55,6 +58,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 718220541622.3727
@@ -62,6 +68,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.4,
           "n_yes": 2,
           "attributable": 583174139503.203
@@ -69,20 +78,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.6,
           "n_yes": 3,
           "attributable": 520661199189.6428
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 718220541622.3727
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.4,
           "n_yes": 2,
           "attributable": 583174139503.203
@@ -90,27 +108,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.6,
           "n_yes": 3,
           "attributable": 520661199189.6428
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.6,
           "n_yes": 3,
           "attributable": 520661199189.6428
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 718220541622.3727
         }
       ],
       "para1": "The Eastern Asia region has a population-weighted average RTLP score of 0.06. Across its 5 member countries, roughly 6% of the nine core protections are in place on average, corresponding to an estimated $5,467.0 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Protection Against Arbitrary Detention, Access to Justice, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $2,154.7 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatment, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $2,154.7 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "CHN",
@@ -156,6 +183,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 1033153098578.8317
@@ -163,6 +193,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.5,
           "n_yes": 1,
           "attributable": 958365204357.7062
@@ -170,6 +203,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
@@ -177,20 +213,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.5,
           "n_yes": 1,
           "attributable": 958365204357.7062
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
@@ -198,27 +243,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.5,
           "n_yes": 1,
           "attributable": 74787894221.12544
         }
       ],
       "para1": "The Northern America region has a population-weighted average RTLP score of 0.68. Across its 2 member countries, roughly 68% of the nine core protections are in place on average, corresponding to an estimated $3,024.7 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Law Enforcement Accountability, Protection Against Arbitrary Detention, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Socioeconomic Conditions, Existence of Legal Protections\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $2,066.3 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Socioeconomic Conditions, Legal Protections\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $2,066.3 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "USA",
@@ -246,6 +300,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 150190132483.57315
@@ -253,6 +310,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 150190132483.57315
@@ -260,6 +320,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 150190132483.57315
@@ -267,20 +330,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.444,
           "n_yes": 4,
           "attributable": 145124410882.44437
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 150190132483.57315
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 150190132483.57315
@@ -288,20 +360,29 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.444,
           "n_yes": 4,
           "attributable": 145124410882.44437
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.444,
           "n_yes": 4,
           "attributable": 145124410882.44437
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 150190132483.57315
@@ -378,6 +459,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.1,
           "n_yes": 1,
           "attributable": 135546360673.48935
@@ -385,6 +469,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.1,
           "n_yes": 1,
           "attributable": 146507484742.65027
@@ -392,6 +479,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.6,
           "n_yes": 6,
           "attributable": 79473411325.24615
@@ -399,20 +489,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.8,
           "n_yes": 8,
           "attributable": 68893744655.06271
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.2,
           "n_yes": 2,
           "attributable": 128122269375.96799
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.6,
           "n_yes": 6,
           "attributable": 79473411325.24615
@@ -420,27 +519,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.8,
           "n_yes": 8,
           "attributable": 68893744655.06271
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.7,
           "n_yes": 7,
           "attributable": 75695299465.91331
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.7,
           "n_yes": 7,
           "attributable": 16335697927.036207
         }
       ],
       "para1": "The Eastern Europe region has a population-weighted average RTLP score of 0.31. Across its 10 member countries, roughly 31% of the nine core protections are in place on average, corresponding to an estimated $798.9 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Protection Against Arbitrary Detention, Access to Justice, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Existence of Legal Protections, Independent Judiciary\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $410.2 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Legal Protections, Independent Judiciary\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $410.2 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "RUS",
@@ -516,6 +624,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.125,
           "n_yes": 1,
           "attributable": 71078051542.04442
@@ -523,6 +634,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 74256398981.2643
@@ -530,6 +644,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.25,
           "n_yes": 2,
           "attributable": 68193919570.98618
@@ -537,20 +654,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.25,
           "n_yes": 2,
           "attributable": 68193919570.98618
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.25,
           "n_yes": 2,
           "attributable": 68193919570.98618
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.25,
           "n_yes": 2,
           "attributable": 68193919570.98618
@@ -558,27 +684,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.25,
           "n_yes": 2,
           "attributable": 68193919570.98618
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.625,
           "n_yes": 5,
           "attributable": 1618404854.6553497
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.25,
           "n_yes": 2,
           "attributable": 9199197669.846289
         }
       ],
-      "para1": "The Central America region has a population-weighted average RTLP score of 0.22. Across its 8 member countries, roughly 22% of the nine core protections are in place on average, corresponding to an estimated $497.1 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Freedom of Expression and Whistleblower , where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Existence of Legal Protections, Independent Judiciary\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $154.5 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para1": "The Central America region has a population-weighted average RTLP score of 0.22. Across its 8 member countries, roughly 22% of the nine core protections are in place on average, corresponding to an estimated $497.1 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Freedom of Expression and Whistleblower Protections, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Legal Protections, Independent Judiciary\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $154.5 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "MEX",
@@ -642,6 +777,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 143832274405.15988
@@ -649,6 +787,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 143832274405.15988
@@ -656,6 +797,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.059,
           "n_yes": 1,
           "attributable": 142081254538.42056
@@ -663,20 +807,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.529,
           "n_yes": 9,
           "attributable": 103394735953.21223
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.059,
           "n_yes": 1,
           "attributable": 142081254538.42056
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.059,
           "n_yes": 1,
           "attributable": 142081254538.42056
@@ -684,27 +837,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.529,
           "n_yes": 9,
           "attributable": 103394735953.21223
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.412,
           "n_yes": 7,
           "attributable": 114271397157.61302
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.235,
           "n_yes": 4,
           "attributable": 97603813466.7283
         }
       ],
       "para1": "The Western Asia region has a population-weighted average RTLP score of 0.09. Across its 17 member countries, roughly 9% of the nine core protections are in place on average, corresponding to an estimated $1,132.6 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Protection Against Arbitrary Detention, Access to Justice, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Existence of Legal Protections, Independent Judiciary\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $429.7 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Legal Protections, Independent Judiciary\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $429.7 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "SAU",
@@ -822,6 +984,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.8,
           "n_yes": 8,
           "attributable": 125696741999.84964
@@ -829,6 +994,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.9,
           "n_yes": 9,
           "attributable": 2828973850.4454904
@@ -836,6 +1004,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 1.0,
           "n_yes": 10,
           "attributable": 0.0
@@ -843,20 +1014,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 1.0,
           "n_yes": 10,
           "attributable": 0.0
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.9,
           "n_yes": 9,
           "attributable": 122867768149.40414
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 1.0,
           "n_yes": 10,
           "attributable": 0.0
@@ -864,27 +1044,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 1.0,
           "n_yes": 10,
           "attributable": 0.0
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 1.0,
           "n_yes": 10,
           "attributable": 0.0
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.8,
           "n_yes": 8,
           "attributable": 123976274198.36874
         }
       ],
       "para1": "The Northern Europe region has a population-weighted average RTLP score of 0.78. Across its 10 member countries, roughly 78% of the nine core protections are in place on average, corresponding to an estimated $375.4 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Law Enforcement Accountability, Protection Against Arbitrary Detention, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Existence of Legal Protections, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $372.5 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Legal Protections, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $372.5 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "GBR",
@@ -960,6 +1149,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.167,
           "n_yes": 2,
           "attributable": 129390931782.3257
@@ -967,6 +1159,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.167,
           "n_yes": 2,
           "attributable": 129390931782.3257
@@ -974,6 +1169,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.333,
           "n_yes": 4,
           "attributable": 128421615617.51802
@@ -981,20 +1179,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.833,
           "n_yes": 10,
           "attributable": 5042901573.39917
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.167,
           "n_yes": 2,
           "attributable": 129390931782.3257
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.333,
           "n_yes": 4,
           "attributable": 128421615617.51802
@@ -1002,27 +1209,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.833,
           "n_yes": 10,
           "attributable": 5042901573.39917
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.917,
           "n_yes": 11,
           "attributable": 3327860090.49396
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.417,
           "n_yes": 5,
           "attributable": 21290756476.886356
         }
       ],
-      "para1": "The South America region has a population-weighted average RTLP score of 0.42. Across its 12 member countries, roughly 42% of the nine core protections are in place on average, corresponding to an estimated $679.7 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Freedom of Expression and Whistleblower , Protection Against Arbitrary Detention, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Independent Judiciary, Freedom from Torture and Inhumane Treatm\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $388.2 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para1": "The South America region has a population-weighted average RTLP score of 0.42. Across its 12 member countries, roughly 42% of the nine core protections are in place on average, corresponding to an estimated $679.7 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Freedom of Expression and Whistleblower Protections, Protection Against Arbitrary Detention, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Independent Judiciary, Freedom from Torture and Inhumane Treatment\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $388.2 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "BRA",
@@ -1110,6 +1326,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.091,
           "n_yes": 1,
           "attributable": 109983266696.66257
@@ -1117,6 +1336,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 128229488226.3908
@@ -1124,6 +1346,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.273,
           "n_yes": 3,
           "attributable": 95846846231.85916
@@ -1131,20 +1356,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.455,
           "n_yes": 5,
           "attributable": 33916259299.414932
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.182,
           "n_yes": 2,
           "attributable": 109921079746.14879
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.273,
           "n_yes": 3,
           "attributable": 95846846231.85916
@@ -1152,27 +1386,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.455,
           "n_yes": 5,
           "attributable": 33916259299.414932
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.364,
           "n_yes": 4,
           "attributable": 52162480829.14317
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.182,
           "n_yes": 2,
           "attributable": 96388561061.5097
         }
       ],
       "para1": "The South-eastern Asia region has a population-weighted average RTLP score of 0.26. Across its 11 member countries, roughly 26% of the nine core protections are in place on average, corresponding to an estimated $756.2 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Protection Against Arbitrary Detention, Access to Justice, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Existence of Legal Protections, Independent Judiciary\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $334.6 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Legal Protections, Independent Judiciary\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $334.6 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "IDN",
@@ -1254,6 +1497,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 168132504423.54135
@@ -1261,6 +1507,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.071,
           "n_yes": 1,
           "attributable": 157690131587.37128
@@ -1268,6 +1517,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.714,
           "n_yes": 10,
           "attributable": 3737047594.602068
@@ -1275,20 +1527,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.857,
           "n_yes": 12,
           "attributable": 168732654.45101255
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.429,
           "n_yes": 6,
           "attributable": 93527829272.64465
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.714,
           "n_yes": 10,
           "attributable": 3737047594.602068
@@ -1296,27 +1557,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.857,
           "n_yes": 12,
           "attributable": 168732654.45101255
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.857,
           "n_yes": 12,
           "attributable": 168732654.45101255
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.571,
           "n_yes": 8,
           "attributable": 2898122662.312833
         }
       ],
       "para1": "The Southern Europe region has a population-weighted average RTLP score of 0.71. Across its 14 member countries, roughly 71% of the nine core protections are in place on average, corresponding to an estimated $430.2 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Protection Against Arbitrary Detention, Access to Justice, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Independent Judiciary, Existence of Legal Protections\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $419.4 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Independent Judiciary, Legal Protections\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $419.4 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "ITA",
@@ -1416,6 +1686,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.667,
           "n_yes": 6,
           "attributable": 18367747855.90166
@@ -1423,6 +1696,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.667,
           "n_yes": 6,
           "attributable": 105889477922.51022
@@ -1430,6 +1706,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.778,
           "n_yes": 7,
           "attributable": 541390507.0076069
@@ -1437,20 +1716,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.778,
           "n_yes": 7,
           "attributable": 541390507.0076069
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.556,
           "n_yes": 5,
           "attributable": 123715835271.40428
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.778,
           "n_yes": 7,
           "attributable": 541390507.0076069
@@ -1458,27 +1746,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.778,
           "n_yes": 7,
           "attributable": 541390507.0076069
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.778,
           "n_yes": 7,
           "attributable": 541390507.0076069
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.444,
           "n_yes": 4,
           "attributable": 228444206321.2027
         }
       ],
       "para1": "The Western Europe region has a population-weighted average RTLP score of 0.85. Across its 9 member countries, roughly 85% of the nine core protections are in place on average, corresponding to an estimated $479.1 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Law Enforcement Accountability, Protection Against Arbitrary Detention, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $458.0 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatment, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $458.0 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "FRA",
@@ -1548,6 +1845,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
@@ -1555,6 +1855,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
@@ -1562,6 +1865,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
@@ -1569,20 +1875,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.5,
           "n_yes": 1,
           "attributable": 58567415055.09436
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
@@ -1590,27 +1905,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 1.0,
           "n_yes": 2,
           "attributable": 0.0
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 67239827891.681564
         }
       ],
-      "para1": "The Australia and New Zealand region has a population-weighted average RTLP score of 0.80. Across its 2 member countries, roughly 80% of the nine core protections are in place on average, corresponding to an estimated $125.8 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Existence of Legal Protections, Independent Judiciary, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $125.8 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para1": "The Australia and New Zealand region has a population-weighted average RTLP score of 0.80. Across its 2 member countries, roughly 80% of the nine core protections are in place on average, corresponding to an estimated $125.8 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Legal Protections, Independent Judiciary, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatment, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $125.8 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "AUS",
@@ -1638,6 +1962,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 31655754870.246902
@@ -1645,6 +1972,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.167,
           "n_yes": 1,
           "attributable": 26383804469.9317
@@ -1652,6 +1982,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.167,
           "n_yes": 1,
           "attributable": 29944678681.6955
@@ -1659,20 +1992,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.667,
           "n_yes": 4,
           "attributable": 2726655192.4356565
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 31655754870.246902
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.167,
           "n_yes": 1,
           "attributable": 29944678681.6955
@@ -1680,27 +2022,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.667,
           "n_yes": 4,
           "attributable": 2726655192.4356565
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.333,
           "n_yes": 2,
           "attributable": 24672728281.3803
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 31655754870.246902
         }
       ],
       "para1": "The Northern Africa region has a population-weighted average RTLP score of 0.22. Across its 6 member countries, roughly 22% of the nine core protections are in place on average, corresponding to an estimated $211.4 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Protection Against Arbitrary Detention, Access to Justice, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $95.0 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatment, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $95.0 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "EGY",
@@ -1752,6 +2103,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 14093942411.40918
@@ -1759,6 +2113,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 14093942411.40918
@@ -1766,6 +2123,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 14093942411.40918
@@ -1773,20 +2133,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.2,
           "n_yes": 1,
           "attributable": 13511333756.100431
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 14093942411.40918
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 14093942411.40918
@@ -1794,27 +2163,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.2,
           "n_yes": 1,
           "attributable": 13511333756.100431
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.2,
           "n_yes": 1,
           "attributable": 13511333756.100431
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.2,
           "n_yes": 1,
           "attributable": 10501276990.577585
         }
       ],
       "para1": "The Central Asia region has a population-weighted average RTLP score of 0.08. Across its 5 member countries, roughly 8% of the nine core protections are in place on average, corresponding to an estimated $121.5 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in several key areas, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatm, Civilian Protection in Conflict Zones\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $42.3 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatment, Civilian Protection in Conflict Zones\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $42.3 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "KAZ",
@@ -1860,6 +2238,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 14701668723.116367
@@ -1867,6 +2248,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 14701668723.116367
@@ -1874,6 +2258,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.2,
           "n_yes": 1,
           "attributable": 14255923572.725834
@@ -1881,20 +2268,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 1.0,
           "n_yes": 5,
           "attributable": 0.0
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.2,
           "n_yes": 1,
           "attributable": 1330168777.3302035
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.2,
           "n_yes": 1,
           "attributable": 14255923572.725834
@@ -1902,20 +2298,29 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 1.0,
           "n_yes": 5,
           "attributable": 0.0
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.8,
           "n_yes": 4,
           "attributable": 161962861.35907897
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 14701668723.116367
@@ -1968,6 +2373,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.125,
           "n_yes": 2,
           "attributable": 16318554177.798983
@@ -1975,6 +2383,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 20155759744.0459
@@ -1982,6 +2393,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.188,
           "n_yes": 3,
           "attributable": 19268661523.833527
@@ -1989,20 +2403,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.75,
           "n_yes": 12,
           "attributable": 1400752857.4388006
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.125,
           "n_yes": 2,
           "attributable": 17321308926.139523
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.188,
           "n_yes": 3,
           "attributable": 19268661523.833527
@@ -2010,26 +2433,35 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.75,
           "n_yes": 12,
           "attributable": 1400752857.4388006
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.812,
           "n_yes": 13,
           "attributable": 1761375951.7657108
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 20155759744.0459
         }
       ],
-      "para1": "The Western Africa region has a population-weighted average RTLP score of 0.34. Across its 16 member countries, roughly 34% of the nine core protections are in place on average, corresponding to an estimated $117.1 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Freedom of Expression and Whistleblower , Protection Against Arbitrary Detention, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
+      "para1": "The Western Africa region has a population-weighted average RTLP score of 0.34. Across its 16 member countries, roughly 34% of the nine core protections are in place on average, corresponding to an estimated $117.1 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Freedom of Expression and Whistleblower Protections, Protection Against Arbitrary Detention, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
       "para2": "Strengthening the areas with lower implementation\u2014especially Independent Judiciary, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $57.6 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
@@ -2142,6 +2574,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.056,
           "n_yes": 1,
           "attributable": 18830116770.429256
@@ -2149,6 +2584,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.056,
           "n_yes": 1,
           "attributable": 18830116770.429256
@@ -2156,6 +2594,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.111,
           "n_yes": 2,
           "attributable": 16118066827.847706
@@ -2163,20 +2604,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.556,
           "n_yes": 10,
           "attributable": 2076707532.5349243
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.056,
           "n_yes": 1,
           "attributable": 18830116770.429256
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.111,
           "n_yes": 2,
           "attributable": 16118066827.847706
@@ -2184,27 +2634,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.556,
           "n_yes": 10,
           "attributable": 2076707532.5349243
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.444,
           "n_yes": 8,
           "attributable": 9922704604.043655
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 18902358089.17793
         }
       ],
       "para1": "The Eastern Africa region has a population-weighted average RTLP score of 0.24. Across its 18 member countries, roughly 24% of the nine core protections are in place on average, corresponding to an estimated $121.7 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Protection Against Arbitrary Detention, Access to Justice, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $56.6 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatment, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $56.6 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "ETH",
@@ -2328,6 +2787,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 7461692811.315663
@@ -2335,6 +2797,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.077,
           "n_yes": 1,
           "attributable": 7211757811.315663
@@ -2342,6 +2807,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.154,
           "n_yes": 2,
           "attributable": 3069016290.0300474
@@ -2349,20 +2817,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.231,
           "n_yes": 3,
           "attributable": 5623493090.673871
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.077,
           "n_yes": 1,
           "attributable": 7211757811.315663
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.154,
           "n_yes": 2,
           "attributable": 3069016290.0300474
@@ -2370,27 +2847,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.231,
           "n_yes": 3,
           "attributable": 5623493090.673871
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.385,
           "n_yes": 5,
           "attributable": 692496725.9259266
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.077,
           "n_yes": 1,
           "attributable": 3318951290.030048
         }
       ],
       "para1": "The Caribbean region has a population-weighted average RTLP score of 0.20. Across its 13 member countries, roughly 20% of the nine core protections are in place on average, corresponding to an estimated $43.3 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in several key areas, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Socioeconomic Conditions, Existence of Legal Protections\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $18.0 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Socioeconomic Conditions, Legal Protections\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $18.0 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "DOM",
@@ -2484,6 +2970,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.111,
           "n_yes": 1,
           "attributable": 8696570566.071527
@@ -2491,6 +2980,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 9393093380.260702
@@ -2498,6 +2990,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 9393093380.260702
@@ -2505,20 +3000,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.333,
           "n_yes": 3,
           "attributable": 5302534852.665931
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.111,
           "n_yes": 1,
           "attributable": 9365688226.224405
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 9393093380.260702
@@ -2526,26 +3030,35 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.333,
           "n_yes": 3,
           "attributable": 5302534852.665931
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.667,
           "n_yes": 6,
           "attributable": 1333460652.9164326
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 9393093380.260702
         }
       ],
-      "para1": "The Middle Africa region has a population-weighted average RTLP score of 0.14. Across its 9 member countries, roughly 14% of the nine core protections are in place on average, corresponding to an estimated $67.6 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Freedom of Expression and Whistleblower , where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
+      "para1": "The Middle Africa region has a population-weighted average RTLP score of 0.14. Across its 9 member countries, roughly 14% of the nine core protections are in place on average, corresponding to an estimated $67.6 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Freedom of Expression and Whistleblower Protections, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
       "para2": "Strengthening the areas with lower implementation\u2014especially Civilian Protection in Conflict Zones, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $28.2 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
@@ -2616,6 +3129,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 1349016363.7590954
@@ -2623,6 +3139,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 1349016363.7590954
@@ -2630,6 +3149,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.5,
           "n_yes": 2,
           "attributable": 1112813098.9758396
@@ -2637,20 +3159,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 1.0,
           "n_yes": 4,
           "attributable": 0.0
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 1349016363.7590954
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.5,
           "n_yes": 2,
           "attributable": 1112813098.9758396
@@ -2658,27 +3189,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 1.0,
           "n_yes": 4,
           "attributable": 0.0
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 1.0,
           "n_yes": 4,
           "attributable": 0.0
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 1349016363.7590954
         }
       ],
       "para1": "The Melanesia region has a population-weighted average RTLP score of 0.36. Across its 4 member countries, roughly 36% of the nine core protections are in place on average, corresponding to an estimated $7.6 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in Protection Against Arbitrary Detention, Access to Justice, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatm, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $4.0 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom from Torture and Inhumane Treatment, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $4.0 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "PNG",
@@ -2718,6 +3258,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
@@ -2725,6 +3268,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
@@ -2732,6 +3278,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
@@ -2739,20 +3288,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
@@ -2760,27 +3318,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 55230413.41677533
         }
       ],
       "para1": "The Polynesia region has a population-weighted average RTLP score of 0.00. Across its 4 member countries, roughly 0% of the nine core protections are in place on average, corresponding to an estimated $0.5 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in several key areas, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom of Expression and Whistleblower , Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $0.2 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Freedom of Expression and Whistleblower Protections, Socioeconomic Conditions\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $0.2 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "WSM",
@@ -2820,6 +3387,9 @@
         {
           "num": 1,
           "name": "Legal Protections",
+          "short": "Legal protections",
+          "desc": "Ordinary law applies consistently to state agents and everyone else.",
+          "long_desc": "Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 38447569.19254987
@@ -2827,6 +3397,9 @@
         {
           "num": 2,
           "name": "Independent Judiciary",
+          "short": "Independent judiciary",
+          "desc": "Courts can uphold right-to-life laws, including against the state.",
+          "long_desc": "Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 38447569.19254987
@@ -2834,6 +3407,9 @@
         {
           "num": 3,
           "name": "Law Enforcement Accountability",
+          "short": "Law enforcement accountability",
+          "desc": "Law enforcement agencies are accountable for unlawful killings and violence.",
+          "long_desc": "Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 38447569.19254987
@@ -2841,20 +3417,29 @@
         {
           "num": 4,
           "name": "Protection Against Arbitrary Detention",
+          "short": "Arbitrary detention protection",
+          "desc": "Arbitrary detention is prohibited with real legal recourse.",
+          "long_desc": "Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 38447569.19254987
         },
         {
           "num": 5,
-          "name": "Freedom from Torture & Inhumane Treatment",
+          "name": "Freedom from Torture and Inhumane Treatment",
+          "short": "Freedom from torture",
+          "desc": "Measures are in place to prevent torture and inhumane treatment.",
+          "long_desc": "Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 38447569.19254987
         },
         {
           "num": 6,
-          "name": "Civilian Protection in Conflict",
+          "name": "Civilian Protection in Conflict Zones",
+          "short": "Civilian protection in conflict",
+          "desc": "Mechanisms protect civilians during conflict.",
+          "long_desc": "Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 38447569.19254987
@@ -2862,27 +3447,36 @@
         {
           "num": 7,
           "name": "Access to Justice",
+          "short": "Access to justice",
+          "desc": "Ordinary people can bring serious claims and have them heard fairly.",
+          "long_desc": "Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 38447569.19254987
         },
         {
           "num": 8,
-          "name": "Freedom of Expression & Whistleblowers",
+          "name": "Freedom of Expression and Whistleblower Protections",
+          "short": "Expression and whistleblowers",
+          "desc": "Expression and whistleblower rights are protected from retaliation.",
+          "long_desc": "Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.",
           "frac_yes": 0.0,
           "n_yes": 0,
           "attributable": 38447569.19254987
         },
         {
           "num": 9,
-          "name": "Socioeconomic Conditions (Food/Health/Shelter)",
+          "name": "Socioeconomic Conditions",
+          "short": "Basic human security",
+          "desc": "A minimum floor against extreme deprivation is maintained.",
+          "long_desc": "Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.",
           "frac_yes": 0.25,
           "n_yes": 1,
           "attributable": 28826864.052246395
         }
       ],
       "para1": "The Micronesia region has a population-weighted average RTLP score of 0.05. Across its 4 member countries, roughly 5% of the nine core protections are in place on average, corresponding to an estimated $0.3 billion in capital exclusions (lost potential GDP) annually. The region demonstrates particular strength in several key areas, where a substantial share of countries satisfy the binarization thresholds for those indicators. These protections represent opportunities to support greater economic scale for life and capital.",
-      "para2": "Strengthening the areas with lower implementation\u2014especially Access to Justice, Freedom of Expression and Whistleblower \u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $0.1 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
+      "para2": "Strengthening the areas with lower implementation\u2014especially Access to Justice, Freedom of Expression and Whistleblower Protections\u2014is associated with the largest opportunities for realizing additional scale in the region (after the 25% contextual bound). The cross-sectional association links stronger protections to greater economic scale of roughly $0.1 billion annually for the region as a whole (within the bound). Whether and how much of that association is realized depends on the other determinants of output (industry structure, resources, human capital, history) that the model explicitly accounts for by bounding the contribution of these nine factors.",
       "members": [
         {
           "iso3": "FSM",
