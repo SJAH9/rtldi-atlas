@@ -635,7 +635,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
       </div>
       <a class="button" href="../html-atlas/index.html">HTML Atlas</a>
       <a class="button" href="../html-atlas/full_data.html">Full Data View</a>
-      <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.1">Print PDF</a>
+      <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.4">Print PDF</a>
     </div>
   </header>
   <main>

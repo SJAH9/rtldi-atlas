@@ -1,13 +1,23 @@
 # RTLDI Atlas Handoff Notes
 
-Last updated after release commit `bb90b15` on `main`.
+Last updated while preparing release `v2026.8.4` on `main`.
 
-## Current Git State
+## v2026.8.4 Work
+
+- Added `src/atlas_evidence.py` as the shared executable crosswalk, regression, and provenance layer.
+- Added generated web pages: `levers.html`, `regression.html`, `vdem.html`, and `world_bank.html`.
+- Mirrored those evidence sections in print before the glossary.
+- Ebook order is front, regions, 193 nation profiles, 27-page Eurozone report, evidence/data pages, then glossary and credits; total is 278 pages.
+- Published scores identify V-Dem Full+Others v15 with 2024 observations. The current update workflow targets v16; exact historical replication is limited because the raw v15 checksum is not committed.
+- Regression reproduces eta=0.305 (n=187, robust p=0.00568, weighted R2=0.252); the one-year current-US$ growth check is non-significant (p=0.207).
+- Release `v2026.8.4` should attach only `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf`.
+
+## Prior Published Git State
 
 - Branch: `main`
 - Remote: `origin/main`
-- Latest commit: `bb90b15 Release v2026.8.3 cohesive atlas design`
-- Latest tag: `v2026.8.3`
+- Previous release commit: `bb90b15 Release v2026.8.3 cohesive atlas design`
+- Previous release tag: `v2026.8.3`
 - Tag pushed: yes
 - Branch pushed: yes
 

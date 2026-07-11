@@ -44,6 +44,15 @@ except Exception:
 # Reuse the exact data prep (capped deltas, regional aggregates, global 9-ind losses, etc.)
 # This guarantees the HTML and the print PDF are derived from identical numbers.
 from src.generate_atlas_ebook import prepare_atlas_data, ETA
+from src.atlas_evidence import (
+    VDEM_CODEBOOK_URL,
+    VDEM_CORE_URL,
+    VDEM_DATASET_URL,
+    VDEM_ARCHIVE_URL,
+    WORLD_BANK_API_URL,
+    WORLD_BANK_DATA_URL,
+    evidence_bundle,
+)
 from src.lever_display import LEVER_DISPLAY, format_compact_usd, lever_description, lever_long_description, lever_name, lever_short
 from src.map_geometry import (
     RTLDI_COLOR_SCALE,
@@ -194,6 +203,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     indicator_descs: List[str] = data["indicator_descs"]
     detailed_all: List[Dict] = data["detailed_all"]
     detailed_by_loss: List[Dict] = data["detailed_by_loss"]
+    evidence = evidence_bundle(data)
 
     def safe_float(value: Any, default: float = 0.0) -> float:
         try:
@@ -646,8 +656,9 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     </div>
     <div class="actions">
       <a class="button" href="index.html">HTML Atlas</a>
+      <a class="button" href="levers.html">Levers & Methods</a>
       <a class="button" href="global_interactive.html">Interactive Map</a>
-      <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.1">Print PDF</a>
+      <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.4">Print PDF</a>
     </div>
   </header>
   <main>
@@ -681,6 +692,64 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
 </body>
 </html>
 """
+
+    def reference_page(title: str, eyebrow: str, body: str) -> str:
+        return f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{escape(title)} | RTLDI Atlas 2026</title>
+<style>
+:root{{--ink:#18202b;--muted:#5b6770;--rule:#c6d1da;--panel:#f4f8fa;--accent:#107e65;--warn:#9a5a16}}
+*{{box-sizing:border-box}}body{{margin:0;background:#eef2f5;color:var(--ink);font:17px/1.6 Inter,system-ui,sans-serif}}
+.shell{{max-width:1180px;margin:auto;background:white;min-height:100vh}}header{{border-bottom:1px solid var(--rule);padding:18px 24px;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}}
+.brand{{display:flex;gap:12px;align-items:center;font-weight:700}}.mark{{width:38px;height:38px;background:var(--accent);color:white;display:grid;place-items:center;font-size:22px}}
+nav{{display:flex;gap:8px;flex-wrap:wrap}}nav a,.button{{border:1px solid var(--rule);padding:7px 11px;color:var(--ink);text-decoration:none;font-size:14px}}nav a:hover,.button:hover{{background:var(--panel)}}
+main{{padding:42px 24px 70px}}.hero{{border-left:5px solid var(--accent);padding-left:20px;max-width:930px;margin-bottom:34px}}.eyebrow{{color:var(--accent);font-size:13px;font-weight:700;text-transform:uppercase}}h1{{font-size:clamp(2.2rem,5vw,4rem);line-height:1.04;margin:5px 0 12px}}h2{{font-size:1.55rem;margin:36px 0 12px}}h3{{font-size:1.12rem;margin:0 0 8px}}p{{max-width:850px}}.lede{{font-size:20px;color:var(--muted)}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}}.card{{border:1px solid var(--rule);border-left:4px solid var(--accent);padding:18px;background:white}}.total{{font-size:27px;font-weight:750;font-variant-numeric:tabular-nums}}.meta{{color:var(--muted);font-size:14px}}code{{background:#edf3f5;padding:2px 5px}}table{{width:100%;border-collapse:collapse;margin:12px 0 24px}}th,td{{border-bottom:1px solid var(--rule);padding:10px;text-align:left;vertical-align:top}}th{{background:var(--panel);font-size:13px;text-transform:uppercase}}.num{{text-align:right;font-variant-numeric:tabular-nums}}.callout{{border:1px solid #e0c18e;border-left:5px solid var(--warn);background:#fff9ef;padding:16px;margin:20px 0}}.bar{{height:10px;background:#dfe8e8;margin-top:10px}}.bar span{{display:block;height:100%;background:var(--accent)}}a{{color:#0f766e}}ul{{padding-left:22px}}@media(max-width:650px){{main{{padding:28px 16px 50px}}header{{padding:14px 16px}}}}
+</style></head><body><div class="shell"><header><div class="brand"><span class="mark">R</span><span>RTLDI ATLAS 2026</span></div><nav><a href="index.html">Atlas</a><a href="levers.html">Levers</a><a href="regression.html">Regression</a><a href="vdem.html">V-Dem</a><a href="world_bank.html">World Bank</a><a href="full_data.html">Full Data</a><a href="global_interactive.html">Map</a></nav></header><main><section class="hero"><div class="eyebrow">{escape(eyebrow)}</div><h1>{escape(title)}</h1></section>{body}</main></div></body></html>"""
+
+    max_total = max(evidence["lever_totals"].values()) or 1
+    lever_cards = []
+    for num, meta in LEVER_DISPLAY.items():
+        cross = evidence["crosswalk"][num]
+        total = evidence["lever_totals"].get(num, 0)
+        fields = ", ".join(f"<code>{escape(field)}</code>" for field in cross["fields"])
+        lever_cards.append(f"""<article class="card" id="lever-{num}"><div class="eyebrow">Lever {num}</div><h2>{escape(meta['name'])}</h2><div class="total">{format_compact_usd(total)} annually</div><div class="bar"><span style="width:{100*total/max_total:.1f}%"></span></div><p>{escape(meta['long_description'])}</p><h3>RTLP question</h3><p>{escape(cross['question'])}</p><h3>Executable crosswalk</h3><p><strong>{escape(cross['source'])}</strong> · {fields}<br>{escape(cross['transform'])}</p><p class="meta"><strong>Proxy:</strong> {escape(cross['proxy'])}</p><div class="callout"><strong>Transparency note:</strong> {escape(cross['caveat'])}</div></article>""")
+    levers_html = reference_page(
+        "The Nine Levers: Fields, Thresholds, and Capital Exclusions",
+        "Executable crosswalk",
+        f"<p class='lede'>Clicking a lever from the atlas opens the exact source fields and binary rule used to populate it. The dollar amount is that lever's globally attributed share after the national 25% cap is allocated.</p><div class='callout'><strong>What is the NCM Isolated Entity?</strong><br>{escape(evidence['ncm_note'])}</div><div class='grid'>{''.join(lever_cards)}</div>",
+    )
+
+    reg = evidence["regression"]
+    main_reg = reg["main"]
+    growth = reg["growth"]
+    comparator_rows = "".join(
+        f"<tr><td>{escape(item['label'])}</td><td class='num'>{item['n']}</td><td class='num'>{item['slope']:.3f}</td><td class='num'>{item['r2']:.3f}</td><td class='num'>{item['p']:.3g}</td></tr>"
+        for item in reg["comparators"]
+    )
+    growth_text = "Not available" if not growth else f"n={growth['n']}; slope={growth['slope']:.3f} percentage points per lever; R²={growth['r2']:.3f}; p={growth['p']:.3g}."
+    regression_html = reference_page(
+        "GDP Regression, Significance, and Eta",
+        "Reproducible model evidence",
+        f"""<p class="lede">The canonical model is a population-weighted cross-sectional regression of log GDP per capita on the number of activated levers. It estimates association with GDP level, not a causal time-series growth effect.</p>
+        <div class="grid"><div class="card"><h3>η (eta)</h3><div class="total">{main_reg['eta']:.3f}</div><p>Implied proportional GDP-per-capita difference per additional activated lever: <code>exp(slope)-1</code>.</p></div><div class="card"><h3>Uncertainty</h3><div class="total">{main_reg['ci_low']:.1%} to {main_reg['ci_high']:.1%}</div><p>Approximate 95% robust interval for η.</p></div><div class="card"><h3>Model fit</h3><div class="total">R² {main_reg['r2']:.3f}</div><p>n={main_reg['n']}; log slope={main_reg['slope']:.3f}; robust SE={main_reg['se']:.3f}; p={main_reg['p']:.3g}.</p></div></div>
+        <h2>Exact specification</h2><p><code>log(GDP per capita) = intercept + beta × activated-lever count + error</code>, fitted by population-weighted least squares. <code>η = exp(beta)-1</code>. The atlas rounds the estimated {main_reg['eta']:.3f} to 0.30, then applies <code>ΔG = min(η × (1-R) × G₀, 0.25 × G₀)</code>.</p>
+        <div class="callout"><strong>Significance is not causality.</strong> The coefficient is statistically distinguishable from zero in this specification, but cross-sectional omitted variables, reverse causation, proxy reuse, threshold choices, and source-year mismatch remain. The 25% cap limits attribution; it does not solve identification.</div>
+        <h2>Comparator checks</h2><table><thead><tr><th>Single predictor</th><th class="num">n</th><th class="num">Slope</th><th class="num">R²</th><th class="num">p</th></tr></thead><tbody>{comparator_rows}</tbody></table><p class="meta">These unweighted, one-predictor comparisons use log GDP per capita as the outcome. Undernourishment and poverty are themselves development outcomes and lever 9 inputs, so they are descriptive comparators, not independent controls. Different sample sizes reflect missing data.</p>
+        <h2>Growth falsification check</h2><p>{growth_text}</p><p>The available 2023–2024 current-US$ change does <strong>not</strong> show a statistically significant relationship with lever count. This is why the atlas describes a strong association with the cross-sectional GDP level and does not claim that the nine levers predict one-year GDP growth.</p>""",
+    )
+
+    vdem_html = reference_page(
+        "V-Dem Data Used by the Atlas",
+        "Dataset provenance",
+        f"""<p class="lede">The committed 2026 score table identifies V-Dem Country-Year Full+Others v15 as its source and uses 2024 country-year observations. The large raw CSV is not redistributed in this repository.</p><div class="grid"><div class="card"><h3>Published score provenance</h3><div class="total">V-Dem v15</div><p>Full+Others country-year file; observation year 2024.</p></div><div class="card"><h3>Current update workflow</h3><div class="total">V-Dem v16</div><p>Core is sufficient for current fields; Full+Others is also accepted.</p></div></div><h2>Download and rebuild</h2><ol><li>For the committed release vintage, open the <a href="{VDEM_ARCHIVE_URL}">official V-Dem archive</a> and obtain Country-Year Full+Others v15 in CSV format.</li><li>For a current-data update, open the <a href="{VDEM_DATASET_URL}">official dataset page</a> and choose <a href="{VDEM_CORE_URL}">Country-Year Core v16</a>.</li><li>Extract the CSV into <code>data/raw/</code> using the matching v15 or v16 filename.</li><li>Run <code>python3 -m src.build_atlas --year 2026 --eta 0.30</code>.</li></ol><p>Use the codebook distributed with the chosen dataset; the <a href="{VDEM_CODEBOOK_URL}">official v16 codebook</a> documents the current release. V-Dem model-estimate columns are latent interval estimates, not original 0–4 coder categories.</p><div class="callout"><strong>Replication boundary:</strong> a v16 rebuild is a refreshed analysis and may revise scores because V-Dem re-estimates historical values between releases. Bit-for-bit replication requires the exact archived v15 source file and its checksum; that checksum is not present in the repository.</div>""",
+    )
+
+    world_bank_html = reference_page(
+        "World Bank Data Used by the Atlas",
+        "Dataset provenance",
+        f"""<p class="lede">World Development Indicators supply the GDP baseline, population, undernourishment, and poverty values used by the 2026 atlas.</p><table><thead><tr><th>Field</th><th>Indicator</th><th>Role</th></tr></thead><tbody><tr><td>GDP per capita</td><td><code>NY.GDP.PCAP.CD</code></td><td>G₀ baseline and regression outcome</td></tr><tr><td>Population</td><td><code>SP.POP.TOTL</code></td><td>Regression weight and national aggregation</td></tr><tr><td>Undernourishment</td><td><code>SN.ITK.DEFC.ZS</code></td><td>Lever 9 input</td></tr><tr><td>Extreme poverty</td><td><code>SI.POV.DDAY</code></td><td>Lever 9 input</td></tr></tbody></table><h2>Download and rebuild</h2><p>Each indicator can be downloaded as CSV, XML, or Excel from the <a href="{WORLD_BANK_DATA_URL}">World Bank Data portal</a>. The build pipeline uses the public <a href="{WORLD_BANK_API_URL}">World Bank API</a> through <code>wbgapi</code> and stores processed snapshots under <code>data/processed/</code>. Run <code>python3 -m src.fetch_wb</code> for a small connectivity check, then the canonical atlas build command.</p><div class="callout"><strong>Vintage and missingness:</strong> “2026 baseline” means the freshest published value available when the atlas was built, not that every observation was measured in 2026. Missing undernourishment or poverty is conservatively scored as lever 9 absent. Current-US$ GDP is appropriate for the atlas's current-dollar totals but includes exchange-rate and price-level movement.</div>""",
+    )
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -781,8 +850,9 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
         <div class="text-[11px] text-slate-500 mt-0.5">Front matter + 22 regional summaries • Same data as the print atlas • Self-contained</div>
       </div>
       <div class="flex items-center gap-x-2 text-sm">
-        <a href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.1" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Print PDF</a>
+        <a href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.4" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Print PDF</a>
         <a href="full_data.html" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Full Data View</a>
+        <a href="levers.html" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Methods & Sources</a>
         <a href="global_interactive.html" target="_blank" class="px-3 py-1.5 bg-teal-700 text-white hover:bg-teal-800 transition">Interactive Map</a>
         <span class="hidden sm:inline text-[10px] text-slate-500">V-Dem 2024 + WB 2026 G0</span>
       </div>
@@ -846,7 +916,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     <div>
       <div class="section-title font-semibold mb-3 text-teal-800">The Nine Levers</div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-        {''.join(f'<div class="lever-card bg-white border border-slate-200 p-4"><div class="lever-card-kicker">Lever {num}</div><span class="font-semibold text-slate-950">{meta["name"]}</span>{lever_loss_badge(num)}<div class="lever-card-body mt-2 text-slate-600">{meta["long_description"]}</div></div>' for num, meta in LEVER_DISPLAY.items())}
+        {''.join(f'<a href="levers.html#lever-{num}" class="lever-card bg-white border border-slate-200 p-4 no-underline hover:border-teal-600"><div class="lever-card-kicker">Lever {num}</div><span class="font-semibold text-slate-950">{meta["name"]}</span>{lever_loss_badge(num)}<div class="lever-card-body mt-2 text-slate-600">{meta["long_description"]}</div></a>' for num, meta in LEVER_DISPLAY.items())}
       </div>
       <div class="text-xs text-slate-400 mt-3">Each lever is a simple binary condition. When present, it removes a barrier that otherwise excludes capital from the economy. The nine come from the source document and are extended here via population-weighted regression so the scale of capital exclusions (lost potential GDP) becomes visible. Activating them is how excluded capital can be brought back in.</div>
     </div>
@@ -859,7 +929,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
       <div class="text-xs text-slate-400">Static data view + interactive map</div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div class="bg-white border border-slate-200 border-l-4 border-l-teal-700 p-5 flex flex-col gap-4">
         <div>
           <div class="font-semibold text-slate-950">Interactive Map</div>
@@ -873,6 +943,10 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
           <div class="text-sm text-slate-500 mt-1">Open the complete alphabetized table for all UN member states, computed RTLP scores, nine levers, GDP, potential GDP, and capital exclusions.</div>
         </div>
         <a href="full_data.html" class="inline-flex items-center justify-center px-4 py-2 border border-slate-300 text-slate-900 hover:bg-slate-50 transition mt-auto">Open Full Data View</a>
+      </div>
+      <div class="bg-white border border-slate-200 border-l-4 border-l-teal-700 p-5 flex flex-col gap-4">
+        <div><div class="font-semibold text-slate-950">Methods and Source Data</div><div class="text-sm text-slate-500 mt-1">Inspect every lever field and threshold, the GDP regression and eta, and exact V-Dem and World Bank download paths.</div></div>
+        <a href="levers.html" class="inline-flex items-center justify-center px-4 py-2 border border-slate-300 text-slate-900 hover:bg-slate-50 transition mt-auto">Open Methods & Sources</a>
       </div>
     </div>
   </div>
@@ -1006,6 +1080,13 @@ document.addEventListener('DOMContentLoaded', boot);
 
     full_data_path = HTML_DIR / "full_data.html"
     full_data_path.write_text(build_full_data_html(), encoding="utf-8")
+    for filename, page in {
+        "levers.html": levers_html,
+        "regression.html": regression_html,
+        "vdem.html": vdem_html,
+        "world_bank.html": world_bank_html,
+    }.items():
+        (HTML_DIR / filename).write_text(page, encoding="utf-8")
 
     rdf_path = write_rdf_atlas(data, HTML_DIR / "rtldi_atlas_2026.rdf")
 
@@ -1018,6 +1099,7 @@ document.addEventListener('DOMContentLoaded', boot);
 
     print(f"\nHTML atlas written to: {index_path}")
     print(f"Full data view written to: {full_data_path}")
+    print("Evidence pages written: levers.html, regression.html, vdem.html, world_bank.html")
     print(f"RDF/XML linked data written to: {rdf_path}")
     print(f"Vector maps (SVG): {MAPS_DIR} (global.svg + 22 regional *.svg)")
     print("Open outputs/html-atlas/index.html in a browser. The full data table is outputs/html-atlas/full_data.html.")

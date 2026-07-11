@@ -55,8 +55,17 @@ import numpy as np
 import pandas as pd
 from typing import Optional, Dict, Any, List
 import argparse
+import subprocess
 import sys
-from src.lever_display import format_compact_usd, lever_description, lever_name, lever_short
+from src.lever_display import LEVER_DISPLAY, format_compact_usd, lever_description, lever_name, lever_short
+from src.atlas_evidence import (
+    LEVER_CROSSWALK,
+    VDEM_ARCHIVE_URL,
+    VDEM_CODEBOOK_URL,
+    VDEM_DATASET_URL,
+    WORLD_BANK_DATA_URL,
+    evidence_bundle,
+)
 from src.map_geometry import (
     RTLDI_COLOR_SCALE,
     add_small_country_markers,
@@ -113,6 +122,7 @@ MAX_INSTITUTIONAL_SHARE = 0.25
 FRONT_PDF = "outputs/atlas/RTLDI_ATLAS_2026_front.pdf"
 REGIONS_PDF = "outputs/atlas/RTLDI_ATLAS_2026_regions.pdf"
 NATIONS_PDF = "outputs/atlas/RTLDI_ATLAS_2026_nations.pdf"
+EUROZONE_PDF = "outputs/atlas/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf"
 
 
 def _bounded_drag(g0: float, r: float, eta: float = ETA, cap: float = MAX_INSTITUTIONAL_SHARE) -> float:
@@ -556,8 +566,9 @@ def create_pdf():
     front = build_front_matter(data)
     regions = build_regions(data)
     nations = build_nations(data)
+    subprocess.run([sys.executable, "-m", "src.generate_eurozone_atlas"], check=True)
     back = build_back_matter(data)
-    out = concat_pdfs(front, regions, nations, back, Path(RELEASE_PDF))
+    out = concat_pdfs(front, regions, nations, back, Path(RELEASE_PDF), Path(EUROZONE_PDF))
     print(f"Release PDF (concatenated): {out}")
     return out
 
@@ -637,15 +648,15 @@ def build_front_matter(data: dict) -> Path:
     pdf.body_text(
         "RTLP Score (R)\n"
         "R is the simple average of nine binary indicators (0 = no protection, 1 = full protection). "
-        "Eight indicators are derived from V-Dem v15 (2024 data) using the following thresholds "
+        "Eight indicators are derived from V-Dem country-year observations (2024 score year; current reproducible workflow targets v16) using the following thresholds "
         "(higher = stronger protection):\n\n"
         "1. Legal Protections — v2cltrnslw ≥ 2.0\n"
         "2. Independent Judiciary — average(v2juhcind, v2juncind) ≥ 2.0\n"
         "3. Law Enforcement Accountability — v2clkill ≥ 2.0\n"
         "4. Protection Against Arbitrary Detention — v2xcl_acjst ≥ 0.5\n"
         "5. Freedom from Torture — v2cltort ≥ 2.0\n"
-        "6. Civilian Protection in Conflict — v2x_clphy (physical violence index) ≥ 0.5\n"
-        "7. Access to Justice — v2clrspct (rigorous impartial admin) ≥ 2.0\n"
+        "6. Civilian Protection in Conflict — v2clkill ≥ 2.0 (reuses lever 3 proxy in released component data)\n"
+        "7. Access to Justice — v2xcl_acjst ≥ 0.5 (reuses lever 4 proxy in released component data)\n"
         "8. Freedom of Expression & Whistleblower Protections — v2x_freexp ≥ 0.5\n\n"
         "9. Socioeconomic Conditions — World Bank: undernourishment ≤ 5 % AND poverty headcount ($2.15) ≤ 10 %.\n\n"
         "R = (number of 'Yes' indicators) / 9\n\n"
@@ -1415,7 +1426,7 @@ def build_back_matter(data: dict) -> Path:
     pdf.body_text(
         "Primary Data\n"
         "• V-Dem (Varieties of Democracy) Country-Year Full+Others, version 15 (2024 data release). "
-        "Indicators used: v2cltrnslw, v2juhcind, v2juncind, v2clkill, v2cltort, v2xcl_acjst, v2x_freexp, v2x_clphy, v2clrspct.\n"
+        "Released component fields: v2cltrnslw, v2juhcind, v2juncind, v2clkill, v2cltort, v2xcl_acjst, and v2x_freexp. The loader also reads v2x_clphy and v2clrspct, but the released 2026 component table reuses v2clkill for lever 6 and v2xcl_acjst for lever 7.\n"
         "• World Bank World Development Indicators (WDI) via API — GDP per capita (current US$), "
         "population, prevalence of undernourishment, and poverty headcount at $2.15 (2017 PPP). "
         "Values are the most recent published as of atlas production (labeled 2026 baseline).\n"
@@ -1471,6 +1482,148 @@ def build_back_matter(data: dict) -> Path:
 
     pdf.body_text(
         "The atlas takes the RTLDI from the source document and extends it via population-weighted regression (25% cap) to quantify capital exclusions — the lost potential GDP where capital is excluded from the economy because the nine protections required for it to operate are not present. The nine levers are the conditions from the source modelling. Their descriptions and the scale of exclusions associated with each are given in the front-matter section. The 25 % cap is a practical limiter on projections; the levers are low-cost conditions whose activation can bring excluded capital back in."
+    )
+
+    evidence = evidence_bundle(data)
+
+    # ========== LEVER TRANSPARENCY ==========
+    pdf.add_page()
+    pdf.chapter_title("The Nine Levers: Executable Crosswalk")
+    pdf.body_text(
+        "This section mirrors the web atlas lever pages. It reports the global annual capital exclusions "
+        "attributed to each lever and the exact fields and thresholds used by the executable 2026 pipeline. "
+        "The lever amounts allocate each country's bounded total across its missing components; they are not "
+        "nine independent causal estimates and should not be summed without the shared cap."
+    )
+    pdf.section_label("What is the NCM Isolated Entity?", HEADER_COLOR)
+    pdf.body_text(evidence["ncm_note"])
+
+    for num in range(1, 10):
+        meta = LEVER_DISPLAY[num]
+        cross = LEVER_CROSSWALK[num]
+        pdf.add_page()
+        pdf.section_label(f"Lever {num} of 9", HEADER_COLOR)
+        pdf.chapter_title(meta["name"])
+        pdf.set_font(FONT_NAME, "", 17)
+        pdf.set_text_color(*HEADER_COLOR)
+        pdf.cell(0, 9, f"{format_compact_usd(evidence['lever_totals'].get(num, 0))} global annual exclusions", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(2)
+        pdf.body_text(meta["long_description"])
+        pdf.section_label("RTLP question", HEADER_COLOR)
+        pdf.body_text(cross["question"])
+        pdf.section_label("Fields and scoring rule", HEADER_COLOR)
+        pdf.body_text(
+            f"Source: {cross['source']}\n"
+            f"Field(s): {', '.join(cross['fields'])}\n"
+            f"Binary rule: {cross['transform']}\n"
+            f"Operational proxy: {cross['proxy']}"
+        )
+        pdf.set_fill_color(255, 249, 239)
+        pdf.set_draw_color(224, 193, 142)
+        note_y = pdf.get_y() + 2
+        pdf.rect(MARGIN, note_y, CONTENT_WIDTH, 30, style="DF")
+        pdf.set_xy(MARGIN + 4, note_y + 4)
+        pdf.set_font(FONT_NAME, "", 8.5)
+        pdf.set_text_color(*INK)
+        pdf.multi_cell(CONTENT_WIDTH - 8, 4.3, "Transparency note: " + cross["caveat"])
+
+    # ========== REGRESSION EVIDENCE ==========
+    reg = evidence["regression"]
+    main_reg = reg["main"]
+    pdf.add_page()
+    pdf.chapter_title("GDP Regression, Significance, and Eta")
+    pdf.body_text(
+        "The canonical atlas model is a population-weighted cross-sectional regression of log GDP per "
+        "capita on activated-lever count. It estimates association with the level of GDP per capita, not a "
+        "causal time-series growth effect."
+    )
+    y = pdf.get_y() + 2
+    w = (CONTENT_WIDTH - 6) / 3
+    pdf.metric_card(MARGIN, y, w, 26, "Eta", f"{main_reg['eta']:.3f}", "exp(beta) - 1", PANEL_ALT)
+    pdf.metric_card(MARGIN + w + 3, y, w, 26, "95% robust interval", f"{main_reg['ci_low']:.1%} to {main_reg['ci_high']:.1%}", f"n = {main_reg['n']}")
+    pdf.metric_card(MARGIN + (w + 3) * 2, y, w, 26, "Model fit", f"R2 {main_reg['r2']:.3f}", f"p = {main_reg['p']:.3g}")
+    pdf.set_y(y + 31)
+    pdf.body_text(
+        f"Specification: log(GDP per capita) = intercept + beta x activated-lever count + error. "
+        f"The fitted log slope is {main_reg['slope']:.3f} with robust standard error {main_reg['se']:.3f}. "
+        f"Eta is exp(beta)-1 = {main_reg['eta']:.3f}; the operational atlas rounds this to 0.30 and applies "
+        "Delta G = min(eta x (1-R) x G0, 0.25 x G0)."
+    )
+    pdf.section_label("Interpretation limit", HEADER_COLOR)
+    pdf.body_text(
+        "Statistical significance is not causal identification. Omitted variables, reverse causation, proxy "
+        "reuse, binary thresholds, and source-year mismatch remain. The 25% cap limits attribution but does "
+        "not resolve those identification problems."
+    )
+
+    pdf.add_page()
+    pdf.chapter_title("Regression Comparators and Growth Check")
+    cols = [53, 15, 25, 20, 20]
+    headers = ["Single predictor", "n", "Slope", "R2", "p"]
+    pdf.set_font(FONT_NAME, "", 7.5)
+    pdf.set_fill_color(*HEADER_COLOR)
+    pdf.set_text_color(255, 255, 255)
+    for width, header in zip(cols, headers):
+        pdf.cell(width, 5, header, border=1, fill=True, align="C")
+    pdf.ln()
+    for item in reg["comparators"]:
+        values = [item["label"], str(item["n"]), f"{item['slope']:.3f}", f"{item['r2']:.3f}", f"{item['p']:.3g}"]
+        pdf.set_text_color(*INK)
+        for i, (width, value) in enumerate(zip(cols, values)):
+            pdf.cell(width, 5, value, border=1, align="L" if i == 0 else "R")
+        pdf.ln()
+    pdf.ln(4)
+    growth = reg["growth"]
+    if growth:
+        pdf.body_text(
+            f"Available growth falsification check: 2023-2024 current-US$ GDP-per-capita change on lever "
+            f"count, unweighted OLS. n={growth['n']}; slope={growth['slope']:.3f} percentage points per lever; "
+            f"R2={growth['r2']:.3f}; p={growth['p']:.3g}. This one-year check is not statistically significant. "
+            "The atlas therefore describes a cross-sectional GDP-level association and does not claim that "
+            "the nine levers predict one-year GDP growth."
+        )
+    pdf.small_text(
+        "Comparator models are descriptive single-predictor checks. Undernourishment and poverty are development "
+        "outcomes and inputs to lever 9, not independent causal controls; missing data change their sample sizes."
+    )
+
+    # ========== DATASET PAGES ==========
+    pdf.add_page()
+    pdf.chapter_title("V-Dem Dataset and Reproduction")
+    pdf.body_text(
+        "The committed 2026 score table identifies V-Dem Country-Year Full+Others v15 as its source and uses "
+        "2024 country-year observations. The current update workflow targets Country-Year Core v16; Full+Others "
+        "v16 is also accepted. The repository does not redistribute the large raw source CSV.\n\n"
+        f"Official v15 archive: {VDEM_ARCHIVE_URL}\n"
+        f"Official current dataset page: {VDEM_DATASET_URL}\n"
+        f"Official v16 codebook: {VDEM_CODEBOOK_URL}\n\n"
+        "For release-vintage replication, download Full+Others v15. For a current-data update, download Core or "
+        "Full+Others v16. Extract the CSV into data/raw/ with its matching versioned filename, then run "
+        "python3 -m src.build_atlas --year 2026 --eta 0.30."
+    )
+    pdf.body_text(
+        "V-Dem's unsuffixed expert-coded fields are measurement-model point estimates on a standardized interval "
+        "scale, not the original ordinal coder categories. The atlas cutoffs are project operationalizations. "
+        "A v16 rebuild may revise historical scores and is therefore an update rather than guaranteed bit-for-bit "
+        "replication. Exact replication requires the archived v15 source and checksum; that checksum is not present "
+        "in this repository."
+    )
+
+    pdf.add_page()
+    pdf.chapter_title("World Bank Dataset and Reproduction")
+    pdf.body_text(
+        "World Development Indicators supply NY.GDP.PCAP.CD (GDP per capita, current US$), SP.POP.TOTL "
+        "(population), SN.ITK.DEFC.ZS (undernourishment), and SI.POV.DDAY (international-poverty headcount). "
+        "GDP is G0 and the regression outcome; population is the regression weight and aggregation factor; the "
+        "last two fields populate lever 9.\n\n"
+        f"World Bank Data portal: {WORLD_BANK_DATA_URL}\n"
+        "Public API: https://api.worldbank.org/v2/\n\n"
+        "The pipeline fetches the public API through wbgapi and stores processed snapshots under data/processed/."
+    )
+    pdf.body_text(
+        "The 2026 baseline is the freshest published value available at build time, not a claim that every value "
+        "was observed in 2026. Missing undernourishment or poverty is conservatively scored as lever 9 absent. "
+        "Current-US$ GDP supports current-dollar totals but also reflects price-level and exchange-rate movement."
     )
 
     # ========== NEW: FALSIFICATION OF MALTHUS (streamlined from source) ==========
@@ -1580,7 +1733,7 @@ def build_back_matter(data: dict) -> Path:
         "Sid J.A. Hubbard — author of Causality and Attraction: A Continuum of Steady States (v3, 2026). "
         "All rights to the RTLDI equations, the nine RTLP indicators, and the nested causal paradigm remain with the author.\n\n"
         "Data\n"
-        "• V-Dem Institute (https://www.v-dem.net) — V-Dem Country-Year dataset v15.\n"
+        "• V-Dem Institute (https://www.v-dem.net) — published scores use Country-Year Full+Others v15, 2024 observation year; current update workflow targets v16.\n"
         "• World Bank Open Data (https://data.worldbank.org) — WDI via API.\n"
         "• United Nations — list of 193 Member States.\n\n"
         "Code and Atlas Production\n"
@@ -1604,8 +1757,8 @@ def build_back_matter(data: dict) -> Path:
     return out_path
 
 
-def concat_pdfs(front: Optional[Path], regions: Optional[Path], nations: Optional[Path], back: Optional[Path], out: Path) -> Path:
-    """Concatenate the four modular PDFs (front + regions + nations + back) into the final release PDF.
+def concat_pdfs(front: Optional[Path], regions: Optional[Path], nations: Optional[Path], back: Optional[Path], out: Path, eurozone: Optional[Path] = None) -> Path:
+    """Concatenate front, regions, nations, Eurozone report, and back matter.
     This is the final step before creating a GitHub release asset.
     Requires PyPDF2 (already present in the environment).
     """
@@ -1615,7 +1768,7 @@ def concat_pdfs(front: Optional[Path], regions: Optional[Path], nations: Optiona
 
     writer = PdfWriter()
     total_pages = 0
-    for label, p in [("front", front), ("regions", regions), ("nations", nations), ("back", back)]:
+    for label, p in [("front", front), ("regions", regions), ("nations", nations), ("Eurozone", eurozone), ("back", back)]:
         if p is None:
             continue
         p = Path(p)
@@ -1655,13 +1808,14 @@ def main(argv: Optional[List[str]] = None):
     regions_p = Path(REGIONS_PDF)
     nations_p = Path(NATIONS_PDF)
     back_p = Path(BACK_PDF)
+    eurozone_p = Path(EUROZONE_PDF)
     release_p = Path(RELEASE_PDF)
 
     if args.concat_only:
-        if not (front_p.exists() and regions_p.exists() and nations_p.exists() and back_p.exists()):
+        if not (front_p.exists() and regions_p.exists() and nations_p.exists() and eurozone_p.exists() and back_p.exists()):
             print("concat-only requested but one or more part PDFs are missing. Run without --concat-only first.")
             return 1
-        concat_pdfs(front_p, regions_p, nations_p, back_p, release_p)
+        concat_pdfs(front_p, regions_p, nations_p, back_p, release_p, eurozone_p)
         return 0
 
     data = None
@@ -1675,14 +1829,16 @@ def main(argv: Optional[List[str]] = None):
         r = build_regions(data)
     if args.nations or do_all:
         n = build_nations(data)
+    if do_all or args.release:
+        subprocess.run([sys.executable, "-m", "src.generate_eurozone_atlas"], check=True)
     if args.back or do_all:
         b = build_back_matter(data)
 
     if do_all or args.release:
-        concat_pdfs(f or front_p, r or regions_p, n or nations_p, b or back_p, release_p)
+        concat_pdfs(f or front_p, r or regions_p, n or nations_p, b or back_p, release_p, eurozone_p)
 
     print("\nOutputs (most current versions):")
-    for p in [front_p, regions_p, nations_p, back_p, release_p]:
+    for p in [front_p, regions_p, nations_p, eurozone_p, back_p, release_p]:
         if p.exists():
             print(f"  {p}")
     return 0

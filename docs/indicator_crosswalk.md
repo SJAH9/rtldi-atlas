@@ -5,6 +5,8 @@
 **Data Releases Targeted**: V-Dem v16 (2026, data to 2025), World Bank WDI latest available.  
 **Date of this mapping**: 2026-06
 
+> **Implementation status:** This document records the proposed crosswalk and alternatives considered. The executable 2026 release contract is defined in `src/atlas_evidence.py` and reflected in the generated `levers.html` page. In the released component data, lever 6 reuses `v2clkill` (the lever 3 proxy) and lever 7 reuses `v2xcl_acjst` (the lever 4 proxy). The loader reads `v2x_clphy` and `v2clrspct`, but those alternatives did not populate the released component table.
+
 ## Principles for Mapping
 - Stay as close as possible to the *spirit* of each binary question (protection against *arbitrary* interruption of life / equal safeguarding).
 - Prefer **V-Dem** "C" (component) variables and high-level "D" indices that directly address personal integrity, judicial autonomy, access, expression.

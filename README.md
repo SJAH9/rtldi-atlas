@@ -26,8 +26,24 @@ Direct deployed atlas links:
 - [HTML Atlas](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/)
 - [Interactive Map](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/global_interactive.html)
 - [Full Data View](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/full_data.html)
+- [Nine Levers and Crosswalk](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/levers.html)
+- [GDP Regression and Eta](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/regression.html)
+- [V-Dem Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/vdem.html)
+- [World Bank Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/world_bank.html)
 
-### v2026.8.3 (Current — cohesive atlas design and linked data views)
+### v2026.8.4 (Current — transparent levers, regression, and data provenance)
+
+This release exposes the evidence behind the atlas as first-class web and print content.
+
+- Adds a separate nine-lever page with global annual capital exclusions, exact source fields, binary thresholds, proxy rationale, crosswalk caveats, and the NCM Isolated Entity definition.
+- Adds a reproducible GDP regression page reporting the canonical population-weighted model, robust uncertainty, statistical significance, explicit `eta`, descriptive comparators, and a non-significant one-year growth falsification check.
+- Adds dedicated V-Dem and World Bank WDI provenance/download pages, separating the published v15 score source from the current v16 update workflow.
+- Mirrors all four evidence sections in the print back matter before the glossary.
+- Corrects older prose to disclose that released levers 3/6 reuse `v2clkill` and levers 4/7 reuse `v2xcl_acjst`.
+- Updates the 27-page Eurozone report and concatenates it after the 193 nation profiles and before the evidence/data pages.
+- The release contains one PDF asset only: the complete 278-page `RTLDI_ATLAS_2026_ebook.pdf`.
+
+### v2026.8.3 (Cohesive atlas design and linked data views)
 
 This release brings the print atlas, web atlas, interactive map, full data view, and linked-data export into a more cohesive information-design language while preserving the canonical single data pipeline.
 
