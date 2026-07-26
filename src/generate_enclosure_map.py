@@ -46,6 +46,14 @@ from src.map_geometry import (
     apply_atlas_geo_style,
     split_france_for_metropolitan_display,
 )
+from src.web_ui import (
+    SITE_CHROME_CSS,
+    THEME_BOOT_SCRIPT,
+    THEME_RUNTIME_SCRIPT,
+    context_nav,
+    site_footer,
+    site_header,
+)
 
 # Default output base (committed as demo per .gitignore whitelist)
 DEFAULT_ATLAS_CSV = "outputs/atlas/rtl_di_atlas_un_members_2026.csv"
@@ -259,6 +267,7 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RTLDI ATLAS {atlas_year} — Interactive Map Explorer</title>
 <link rel="alternate" type="application/rdf+xml" title="RTLDI Atlas 2026 RDF/XML" href="rtldi_atlas_2026.rdf">
+{THEME_BOOT_SCRIPT}
 <style>
   :root {{
     --ink: #18202b;
@@ -537,6 +546,12 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     gap: 12px;
     font-size: 15px;
   }}
+  .component-top a {{
+    color: var(--ink);
+    text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    text-underline-offset: 3px;
+  }}
+  .component-top a:hover {{ color: var(--accent); }}
   .component-num {{
     color: var(--teal);
     font-size: 13px;
@@ -606,76 +621,50 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
     font: inherit;
   }}
   .num {{ font-variant-numeric: tabular-nums; }}
+  .explore-toolbar {{
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }}
+  .explore-toolbar-title {{
+    color: var(--muted);
+    font-size: 13px;
+  }}
   @media (max-width: 860px) {{
-    header {{ align-items: flex-start; flex-direction: column; }}
-    .actions, .map-controls {{ justify-content: flex-start; }}
+    .explore-toolbar {{ align-items: flex-start; flex-direction: column; }}
+    .map-controls {{ justify-content: flex-start; }}
     .metrics, .detail-grid {{ grid-template-columns: 1fr; }}
     .panel-head {{ grid-template-columns: 1fr; }}
     .r-badge {{ text-align: left; }}
   }}
+{SITE_CHROME_CSS}
 </style>
 </head>
 <body>
-<div class="shell">
-  <header>
-    <div>
-      <h1>RTLDI ATLAS {atlas_year} Interactive Map</h1>
-      <div class="subhead">Click a country to load its national data, capital exclusions, and nine-lever breakdown below the map.</div>
-    </div>
-    <div class="actions">
+<div class="shell site-shell">
+  {site_header("map", "Interactive Map", prefix="../html-atlas/")}
+  {context_nav("map", prefix="../html-atlas/")}
+  <main>
+    <div class="explore-toolbar">
+      <div class="explore-toolbar-title">Click a country to open its national RTLP profile below the map.</div>
       <div class="map-controls" aria-label="Map controls">
         <label class="control"><input id="auto-rotate-toggle" type="checkbox" checked> Auto rotate</label>
-        <label class="control">Night mode
-          <select id="night-mode-control">
-            <option value="auto" selected>Auto</option>
-            <option value="on">On</option>
-            <option value="off">Off</option>
-          </select>
-        </label>
       </div>
-      <a class="button" href="../html-atlas/index.html">HTML Atlas</a>
-      <a class="button" href="../html-atlas/full_data.html">Full Data View</a>
-      <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.4">Print PDF</a>
     </div>
-  </header>
-  <main>
     <div class="map-frame">{plot_html}</div>
     <div class="hint"><span>Hover for quick metrics. Click for the full national explorer panel.</span><span id="selection-hint">No country selected</span></div>
     <section id="country-panel" aria-live="polite">
       <div class="empty">Select a country on the map to inspect its national RTLDI profile.</div>
     </section>
   </main>
+  {site_footer(prefix="../html-atlas/")}
 </div>
 <script>
 const COUNTRY_DATA = {countries_json};
-let mapThemeMode = 'auto';
-
-// Automatic solar theme. Uses browser-local timezone and a privacy-preserving
-// timezone-level sunrise/sunset estimate; no geolocation prompt is required.
-function dayOfYear(date) {{
-  const start = new Date(date.getFullYear(), 0, 0);
-  return Math.floor((date - start) / 86400000);
-}}
-function estimateHemisphere(timeZone) {{
-  if (/Australia|Pacific\\/Auckland|Pacific\\/Fiji|Pacific\\/Port_Moresby|America\\/(Argentina|Santiago|Montevideo|Sao_Paulo|Asuncion)|Africa\\/(Johannesburg|Maseru|Mbabane|Maputo)|Indian\\/(Mauritius|Reunion)/.test(timeZone)) return -1;
-  return 1;
-}}
-function estimatedSolarWindow(now = new Date()) {{
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-  const doy = dayOfYear(now);
-  const hemisphere = estimateHemisphere(timeZone);
-  const seasonal = Math.cos((2 * Math.PI * (doy - 172)) / 365) * hemisphere;
-  const daylightHours = Math.max(9, Math.min(15, 12 + 3.4 * seasonal));
-  const sunrise = 12 - daylightHours / 2;
-  const sunset = 12 + daylightHours / 2;
-  return {{ sunrise, sunset }};
-}}
 function applyMapTheme() {{
-  const now = new Date();
-  const hour = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
-  const solar = estimatedSolarWindow(now);
-  const autoNight = hour < solar.sunrise || hour >= solar.sunset;
-  const night = mapThemeMode === 'on' || (mapThemeMode === 'auto' && autoNight);
+  const night = document.documentElement.dataset.theme === 'night';
   document.body.classList.toggle('night-mode', night);
   const graph = document.getElementById('rtldi-map');
   if (graph && window.Plotly) {{
@@ -692,15 +681,7 @@ function applyMapTheme() {{
     }});
   }}
 }}
-function bindThemeControl() {{
-  const control = document.getElementById('night-mode-control');
-  if (!control) return;
-  control.value = mapThemeMode;
-  control.addEventListener('change', () => {{
-    mapThemeMode = control.value;
-    applyMapTheme();
-  }});
-}}
+window.addEventListener('rtldi-theme-change', applyMapTheme);
 
 function money(value) {{
   if (value === null || value === undefined || Number.isNaN(Number(value))) return 'N/A';
@@ -762,7 +743,7 @@ function renderCountry(iso3) {{
     <div class="component">
       <div class="component-num">Lever ${{escapeHtml(c.num)}}</div>
       <div class="component-top">
-        <strong>${{escapeHtml(c.name)}}</strong>
+        <strong><a href="../html-atlas/levers.html#lever-${{encodeURIComponent(c.num)}}">${{escapeHtml(c.name)}}</a></strong>
         <span class="status ${{c.bin ? 'yes' : 'no'}}">${{c.bin ? 'Yes' : 'No'}}</span>
       </div>
       <div class="component-desc">${{escapeHtml(c.desc || '')}}</div>
@@ -949,13 +930,12 @@ function bindMapMotion() {{
 
 document.addEventListener('DOMContentLoaded', () => {{
   applyMapTheme();
-  bindThemeControl();
-  window.setInterval(applyMapTheme, 5 * 60 * 1000);
   bindMapClicks();
   bindMapMotion();
   renderRequestedCountry();
 }});
 </script>
+{THEME_RUNTIME_SCRIPT}
 </body>
 </html>
 """

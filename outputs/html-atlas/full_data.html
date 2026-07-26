@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The RTLDI Atlas of UN Member States - Data and computed RTLP scores</title>
 <link rel="alternate" type="application/rdf+xml" title="RTLDI Atlas 2026 RDF/XML" href="rtldi_atlas_2026.rdf">
+<script>
+(function () {
+  var now = new Date();
+  var hour = now.getHours() + now.getMinutes() / 60;
+  document.documentElement.dataset.theme = (hour < 7 || hour >= 19) ? 'night' : 'day';
+})();
+</script>
 <style>
   :root {
     --ink: #18202b;
@@ -140,6 +147,8 @@
     text-transform: uppercase;
     letter-spacing: .04em;
   }
+  th a { color: inherit; text-decoration: none; }
+  th a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
   td { font-size: 14px; }
   th:first-child, td:first-child {
     position: sticky;
@@ -164,30 +173,357 @@
     color: var(--muted);
     font-size: 13px;
   }
-  @media (max-width: 760px) {
-    header { align-items: flex-start; flex-direction: column; }
-    .actions { justify-content: flex-start; }
-    main { padding: 22px 16px 32px; }
+  .citation-panel {
+    margin-top: 30px;
+    padding-top: 26px;
+    border-top: 1px solid var(--rule);
+    max-width: 1060px;
   }
+  .citation-panel h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+  }
+  .citation-panel p { max-width: 920px; }
+  .citation-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .citation-item {
+    padding: 16px;
+    border: 1px solid var(--rule);
+    background: var(--panel);
+  }
+  .citation-item h4 { margin: 0 0 7px; font-size: 15px; }
+  .citation-item p { margin: 0; color: var(--muted); font-size: 14px; }
+  .citation-text {
+    display: block;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-left: 4px solid var(--accent);
+    background: var(--panel);
+    color: var(--ink);
+    font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: normal;
+  }
+  @media (max-width: 760px) {
+    main { padding: 22px 16px 32px; }
+    .citation-grid { grid-template-columns: 1fr; }
+  }
+  html[data-theme="night"] .table-wrap,
+  html[data-theme="night"] table,
+  html[data-theme="night"] td,
+  html[data-theme="night"] td:first-child {
+    background: var(--site-surface) !important;
+    color: var(--site-ink);
+    border-color: var(--site-rule);
+  }
+  html[data-theme="night"] th,
+  html[data-theme="night"] th:first-child {
+    background: #172338 !important;
+    color: #cbd5e1;
+    border-color: var(--site-rule);
+  }
+  html[data-theme="night"] tr:nth-child(even) td,
+  html[data-theme="night"] tr:nth-child(even) td:first-child {
+    background: #0f172a !important;
+  }
+  html[data-theme="night"] tbody tr:hover td,
+  html[data-theme="night"] tbody tr:hover td:first-child {
+    background: #13332f !important;
+  }
+  html[data-theme="night"] .country,
+  html[data-theme="night"] .title-block h2 { color: var(--site-ink); }
+  html[data-theme="night"] .citation-item,
+  html[data-theme="night"] .citation-text {
+    background: var(--site-surface-soft);
+    border-color: var(--site-rule);
+    color: var(--site-ink);
+  }
+
+  :root {
+    --site-bg: #eef2f5;
+    --site-surface: #ffffff;
+    --site-surface-soft: #f5f8fa;
+    --site-ink: #18202b;
+    --site-muted: #5b6770;
+    --site-rule: #c6d1da;
+    --site-accent: #107e65;
+    --site-accent-strong: #0b6754;
+    color-scheme: light;
+  }
+  html[data-theme="night"] {
+    --site-bg: #08111f;
+    --site-surface: #111827;
+    --site-surface-soft: #0f172a;
+    --site-ink: #e5edf7;
+    --site-muted: #9aa9bb;
+    --site-rule: #334155;
+    --site-accent: #2dd4bf;
+    --site-accent-strong: #5eead4;
+    color-scheme: dark;
+  }
+  html { background: var(--site-bg); }
+  body { background: var(--site-bg); color: var(--site-ink); }
+  .site-shell { background: var(--site-surface); color: var(--site-ink); }
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 100;
+    width: 100%;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid var(--site-rule);
+    background: color-mix(in srgb, var(--site-surface) 96%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .site-header-inner {
+    min-height: 66px;
+    padding: 10px 24px;
+    display: grid;
+    grid-template-columns: minmax(190px, auto) 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+  .site-brand {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--site-ink);
+    text-decoration: none;
+  }
+  .site-brand-mark {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    background: var(--site-accent);
+    color: #fff;
+    font-size: 21px;
+    font-weight: 750;
+  }
+  .site-brand-copy { min-width: 0; }
+  .site-brand-name {
+    display: block;
+    font-size: 16px;
+    line-height: 1.15;
+    font-weight: 720;
+    white-space: nowrap;
+  }
+  .site-page-label {
+    display: block;
+    margin-top: 3px;
+    color: var(--site-muted);
+    font-size: 12px;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+  .site-primary-nav {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+  }
+  .site-nav-link {
+    min-height: 38px;
+    padding: 8px 10px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--site-muted);
+    background: transparent;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 590;
+    white-space: nowrap;
+  }
+  .site-nav-link:hover {
+    color: var(--site-ink);
+    background: var(--site-surface-soft);
+  }
+  .site-nav-link[aria-current="page"] {
+    color: var(--site-accent-strong);
+    border-bottom-color: var(--site-accent);
+  }
+  .site-nav-link.site-print-link {
+    margin-left: 5px;
+    border: 1px solid var(--site-rule);
+    border-bottom-width: 1px;
+    color: var(--site-ink);
+  }
+  .site-mobile-menu { display: none; }
+  .site-context-nav {
+    min-height: 44px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--site-rule);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    background: var(--site-surface-soft);
+    scrollbar-width: thin;
+  }
+  .site-context-label {
+    margin-right: 5px;
+    color: var(--site-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .site-context-link {
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    color: var(--site-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .site-context-link:hover {
+    color: var(--site-ink);
+    border-color: var(--site-rule);
+    background: var(--site-surface);
+  }
+  .site-context-link[aria-current="page"] {
+    color: var(--site-accent-strong);
+    border-color: var(--site-rule);
+    background: var(--site-surface);
+  }
+  .site-footer {
+    padding: 24px;
+    border-top: 1px solid var(--site-rule);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    color: var(--site-muted);
+    background: var(--site-surface-soft);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .site-footer-credit { max-width: 720px; }
+  .site-footer strong { color: var(--site-ink); }
+  .site-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 14px;
+  }
+  .site-footer a {
+    color: var(--site-accent-strong);
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  html[data-theme="night"] .site-shell,
+  html[data-theme="night"] .shell,
+  html[data-theme="night"] .max-w-screen-xl {
+    background: var(--site-surface) !important;
+  }
+  html[data-theme="night"] code {
+    background: #1e293b;
+    color: #dbeafe;
+  }
+  @media (max-width: 980px) {
+    .site-header-inner {
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 10px 16px;
+    }
+    .site-primary-nav { display: none; }
+    .site-mobile-menu {
+      position: relative;
+      display: block;
+    }
+    .site-mobile-menu summary {
+      min-width: 74px;
+      min-height: 38px;
+      padding: 8px 11px;
+      border: 1px solid var(--site-rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--site-ink);
+      background: var(--site-surface);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 650;
+      list-style: none;
+    }
+    .site-mobile-menu summary::-webkit-details-marker { display: none; }
+    .site-mobile-menu[open] summary {
+      border-color: var(--site-accent);
+      color: var(--site-accent-strong);
+    }
+    .site-mobile-links {
+      position: absolute;
+      inset-block-start: calc(100% + 8px);
+      inset-inline-end: 0;
+      width: min(290px, calc(100vw - 32px));
+      padding: 8px;
+      border: 1px solid var(--site-rule);
+      background: var(--site-surface);
+      box-shadow: 0 14px 36px rgba(15, 23, 42, .18);
+      display: grid;
+      gap: 2px;
+    }
+    .site-mobile-links .site-nav-link {
+      width: 100%;
+      justify-content: flex-start;
+      border: 0;
+    }
+    .site-mobile-links .site-nav-link[aria-current="page"] {
+      background: var(--site-surface-soft);
+      box-shadow: inset 3px 0 0 var(--site-accent);
+    }
+    .site-mobile-links .site-print-link { margin: 5px 0 0; }
+    .site-context-nav { padding-inline: 16px; }
+    .site-footer {
+      padding: 22px 16px;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .site-footer-links { justify-content: flex-start; }
+  }
+  @media (max-width: 520px) {
+    .site-page-label { max-width: 190px; }
+    .site-brand-name { font-size: 15px; }
+  }
+
 </style>
 </head>
 <body>
-<div class="shell">
-  <header>
-    <div class="brand-row">
-      <div class="brand-mark">R</div>
-      <div>
-        <h1>RTLDI ATLAS 2026 Full Data View</h1>
-        <div class="subhead">All 193 UN member states, alphabetized by nation.</div>
-      </div>
-    </div>
-    <div class="actions">
-      <a class="button" href="index.html">HTML Atlas</a>
-      <a class="button" href="levers.html">Levers & Methods</a>
-      <a class="button" href="global_interactive.html">Interactive Map</a>
-      <a class="button primary" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.4">Print PDF</a>
-    </div>
-  </header>
+<div class="shell site-shell">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="index.html">
+      <span class="site-brand-mark" aria-hidden="true">R</span>
+      <span class="site-brand-copy">
+        <span class="site-brand-name">RTLDI ATLAS 2026</span>
+        <span class="site-page-label">Full Data View</span>
+      </span>
+    </a>
+    <nav class="site-primary-nav" aria-label="Primary"><a class="site-nav-link" href="index.html">Overview</a><a class="site-nav-link" href="global_interactive.html">Map</a><a class="site-nav-link" href="full_data.html" aria-current="page">Full Data</a><a class="site-nav-link" href="levers.html">Levers</a><a class="site-nav-link" href="regression.html">Regression</a><a class="site-nav-link" href="vdem.html">Sources</a><a class="site-nav-link" href="about.html">About</a><a class="site-nav-link site-print-link" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.5">Print Atlas</a></nav>
+    <details class="site-mobile-menu">
+      <summary>Menu</summary>
+      <nav class="site-mobile-links" aria-label="Primary mobile"><a class="site-nav-link" href="index.html">Overview</a><a class="site-nav-link" href="global_interactive.html">Map</a><a class="site-nav-link" href="full_data.html" aria-current="page">Full Data</a><a class="site-nav-link" href="levers.html">Levers</a><a class="site-nav-link" href="regression.html">Regression</a><a class="site-nav-link" href="vdem.html">Sources</a><a class="site-nav-link" href="about.html">About</a><a class="site-nav-link site-print-link" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.5">Print Atlas</a></nav>
+    </details>
+  </div>
+</header>
+  <nav class="site-context-nav" aria-label="Explore"><span class="site-context-label">Explore</span><a class="site-context-link" href="global_interactive.html">Interactive Map</a><a class="site-context-link" href="full_data.html" aria-current="page">Full Data View</a></nav>
   <main>
     <section class="title-block">
       <h2>The RTLDI Atlas of UN Member States - Data and computed RTLP scores</h2>
@@ -204,7 +540,7 @@
             <th>Annual GDP</th>
             <th>Per capita potential</th>
             <th>GDP per capita</th>
-            <th title="Socioeconomic Conditions">L9</th><th title="Freedom of Expression and Whistleblower Protections">L8</th><th title="Access to Justice">L7</th><th title="Civilian Protection in Conflict Zones">L6</th><th title="Freedom from Torture and Inhumane Treatment">L5</th><th title="Protection Against Arbitrary Detention">L4</th><th title="Law Enforcement Accountability">L3</th><th title="Independent Judiciary">L2</th><th title="Legal Protections">L1</th>
+            <th title="Socioeconomic Conditions"><a href="levers.html#lever-9">L9</a></th><th title="Freedom of Expression and Whistleblower Protections"><a href="levers.html#lever-8">L8</a></th><th title="Access to Justice"><a href="levers.html#lever-7">L7</a></th><th title="Civilian Protection in Conflict Zones"><a href="levers.html#lever-6">L6</a></th><th title="Freedom from Torture and Inhumane Treatment"><a href="levers.html#lever-5">L5</a></th><th title="Protection Against Arbitrary Detention"><a href="levers.html#lever-4">L4</a></th><th title="Law Enforcement Accountability"><a href="levers.html#lever-3">L3</a></th><th title="Independent Judiciary"><a href="levers.html#lever-2">L2</a></th><th title="Legal Protections"><a href="levers.html#lever-1">L1</a></th>
             <th>UN Region</th>
           </tr>
         </thead>
@@ -406,7 +742,45 @@
       </table>
     </div>
     <div class="note">Lever columns are binary computed RTLP components: 1 means the protection is present under the atlas threshold; 0 means it is absent. Annual GDP and annual potential GDP are computed from GDP per capita, population, and capped capital exclusions used by the print atlas.</div>
+    <section class="citation-panel" aria-labelledby="data-citation-heading">
+      <h3 id="data-citation-heading">Citing and attributing this table</h3>
+      <p>This table combines original RTLDI Project classifications and computed outputs with observations from two public statistical sources. Cite the project and the underlying source appropriate to the fields you use.</p>
+      <div class="citation-grid">
+        <article class="citation-item"><h4>RTLDI Project fields</h4><p>The RTLP score, RTLDI and capital-exclusion estimates, annual and per-capita potential GDP, and all nine binary lever classifications are attributable to the RTLDI Atlas Project.</p></article>
+        <article class="citation-item"><h4>V-Dem source fields</h4><p>The institutional observations used to classify the levers are attributable to the V-Dem Institute. Cite the Country-Year Full+Others v15 dataset and consult the <a href="vdem.html">atlas V-Dem guide</a>.</p></article>
+        <article class="citation-item"><h4>World Bank source fields</h4><p>GDP per capita, population, undernourishment, and poverty observations are attributable to the World Bank's World Development Indicators. Consult the <a href="world_bank.html">atlas World Bank guide</a>.</p></article>
+      </div>
+      <code class="citation-text">RTLDI Atlas Project. (2026). RTLDI Atlas of UN Member States (Version 2026.8.4) [Data set and software]. https://github.com/SJAH9/rtldi-atlas</code>
+      <p class="note">The complete project and theoretical-framework citations are provided on the <a href="about.html">About page</a>.</p>
+    </section>
   </main>
+  <footer class="site-footer">
+  <div class="site-footer-credit"><strong><a href="about.html">RTLDI Atlas Project</a></strong><br>Open-source atlas, data pipeline, and generated outputs released under the MIT License.</div>
+  <nav class="site-footer-links" aria-label="Project information">
+    <a href="about.html">About &amp; citation</a>
+    <a href="https://github.com/SJAH9/rtldi-atlas">GitHub repository</a>
+  </nav>
+</footer>
 </div>
+<script>
+(function () {
+  function applyAtlasTheme() {
+    var now = new Date();
+    var hour = now.getHours() + now.getMinutes() / 60;
+    var theme = (hour < 7 || hour >= 19) ? 'night' : 'day';
+    var previous = document.documentElement.dataset.theme;
+    document.documentElement.dataset.theme = theme;
+    if (document.body) document.body.classList.toggle('night-mode', theme === 'night');
+    if (previous !== theme) {
+      window.dispatchEvent(new CustomEvent('rtldi-theme-change', {detail: {theme: theme}}));
+    }
+  }
+  applyAtlasTheme();
+  window.setInterval(applyAtlasTheme, 60 * 1000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) applyAtlasTheme();
+  });
+})();
+</script>
 </body>
 </html>

@@ -1,12 +1,323 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>V-Dem Data Used by the Atlas | RTLDI Atlas 2026</title>
+<script>
+(function () {
+  var now = new Date();
+  var hour = now.getHours() + now.getMinutes() / 60;
+  document.documentElement.dataset.theme = (hour < 7 || hour >= 19) ? 'night' : 'day';
+})();
+</script>
 <style>
 :root{--ink:#18202b;--muted:#5b6770;--rule:#c6d1da;--panel:#f4f8fa;--accent:#107e65;--warn:#9a5a16}
 *{box-sizing:border-box}body{margin:0;background:#eef2f5;color:var(--ink);font:17px/1.6 Inter,system-ui,sans-serif}
-.shell{max-width:1180px;margin:auto;background:white;min-height:100vh}header{border-bottom:1px solid var(--rule);padding:18px 24px;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}
+.shell{max-width:1180px;margin:auto;background:white;min-height:100vh}
 .brand{display:flex;gap:12px;align-items:center;font-weight:700}.mark{width:38px;height:38px;background:var(--accent);color:white;display:grid;place-items:center;font-size:22px}
 nav{display:flex;gap:8px;flex-wrap:wrap}nav a,.button{border:1px solid var(--rule);padding:7px 11px;color:var(--ink);text-decoration:none;font-size:14px}nav a:hover,.button:hover{background:var(--panel)}
 main{padding:42px 24px 70px}.hero{border-left:5px solid var(--accent);padding-left:20px;max-width:930px;margin-bottom:34px}.eyebrow{color:var(--accent);font-size:13px;font-weight:700;text-transform:uppercase}h1{font-size:clamp(2.2rem,5vw,4rem);line-height:1.04;margin:5px 0 12px}h2{font-size:1.55rem;margin:36px 0 12px}h3{font-size:1.12rem;margin:0 0 8px}p{max-width:850px}.lede{font-size:20px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}.card{border:1px solid var(--rule);border-left:4px solid var(--accent);padding:18px;background:white}.total{font-size:27px;font-weight:750;font-variant-numeric:tabular-nums}.meta{color:var(--muted);font-size:14px}code{background:#edf3f5;padding:2px 5px}table{width:100%;border-collapse:collapse;margin:12px 0 24px}th,td{border-bottom:1px solid var(--rule);padding:10px;text-align:left;vertical-align:top}th{background:var(--panel);font-size:13px;text-transform:uppercase}.num{text-align:right;font-variant-numeric:tabular-nums}.callout{border:1px solid #e0c18e;border-left:5px solid var(--warn);background:#fff9ef;padding:16px;margin:20px 0}.bar{height:10px;background:#dfe8e8;margin-top:10px}.bar span{display:block;height:100%;background:var(--accent)}a{color:#0f766e}ul{padding-left:22px}@media(max-width:650px){main{padding:28px 16px 50px}header{padding:14px 16px}}
-</style></head><body><div class="shell"><header><div class="brand"><span class="mark">R</span><span>RTLDI ATLAS 2026</span></div><nav><a href="index.html">Atlas</a><a href="levers.html">Levers</a><a href="regression.html">Regression</a><a href="vdem.html">V-Dem</a><a href="world_bank.html">World Bank</a><a href="full_data.html">Full Data</a><a href="global_interactive.html">Map</a></nav></header><main><section class="hero"><div class="eyebrow">Dataset provenance</div><h1>V-Dem Data Used by the Atlas</h1></section><p class="lede">The committed 2026 score table identifies V-Dem Country-Year Full+Others v15 as its source and uses 2024 country-year observations. The large raw CSV is not redistributed in this repository.</p><div class="grid"><div class="card"><h3>Published score provenance</h3><div class="total">V-Dem v15</div><p>Full+Others country-year file; observation year 2024.</p></div><div class="card"><h3>Current update workflow</h3><div class="total">V-Dem v16</div><p>Core is sufficient for current fields; Full+Others is also accepted.</p></div></div><h2>Download and rebuild</h2><ol><li>For the committed release vintage, open the <a href="https://www.v-dem.net/data/dataset-archive/">official V-Dem archive</a> and obtain Country-Year Full+Others v15 in CSV format.</li><li>For a current-data update, open the <a href="https://www.v-dem.net/data/the-v-dem-dataset/">official dataset page</a> and choose <a href="https://www.v-dem.net/data/the-v-dem-dataset/country-year-v-dem-core-v16/">Country-Year Core v16</a>.</li><li>Extract the CSV into <code>data/raw/</code> using the matching v15 or v16 filename.</li><li>Run <code>python3 -m src.build_atlas --year 2026 --eta 0.30</code>.</li></ol><p>Use the codebook distributed with the chosen dataset; the <a href="https://www.v-dem.net/documents/70/codebook_v16.pdf">official v16 codebook</a> documents the current release. V-Dem model-estimate columns are latent interval estimates, not original 0–4 coder categories.</p><div class="callout"><strong>Replication boundary:</strong> a v16 rebuild is a refreshed analysis and may revise scores because V-Dem re-estimates historical values between releases. Bit-for-bit replication requires the exact archived v15 source file and its checksum; that checksum is not present in the repository.</div></main></div></body></html>
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}.card{scroll-margin-top:130px;border:1px solid var(--rule);border-left:4px solid var(--accent);padding:18px;background:white}.total{font-size:27px;font-weight:750;font-variant-numeric:tabular-nums}.meta{color:var(--muted);font-size:14px}code{background:#edf3f5;padding:2px 5px}.citation-text{display:block;max-width:900px;padding:14px 16px;border-left:4px solid var(--accent);white-space:normal;font-size:14px;line-height:1.55}table{width:100%;border-collapse:collapse;margin:12px 0 24px}th,td{border-bottom:1px solid var(--rule);padding:10px;text-align:left;vertical-align:top}th{background:var(--panel);font-size:13px;text-transform:uppercase}.num{text-align:right;font-variant-numeric:tabular-nums}.callout{border:1px solid #e0c18e;border-left:5px solid var(--warn);background:#fff9ef;padding:16px;margin:20px 0}.bar{height:10px;background:#dfe8e8;margin-top:10px}.bar span{display:block;height:100%;background:var(--accent)}a{color:#0f766e}ul{padding-left:22px}.jump-nav{display:flex;gap:6px;flex-wrap:wrap;margin:22px 0 28px}.jump-nav a{min-width:36px;padding:6px 9px;border:1px solid var(--rule);text-align:center;text-decoration:none;font-size:13px;font-weight:700}@media(max-width:650px){main{padding:28px 16px 50px}}
+html[data-theme="night"] body{--ink:var(--site-ink);--muted:var(--site-muted);--rule:var(--site-rule);--panel:var(--site-surface-soft);--accent:var(--site-accent);--warn:#f2b766}
+html[data-theme="night"] .card,html[data-theme="night"] td{background:var(--site-surface);border-color:var(--site-rule)}html[data-theme="night"] th{background:var(--site-surface-soft)}html[data-theme="night"] .callout{background:#2a2114;border-color:#76552a}html[data-theme="night"] .bar{background:#334155}html[data-theme="night"] h1,html[data-theme="night"] h2,html[data-theme="night"] h3{color:var(--site-ink)}
+
+  :root {
+    --site-bg: #eef2f5;
+    --site-surface: #ffffff;
+    --site-surface-soft: #f5f8fa;
+    --site-ink: #18202b;
+    --site-muted: #5b6770;
+    --site-rule: #c6d1da;
+    --site-accent: #107e65;
+    --site-accent-strong: #0b6754;
+    color-scheme: light;
+  }
+  html[data-theme="night"] {
+    --site-bg: #08111f;
+    --site-surface: #111827;
+    --site-surface-soft: #0f172a;
+    --site-ink: #e5edf7;
+    --site-muted: #9aa9bb;
+    --site-rule: #334155;
+    --site-accent: #2dd4bf;
+    --site-accent-strong: #5eead4;
+    color-scheme: dark;
+  }
+  html { background: var(--site-bg); }
+  body { background: var(--site-bg); color: var(--site-ink); }
+  .site-shell { background: var(--site-surface); color: var(--site-ink); }
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 100;
+    width: 100%;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid var(--site-rule);
+    background: color-mix(in srgb, var(--site-surface) 96%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .site-header-inner {
+    min-height: 66px;
+    padding: 10px 24px;
+    display: grid;
+    grid-template-columns: minmax(190px, auto) 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+  .site-brand {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--site-ink);
+    text-decoration: none;
+  }
+  .site-brand-mark {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    background: var(--site-accent);
+    color: #fff;
+    font-size: 21px;
+    font-weight: 750;
+  }
+  .site-brand-copy { min-width: 0; }
+  .site-brand-name {
+    display: block;
+    font-size: 16px;
+    line-height: 1.15;
+    font-weight: 720;
+    white-space: nowrap;
+  }
+  .site-page-label {
+    display: block;
+    margin-top: 3px;
+    color: var(--site-muted);
+    font-size: 12px;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+  .site-primary-nav {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+  }
+  .site-nav-link {
+    min-height: 38px;
+    padding: 8px 10px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--site-muted);
+    background: transparent;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 590;
+    white-space: nowrap;
+  }
+  .site-nav-link:hover {
+    color: var(--site-ink);
+    background: var(--site-surface-soft);
+  }
+  .site-nav-link[aria-current="page"] {
+    color: var(--site-accent-strong);
+    border-bottom-color: var(--site-accent);
+  }
+  .site-nav-link.site-print-link {
+    margin-left: 5px;
+    border: 1px solid var(--site-rule);
+    border-bottom-width: 1px;
+    color: var(--site-ink);
+  }
+  .site-mobile-menu { display: none; }
+  .site-context-nav {
+    min-height: 44px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--site-rule);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    background: var(--site-surface-soft);
+    scrollbar-width: thin;
+  }
+  .site-context-label {
+    margin-right: 5px;
+    color: var(--site-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .site-context-link {
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    color: var(--site-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .site-context-link:hover {
+    color: var(--site-ink);
+    border-color: var(--site-rule);
+    background: var(--site-surface);
+  }
+  .site-context-link[aria-current="page"] {
+    color: var(--site-accent-strong);
+    border-color: var(--site-rule);
+    background: var(--site-surface);
+  }
+  .site-footer {
+    padding: 24px;
+    border-top: 1px solid var(--site-rule);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    color: var(--site-muted);
+    background: var(--site-surface-soft);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .site-footer-credit { max-width: 720px; }
+  .site-footer strong { color: var(--site-ink); }
+  .site-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 14px;
+  }
+  .site-footer a {
+    color: var(--site-accent-strong);
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  html[data-theme="night"] .site-shell,
+  html[data-theme="night"] .shell,
+  html[data-theme="night"] .max-w-screen-xl {
+    background: var(--site-surface) !important;
+  }
+  html[data-theme="night"] code {
+    background: #1e293b;
+    color: #dbeafe;
+  }
+  @media (max-width: 980px) {
+    .site-header-inner {
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 10px 16px;
+    }
+    .site-primary-nav { display: none; }
+    .site-mobile-menu {
+      position: relative;
+      display: block;
+    }
+    .site-mobile-menu summary {
+      min-width: 74px;
+      min-height: 38px;
+      padding: 8px 11px;
+      border: 1px solid var(--site-rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--site-ink);
+      background: var(--site-surface);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 650;
+      list-style: none;
+    }
+    .site-mobile-menu summary::-webkit-details-marker { display: none; }
+    .site-mobile-menu[open] summary {
+      border-color: var(--site-accent);
+      color: var(--site-accent-strong);
+    }
+    .site-mobile-links {
+      position: absolute;
+      inset-block-start: calc(100% + 8px);
+      inset-inline-end: 0;
+      width: min(290px, calc(100vw - 32px));
+      padding: 8px;
+      border: 1px solid var(--site-rule);
+      background: var(--site-surface);
+      box-shadow: 0 14px 36px rgba(15, 23, 42, .18);
+      display: grid;
+      gap: 2px;
+    }
+    .site-mobile-links .site-nav-link {
+      width: 100%;
+      justify-content: flex-start;
+      border: 0;
+    }
+    .site-mobile-links .site-nav-link[aria-current="page"] {
+      background: var(--site-surface-soft);
+      box-shadow: inset 3px 0 0 var(--site-accent);
+    }
+    .site-mobile-links .site-print-link { margin: 5px 0 0; }
+    .site-context-nav { padding-inline: 16px; }
+    .site-footer {
+      padding: 22px 16px;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .site-footer-links { justify-content: flex-start; }
+  }
+  @media (max-width: 520px) {
+    .site-page-label { max-width: 190px; }
+    .site-brand-name { font-size: 15px; }
+  }
+
+</style></head><body><div class="shell site-shell"><header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="index.html">
+      <span class="site-brand-mark" aria-hidden="true">R</span>
+      <span class="site-brand-copy">
+        <span class="site-brand-name">RTLDI ATLAS 2026</span>
+        <span class="site-page-label">V-Dem Source</span>
+      </span>
+    </a>
+    <nav class="site-primary-nav" aria-label="Primary"><a class="site-nav-link" href="index.html">Overview</a><a class="site-nav-link" href="global_interactive.html">Map</a><a class="site-nav-link" href="full_data.html">Full Data</a><a class="site-nav-link" href="levers.html">Levers</a><a class="site-nav-link" href="regression.html">Regression</a><a class="site-nav-link" href="vdem.html" aria-current="page">Sources</a><a class="site-nav-link" href="about.html">About</a><a class="site-nav-link site-print-link" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.5">Print Atlas</a></nav>
+    <details class="site-mobile-menu">
+      <summary>Menu</summary>
+      <nav class="site-mobile-links" aria-label="Primary mobile"><a class="site-nav-link" href="index.html">Overview</a><a class="site-nav-link" href="global_interactive.html">Map</a><a class="site-nav-link" href="full_data.html">Full Data</a><a class="site-nav-link" href="levers.html">Levers</a><a class="site-nav-link" href="regression.html">Regression</a><a class="site-nav-link" href="vdem.html" aria-current="page">Sources</a><a class="site-nav-link" href="about.html">About</a><a class="site-nav-link site-print-link" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.5">Print Atlas</a></nav>
+    </details>
+  </div>
+</header><nav class="site-context-nav" aria-label="Methods &amp; Sources"><span class="site-context-label">Methods &amp; Sources</span><a class="site-context-link" href="levers.html">Nine Levers</a><a class="site-context-link" href="regression.html">Regression &amp; Eta</a><a class="site-context-link" href="vdem.html" aria-current="page">V-Dem</a><a class="site-context-link" href="world_bank.html">World Bank</a></nav><main><section class="hero"><div class="eyebrow">Dataset provenance</div><h1>V-Dem Data Used by the Atlas</h1></section><p class="lede">The committed 2026 score table identifies V-Dem Country-Year Full+Others v15 as its source and uses 2024 country-year observations. The large raw CSV is not redistributed in this repository.</p><div class="grid"><div class="card"><h3>Published score provenance</h3><div class="total">V-Dem v15</div><p>Full+Others country-year file; observation year 2024.</p></div><div class="card"><h3>Current update workflow</h3><div class="total">V-Dem v16</div><p>Core is sufficient for current fields; Full+Others is also accepted.</p></div></div><h2>Download and rebuild</h2><ol><li>For the committed release vintage, open the <a href="https://www.v-dem.net/data/dataset-archive/">official V-Dem archive</a> and obtain Country-Year Full+Others v15 in CSV format.</li><li>For a current-data update, open the <a href="https://www.v-dem.net/data/the-v-dem-dataset/">official dataset page</a> and choose <a href="https://www.v-dem.net/data/the-v-dem-dataset/country-year-v-dem-core-v16/">Country-Year Core v16</a>.</li><li>Extract the CSV into <code>data/raw/</code> using the matching v15 or v16 filename.</li><li>Run <code>python3 -m src.build_atlas --year 2026 --eta 0.30</code>.</li></ol><p>Use the codebook distributed with the chosen dataset; the <a href="https://www.v-dem.net/documents/70/codebook_v16.pdf">official v16 codebook</a> documents the current release. V-Dem model-estimate columns are latent interval estimates, not original 0–4 coder categories.</p><div class="callout"><strong>Replication boundary:</strong> a v16 rebuild is a refreshed analysis and may revise scores because V-Dem re-estimates historical values between releases. Bit-for-bit replication requires the exact archived v15 source file and its checksum; that checksum is not present in the repository.</div></main><footer class="site-footer">
+  <div class="site-footer-credit"><strong><a href="about.html">RTLDI Atlas Project</a></strong><br>Open-source atlas, data pipeline, and generated outputs released under the MIT License.</div>
+  <nav class="site-footer-links" aria-label="Project information">
+    <a href="about.html">About &amp; citation</a>
+    <a href="https://github.com/SJAH9/rtldi-atlas">GitHub repository</a>
+  </nav>
+</footer></div><script>
+(function () {
+  function applyAtlasTheme() {
+    var now = new Date();
+    var hour = now.getHours() + now.getMinutes() / 60;
+    var theme = (hour < 7 || hour >= 19) ? 'night' : 'day';
+    var previous = document.documentElement.dataset.theme;
+    document.documentElement.dataset.theme = theme;
+    if (document.body) document.body.classList.toggle('night-mode', theme === 'night');
+    if (previous !== theme) {
+      window.dispatchEvent(new CustomEvent('rtldi-theme-change', {detail: {theme: theme}}));
+    }
+  }
+  applyAtlasTheme();
+  window.setInterval(applyAtlasTheme, 60 * 1000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) applyAtlasTheme();
+  });
+})();
+</script></body></html>

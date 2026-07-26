@@ -30,8 +30,22 @@ Direct deployed atlas links:
 - [GDP Regression and Eta](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/regression.html)
 - [V-Dem Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/vdem.html)
 - [World Bank Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/world_bank.html)
+- [About, Authorship, and Citation](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/about.html)
 
-### v2026.8.4 (Current — transparent levers, regression, and data provenance)
+### v2026.8.5 (Current — refined web atlas navigation and attribution)
+
+This release brings every web-atlas view into one coherent, responsive information architecture.
+
+- Adds consistent primary and contextual navigation across the overview, map, Full Data, levers, regression, source guides, and About page.
+- Adds automatic local-time day/night presentation to every page, including coordinated Plotly map styling.
+- Strengthens drill-down paths from global lever summaries, table headers, and country profiles into the underlying lever methodology.
+- Adds a conventional About page documenting the Atlas as a Level 4 Nested Causal Modelling Intervention, its origins, authorship, production disclosure, open-source license, and citation.
+- Adds field-level citation guidance to Full Data, separating RTLDI Project outputs from V-Dem and World Bank source observations.
+- Adds a restrained project footer whose RTLDI Atlas Project identity links to the About page.
+- Verified all eight pages in desktop and mobile layouts, day and night modes, with 193 Full Data rows and no missing internal links.
+- The release contains one PDF asset only: the complete `RTLDI_ATLAS_2026_ebook.pdf`.
+
+### v2026.8.4 (Transparent levers, regression, and data provenance)
 
 This release exposes the evidence behind the atlas as first-class web and print content.
 

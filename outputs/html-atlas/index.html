@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RTLDI ATLAS 2026 — HTML (Front + Regions)</title>
 <link rel="alternate" type="application/rdf+xml" title="RTLDI Atlas 2026 RDF/XML" href="rtldi_atlas_2026.rdf">
+<script>
+(function () {
+  var now = new Date();
+  var hour = now.getHours() + now.getMinutes() / 60;
+  document.documentElement.dataset.theme = (hour < 7 || hour >= 19) ? 'night' : 'day';
+})();
+</script>
 <!-- RTLDI = Right to Life Deficit Index (extended to capital exclusions) -->
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
@@ -79,32 +86,288 @@
   body.night-mode .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: #1f2937 !important; }
   body.night-mode .shadow-sm { box-shadow: 0 0 0 1px rgba(51,65,85,.7) !important; }
   body.night-mode .map-container img { background: #0f172a !important; border-color: #334155 !important; }
+
+  :root {
+    --site-bg: #eef2f5;
+    --site-surface: #ffffff;
+    --site-surface-soft: #f5f8fa;
+    --site-ink: #18202b;
+    --site-muted: #5b6770;
+    --site-rule: #c6d1da;
+    --site-accent: #107e65;
+    --site-accent-strong: #0b6754;
+    color-scheme: light;
+  }
+  html[data-theme="night"] {
+    --site-bg: #08111f;
+    --site-surface: #111827;
+    --site-surface-soft: #0f172a;
+    --site-ink: #e5edf7;
+    --site-muted: #9aa9bb;
+    --site-rule: #334155;
+    --site-accent: #2dd4bf;
+    --site-accent-strong: #5eead4;
+    color-scheme: dark;
+  }
+  html { background: var(--site-bg); }
+  body { background: var(--site-bg); color: var(--site-ink); }
+  .site-shell { background: var(--site-surface); color: var(--site-ink); }
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 100;
+    width: 100%;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid var(--site-rule);
+    background: color-mix(in srgb, var(--site-surface) 96%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .site-header-inner {
+    min-height: 66px;
+    padding: 10px 24px;
+    display: grid;
+    grid-template-columns: minmax(190px, auto) 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+  .site-brand {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--site-ink);
+    text-decoration: none;
+  }
+  .site-brand-mark {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    background: var(--site-accent);
+    color: #fff;
+    font-size: 21px;
+    font-weight: 750;
+  }
+  .site-brand-copy { min-width: 0; }
+  .site-brand-name {
+    display: block;
+    font-size: 16px;
+    line-height: 1.15;
+    font-weight: 720;
+    white-space: nowrap;
+  }
+  .site-page-label {
+    display: block;
+    margin-top: 3px;
+    color: var(--site-muted);
+    font-size: 12px;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+  .site-primary-nav {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+  }
+  .site-nav-link {
+    min-height: 38px;
+    padding: 8px 10px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--site-muted);
+    background: transparent;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 590;
+    white-space: nowrap;
+  }
+  .site-nav-link:hover {
+    color: var(--site-ink);
+    background: var(--site-surface-soft);
+  }
+  .site-nav-link[aria-current="page"] {
+    color: var(--site-accent-strong);
+    border-bottom-color: var(--site-accent);
+  }
+  .site-nav-link.site-print-link {
+    margin-left: 5px;
+    border: 1px solid var(--site-rule);
+    border-bottom-width: 1px;
+    color: var(--site-ink);
+  }
+  .site-mobile-menu { display: none; }
+  .site-context-nav {
+    min-height: 44px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--site-rule);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    background: var(--site-surface-soft);
+    scrollbar-width: thin;
+  }
+  .site-context-label {
+    margin-right: 5px;
+    color: var(--site-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .site-context-link {
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    color: var(--site-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .site-context-link:hover {
+    color: var(--site-ink);
+    border-color: var(--site-rule);
+    background: var(--site-surface);
+  }
+  .site-context-link[aria-current="page"] {
+    color: var(--site-accent-strong);
+    border-color: var(--site-rule);
+    background: var(--site-surface);
+  }
+  .site-footer {
+    padding: 24px;
+    border-top: 1px solid var(--site-rule);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    color: var(--site-muted);
+    background: var(--site-surface-soft);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .site-footer-credit { max-width: 720px; }
+  .site-footer strong { color: var(--site-ink); }
+  .site-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 14px;
+  }
+  .site-footer a {
+    color: var(--site-accent-strong);
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  html[data-theme="night"] .site-shell,
+  html[data-theme="night"] .shell,
+  html[data-theme="night"] .max-w-screen-xl {
+    background: var(--site-surface) !important;
+  }
+  html[data-theme="night"] code {
+    background: #1e293b;
+    color: #dbeafe;
+  }
+  @media (max-width: 980px) {
+    .site-header-inner {
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 10px 16px;
+    }
+    .site-primary-nav { display: none; }
+    .site-mobile-menu {
+      position: relative;
+      display: block;
+    }
+    .site-mobile-menu summary {
+      min-width: 74px;
+      min-height: 38px;
+      padding: 8px 11px;
+      border: 1px solid var(--site-rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--site-ink);
+      background: var(--site-surface);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 650;
+      list-style: none;
+    }
+    .site-mobile-menu summary::-webkit-details-marker { display: none; }
+    .site-mobile-menu[open] summary {
+      border-color: var(--site-accent);
+      color: var(--site-accent-strong);
+    }
+    .site-mobile-links {
+      position: absolute;
+      inset-block-start: calc(100% + 8px);
+      inset-inline-end: 0;
+      width: min(290px, calc(100vw - 32px));
+      padding: 8px;
+      border: 1px solid var(--site-rule);
+      background: var(--site-surface);
+      box-shadow: 0 14px 36px rgba(15, 23, 42, .18);
+      display: grid;
+      gap: 2px;
+    }
+    .site-mobile-links .site-nav-link {
+      width: 100%;
+      justify-content: flex-start;
+      border: 0;
+    }
+    .site-mobile-links .site-nav-link[aria-current="page"] {
+      background: var(--site-surface-soft);
+      box-shadow: inset 3px 0 0 var(--site-accent);
+    }
+    .site-mobile-links .site-print-link { margin: 5px 0 0; }
+    .site-context-nav { padding-inline: 16px; }
+    .site-footer {
+      padding: 22px 16px;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .site-footer-links { justify-content: flex-start; }
+  }
+  @media (max-width: 520px) {
+    .site-page-label { max-width: 190px; }
+    .site-brand-name { font-size: 15px; }
+  }
+
 </style>
 </head>
 <body class="bg-slate-100 text-slate-900">
-<div class="max-w-screen-xl mx-auto bg-white min-h-screen shadow-sm">
-  <!-- Header -->
-  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50">
-    <div class="px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      <div>
-        <div class="flex items-center gap-x-3">
-          <div class="w-9 h-9 bg-teal-700 flex items-center justify-center text-white text-xl font-semibold">R</div>
-          <div>
-            <span class="heading text-2xl font-semibold">RTLDI ATLAS 2026</span>
-            <span class="ml-2 text-xs px-2 py-0.5 bg-teal-50 text-teal-800 border border-teal-100 font-medium">Right to Life Deficit Index</span>
-          </div>
-        </div>
-        <div class="text-[11px] text-slate-500 mt-0.5">Front matter + 22 regional summaries • Same data as the print atlas • Self-contained</div>
-      </div>
-      <div class="flex items-center gap-x-2 text-sm">
-        <a href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.4" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Print PDF</a>
-        <a href="full_data.html" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Full Data View</a>
-        <a href="levers.html" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 transition">Methods & Sources</a>
-        <a href="global_interactive.html" target="_blank" class="px-3 py-1.5 bg-teal-700 text-white hover:bg-teal-800 transition">Interactive Map</a>
-        <span class="hidden sm:inline text-[10px] text-slate-500">V-Dem 2024 + WB 2026 G0</span>
-      </div>
-    </div>
-  </header>
+<div class="max-w-screen-xl mx-auto bg-white min-h-screen shadow-sm site-shell">
+  <header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="index.html">
+      <span class="site-brand-mark" aria-hidden="true">R</span>
+      <span class="site-brand-copy">
+        <span class="site-brand-name">RTLDI ATLAS 2026</span>
+        <span class="site-page-label">Global Overview</span>
+      </span>
+    </a>
+    <nav class="site-primary-nav" aria-label="Primary"><a class="site-nav-link" href="index.html" aria-current="page">Overview</a><a class="site-nav-link" href="global_interactive.html">Map</a><a class="site-nav-link" href="full_data.html">Full Data</a><a class="site-nav-link" href="levers.html">Levers</a><a class="site-nav-link" href="regression.html">Regression</a><a class="site-nav-link" href="vdem.html">Sources</a><a class="site-nav-link" href="about.html">About</a><a class="site-nav-link site-print-link" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.5">Print Atlas</a></nav>
+    <details class="site-mobile-menu">
+      <summary>Menu</summary>
+      <nav class="site-mobile-links" aria-label="Primary mobile"><a class="site-nav-link" href="index.html" aria-current="page">Overview</a><a class="site-nav-link" href="global_interactive.html">Map</a><a class="site-nav-link" href="full_data.html">Full Data</a><a class="site-nav-link" href="levers.html">Levers</a><a class="site-nav-link" href="regression.html">Regression</a><a class="site-nav-link" href="vdem.html">Sources</a><a class="site-nav-link" href="about.html">About</a><a class="site-nav-link site-print-link" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.5">Print Atlas</a></nav>
+    </details>
+  </div>
+</header>
 
   <!-- Hero / Global Snapshot -->
   <div class="px-6 pt-8 pb-6">
@@ -2448,10 +2711,13 @@
 </section>
   </div>
 
-  <footer class="px-6 pb-10 text-[10px] text-slate-400">
-    Self-contained HTML atlas • Data &amp; methodology identical to RTLDI_ATLAS_2026_ebook.pdf • Generated from the same 2026 rule (V-Dem 2024 + World Bank 2026 G₀) and 0.30 Conservative Marginal Coefficient with 25% cap (population-weighted regression).
-    Vector maps are SVG exports from the identical plotly choropleth code used for the print edition. The RTLDI is extended here to quantify capital exclusions (lost potential GDP where capital is excluded because the nine protections are absent). Global total ~15T.
-  </footer>
+  <footer class="site-footer">
+  <div class="site-footer-credit"><strong><a href="about.html">RTLDI Atlas Project</a></strong><br>Open-source atlas, data pipeline, and generated outputs released under the MIT License.</div>
+  <nav class="site-footer-links" aria-label="Project information">
+    <a href="about.html">About &amp; citation</a>
+    <a href="https://github.com/SJAH9/rtldi-atlas">GitHub repository</a>
+  </nav>
+</footer>
 </div>
 
 <script>
@@ -4626,7 +4892,7 @@ const ATLAS = {
 "total_pop": 1614725047.0,
 "weighted_r": 0.0631,
 "mean_r": 0.3111,
-"total_lost": 5466960792279.805,
+"total_lost": 5466960792279.806,
 "indicators": [
 {
 "num": 1,
@@ -4878,7 +5144,7 @@ const ATLAS = {
 "total_pop": 2062868926.0,
 "weighted_r": 0.0085,
 "mean_r": 0.1481,
-"total_lost": 1336514027548.7717,
+"total_lost": 1336514027548.772,
 "indicators": [
 {
 "num": 1,
@@ -5037,7 +5303,7 @@ const ATLAS = {
 "total_pop": 280870627.0,
 "weighted_r": 0.3057,
 "mean_r": 0.5111,
-"total_lost": 798941424145.675,
+"total_lost": 798941424145.6748,
 "indicators": [
 {
 "num": 1,
@@ -5727,7 +5993,7 @@ const ATLAS = {
 "total_pop": 435299309.0,
 "weighted_r": 0.4207,
 "mean_r": 0.463,
-"total_lost": 679720446296.192,
+"total_lost": 679720446296.1918,
 "indicators": [
 {
 "num": 1,
@@ -6075,7 +6341,7 @@ const ATLAS = {
 "total_pop": 150155462.0,
 "weighted_r": 0.7051,
 "mean_r": 0.5635,
-"total_lost": 430228881098.42725,
+"total_lost": 430228881098.4272,
 "indicators": [
 {
 "num": 1,
@@ -6264,7 +6530,7 @@ const ATLAS = {
 "total_pop": 200859998.0,
 "weighted_r": 0.8525,
 "mean_r": 0.6914,
-"total_lost": 479124219906.0572,
+"total_lost": 479124219906.0571,
 "indicators": [
 {
 "num": 1,
@@ -6951,7 +7217,7 @@ const ATLAS = {
 "total_pop": 456246090.0,
 "weighted_r": 0.3363,
 "mean_r": 0.3264,
-"total_lost": 117051587306.34068,
+"total_lost": 117051587306.3407,
 "indicators": [
 {
 "num": 1,
@@ -7152,7 +7418,7 @@ const ATLAS = {
 "total_pop": 499464295.0,
 "weighted_r": 0.2438,
 "mean_r": 0.216,
-"total_lost": 121704961725.27464,
+"total_lost": 121704961725.27463,
 "indicators": [
 {
 "num": 1,
@@ -7365,7 +7631,7 @@ const ATLAS = {
 "total_pop": 39675542.0,
 "weighted_r": 0.2019,
 "mean_r": 0.1538,
-"total_lost": 43281675211.3108,
+"total_lost": 43281675211.31081,
 "indicators": [
 {
 "num": 1,
@@ -7548,7 +7814,7 @@ const ATLAS = {
 "total_pop": 212915636.0,
 "weighted_r": 0.1401,
 "mean_r": 0.1728,
-"total_lost": 67573162671.58704,
+"total_lost": 67573162671.587036,
 "indicators": [
 {
 "num": 1,
@@ -7836,7 +8102,7 @@ const ATLAS = {
 "total_pop": 343787.0,
 "weighted_r": 0.0,
 "mean_r": 0.0,
-"total_lost": 497073720.750978,
+"total_lost": 497073720.75097805,
 "indicators": [
 {
 "num": 1,
@@ -8093,36 +8359,6 @@ const ATLAS = {
 const LOW_R = 0.35;
 const HIGH_R = 0.65;
 
-// Automatic solar theme. Uses browser-local timezone and a privacy-preserving
-// timezone-level sunrise/sunset estimate; no geolocation prompt is required.
-function dayOfYear(date) {
-  const start = new Date(date.getFullYear(), 0, 0);
-  return Math.floor((date - start) / 86400000);
-}
-
-function estimateHemisphere(timeZone) {
-  if (/Australia|Pacific\/Auckland|Pacific\/Fiji|Pacific\/Port_Moresby|America\/(Argentina|Santiago|Montevideo|Sao_Paulo|Asuncion)|Africa\/(Johannesburg|Maseru|Mbabane|Maputo)|Indian\/(Mauritius|Reunion)/.test(timeZone)) return -1;
-  return 1;
-}
-
-function estimatedSolarWindow(now = new Date()) {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-  const doy = dayOfYear(now);
-  const hemisphere = estimateHemisphere(timeZone);
-  const seasonal = Math.cos((2 * Math.PI * (doy - 172)) / 365) * hemisphere;
-  const daylightHours = Math.max(9, Math.min(15, 12 + 3.4 * seasonal));
-  const sunrise = 12 - daylightHours / 2;
-  const sunset = 12 + daylightHours / 2;
-  return { sunrise, sunset };
-}
-
-function applyAutomaticTheme() {
-  const now = new Date();
-  const hour = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
-  const solar = estimatedSolarWindow(now);
-  document.body.classList.toggle('night-mode', hour < solar.sunrise || hour >= solar.sunset);
-}
-
 // Client-side helpers (executed in browser)
 function formatPop(n) {
   if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
@@ -8151,8 +8387,10 @@ function renderGlobalBars() {
     const pct = total > 0 ? (lost / total) * 100 : 0;
     const w = Math.max(4, (lost / maxLost) * 100);
 
-    const el = document.createElement('div');
-    el.className = 'bg-white border border-slate-200 p-3 flex gap-3 items-center';
+    const el = document.createElement('a');
+    el.href = `levers.html#lever-${i + 1}`;
+    el.setAttribute('aria-label', `Open lever ${i + 1}: ${name}`);
+    el.className = 'bg-white border border-slate-200 p-3 flex gap-3 items-center no-underline text-inherit hover:border-teal-600';
     el.innerHTML = `
       <div class="flex-1 min-w-0">
         <div class="flex justify-between text-xs">
@@ -8176,8 +8414,6 @@ let currentRegion = null;
 
 // ================== BOOT ==================
 function boot() {
-  applyAutomaticTheme();
-  window.setInterval(applyAutomaticTheme, 5 * 60 * 1000);
   initTailwind();
   try {
     renderGlobalBars();
@@ -8188,6 +8424,26 @@ function boot() {
 }
 
 document.addEventListener('DOMContentLoaded', boot);
+</script>
+<script>
+(function () {
+  function applyAtlasTheme() {
+    var now = new Date();
+    var hour = now.getHours() + now.getMinutes() / 60;
+    var theme = (hour < 7 || hour >= 19) ? 'night' : 'day';
+    var previous = document.documentElement.dataset.theme;
+    document.documentElement.dataset.theme = theme;
+    if (document.body) document.body.classList.toggle('night-mode', theme === 'night');
+    if (previous !== theme) {
+      window.dispatchEvent(new CustomEvent('rtldi-theme-change', {detail: {theme: theme}}));
+    }
+  }
+  applyAtlasTheme();
+  window.setInterval(applyAtlasTheme, 60 * 1000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) applyAtlasTheme();
+  });
+})();
 </script>
 </body>
 </html>

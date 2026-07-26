@@ -1,12 +1,323 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Nine Levers: Fields, Thresholds, and Capital Exclusions | RTLDI Atlas 2026</title>
+<script>
+(function () {
+  var now = new Date();
+  var hour = now.getHours() + now.getMinutes() / 60;
+  document.documentElement.dataset.theme = (hour < 7 || hour >= 19) ? 'night' : 'day';
+})();
+</script>
 <style>
 :root{--ink:#18202b;--muted:#5b6770;--rule:#c6d1da;--panel:#f4f8fa;--accent:#107e65;--warn:#9a5a16}
 *{box-sizing:border-box}body{margin:0;background:#eef2f5;color:var(--ink);font:17px/1.6 Inter,system-ui,sans-serif}
-.shell{max-width:1180px;margin:auto;background:white;min-height:100vh}header{border-bottom:1px solid var(--rule);padding:18px 24px;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}
+.shell{max-width:1180px;margin:auto;background:white;min-height:100vh}
 .brand{display:flex;gap:12px;align-items:center;font-weight:700}.mark{width:38px;height:38px;background:var(--accent);color:white;display:grid;place-items:center;font-size:22px}
 nav{display:flex;gap:8px;flex-wrap:wrap}nav a,.button{border:1px solid var(--rule);padding:7px 11px;color:var(--ink);text-decoration:none;font-size:14px}nav a:hover,.button:hover{background:var(--panel)}
 main{padding:42px 24px 70px}.hero{border-left:5px solid var(--accent);padding-left:20px;max-width:930px;margin-bottom:34px}.eyebrow{color:var(--accent);font-size:13px;font-weight:700;text-transform:uppercase}h1{font-size:clamp(2.2rem,5vw,4rem);line-height:1.04;margin:5px 0 12px}h2{font-size:1.55rem;margin:36px 0 12px}h3{font-size:1.12rem;margin:0 0 8px}p{max-width:850px}.lede{font-size:20px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}.card{border:1px solid var(--rule);border-left:4px solid var(--accent);padding:18px;background:white}.total{font-size:27px;font-weight:750;font-variant-numeric:tabular-nums}.meta{color:var(--muted);font-size:14px}code{background:#edf3f5;padding:2px 5px}table{width:100%;border-collapse:collapse;margin:12px 0 24px}th,td{border-bottom:1px solid var(--rule);padding:10px;text-align:left;vertical-align:top}th{background:var(--panel);font-size:13px;text-transform:uppercase}.num{text-align:right;font-variant-numeric:tabular-nums}.callout{border:1px solid #e0c18e;border-left:5px solid var(--warn);background:#fff9ef;padding:16px;margin:20px 0}.bar{height:10px;background:#dfe8e8;margin-top:10px}.bar span{display:block;height:100%;background:var(--accent)}a{color:#0f766e}ul{padding-left:22px}@media(max-width:650px){main{padding:28px 16px 50px}header{padding:14px 16px}}
-</style></head><body><div class="shell"><header><div class="brand"><span class="mark">R</span><span>RTLDI ATLAS 2026</span></div><nav><a href="index.html">Atlas</a><a href="levers.html">Levers</a><a href="regression.html">Regression</a><a href="vdem.html">V-Dem</a><a href="world_bank.html">World Bank</a><a href="full_data.html">Full Data</a><a href="global_interactive.html">Map</a></nav></header><main><section class="hero"><div class="eyebrow">Executable crosswalk</div><h1>The Nine Levers: Fields, Thresholds, and Capital Exclusions</h1></section><p class='lede'>The RTLP equations come from the source material. Nested Causal Modelling identified the nine protections that most track with GDP gains, and this atlas operationalizes and extends that calculation across UN member states using the executable fields below.</p><div class='callout'><strong>How to read this page</strong><br>The dollar amount is each lever's globally attributed share after the national 25% cap is allocated. The listed source fields show how the atlas implements each RTLP protection in the released country dataset; they do not replace the source RTLP theory or the NCM identification of the nine protections.</div><div class='grid'><article class="card" id="lever-1"><div class="eyebrow">Lever 1</div><h2>Legal Protections</h2><div class="total">$2.78T annually</div><div class="bar"><span style="width:95.8%"></span></div><p>Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.</p><h3>RTLP question</h3><p>Does the entity have provisions explicitly protecting the right to life?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2cltrnslw</code><br>v2cltrnslw &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> Transparent laws with predictable enforcement</p></article><article class="card" id="lever-2"><div class="eyebrow">Lever 2</div><h2>Independent Judiciary</h2><div class="total">$2.83T annually</div><div class="bar"><span style="width:97.4%"></span></div><p>Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.</p><h3>RTLP question</h3><p>Is there an independent judiciary capable of upholding right-to-life laws?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2juhcind</code>, <code>v2juncind</code><br>mean(v2juhcind, v2juncind) &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> High-court and lower-court independence</p></article><article class="card" id="lever-3"><div class="eyebrow">Lever 3</div><h2>Law Enforcement Accountability</h2><div class="total">$1.36T annually</div><div class="bar"><span style="width:46.8%"></span></div><p>Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.</p><h3>RTLP question</h3><p>Are law-enforcement agencies accountable for unlawful killings?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2clkill</code><br>v2clkill &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> Freedom from political killings</p></article><article class="card" id="lever-4"><div class="eyebrow">Lever 4</div><h2>Protection Against Arbitrary Detention</h2><div class="total">$976.7B annually</div><div class="bar"><span style="width:33.6%"></span></div><p>Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.</p><h3>RTLP question</h3><p>Is arbitrary detention prohibited with legal recourse?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2xcl_acjst</code><br>v2xcl_acjst &gt;= 0.5</p><p class="meta"><strong>Atlas field mapping:</strong> Access to justice index</p></article><article class="card" id="lever-5"><div class="eyebrow">Lever 5</div><h2>Freedom from Torture and Inhumane Treatment</h2><div class="total">$2.90T annually</div><div class="bar"><span style="width:100.0%"></span></div><p>Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.</p><h3>RTLP question</h3><p>Are measures in place to prevent torture and inhumane treatment?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2cltort</code><br>v2cltort &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> Freedom from torture</p></article><article class="card" id="lever-6"><div class="eyebrow">Lever 6</div><h2>Civilian Protection in Conflict Zones</h2><div class="total">$1.36T annually</div><div class="bar"><span style="width:46.8%"></span></div><p>Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.</p><h3>RTLP question</h3><p>In conflict areas, are mechanisms protecting civilians?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2clkill</code><br>v2clkill &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> Freedom from political killings</p></article><article class="card" id="lever-7"><div class="eyebrow">Lever 7</div><h2>Access to Justice</h2><div class="total">$976.7B annually</div><div class="bar"><span style="width:33.6%"></span></div><p>Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.</p><h3>RTLP question</h3><p>Can individuals obtain fair remedies for right-to-life violations?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2xcl_acjst</code><br>v2xcl_acjst &gt;= 0.5</p><p class="meta"><strong>Atlas field mapping:</strong> Access to justice index</p></article><article class="card" id="lever-8"><div class="eyebrow">Lever 8</div><h2>Freedom of Expression and Whistleblower Protections</h2><div class="total">$965.7B annually</div><div class="bar"><span style="width:33.3%"></span></div><p>Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.</p><h3>RTLP question</h3><p>Are expression and whistleblower rights upheld?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2x_freexp</code><br>v2x_freexp &gt;= 0.5</p><p class="meta"><strong>Atlas field mapping:</strong> Freedom of expression and alternative information index</p></article><article class="card" id="lever-9"><div class="eyebrow">Lever 9</div><h2>Socioeconomic Conditions</h2><div class="total">$1.72T annually</div><div class="bar"><span style="width:59.1%"></span></div><p>Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.</p><h3>RTLP question</h3><p>Are food and minimum material conditions adequate to sustain life?</p><h3>Executable crosswalk</h3><p><strong>World Bank WDI</strong> · <code>SN.ITK.DEFC.ZS</code>, <code>SI.POV.DDAY</code><br>undernourishment &lt;= 5% AND poverty headcount &lt;= 10%</p><p class="meta"><strong>Atlas field mapping:</strong> Prevalence of undernourishment and international-poverty headcount</p></article></div></main></div></body></html>
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}.card{scroll-margin-top:130px;border:1px solid var(--rule);border-left:4px solid var(--accent);padding:18px;background:white}.total{font-size:27px;font-weight:750;font-variant-numeric:tabular-nums}.meta{color:var(--muted);font-size:14px}code{background:#edf3f5;padding:2px 5px}.citation-text{display:block;max-width:900px;padding:14px 16px;border-left:4px solid var(--accent);white-space:normal;font-size:14px;line-height:1.55}table{width:100%;border-collapse:collapse;margin:12px 0 24px}th,td{border-bottom:1px solid var(--rule);padding:10px;text-align:left;vertical-align:top}th{background:var(--panel);font-size:13px;text-transform:uppercase}.num{text-align:right;font-variant-numeric:tabular-nums}.callout{border:1px solid #e0c18e;border-left:5px solid var(--warn);background:#fff9ef;padding:16px;margin:20px 0}.bar{height:10px;background:#dfe8e8;margin-top:10px}.bar span{display:block;height:100%;background:var(--accent)}a{color:#0f766e}ul{padding-left:22px}.jump-nav{display:flex;gap:6px;flex-wrap:wrap;margin:22px 0 28px}.jump-nav a{min-width:36px;padding:6px 9px;border:1px solid var(--rule);text-align:center;text-decoration:none;font-size:13px;font-weight:700}@media(max-width:650px){main{padding:28px 16px 50px}}
+html[data-theme="night"] body{--ink:var(--site-ink);--muted:var(--site-muted);--rule:var(--site-rule);--panel:var(--site-surface-soft);--accent:var(--site-accent);--warn:#f2b766}
+html[data-theme="night"] .card,html[data-theme="night"] td{background:var(--site-surface);border-color:var(--site-rule)}html[data-theme="night"] th{background:var(--site-surface-soft)}html[data-theme="night"] .callout{background:#2a2114;border-color:#76552a}html[data-theme="night"] .bar{background:#334155}html[data-theme="night"] h1,html[data-theme="night"] h2,html[data-theme="night"] h3{color:var(--site-ink)}
+
+  :root {
+    --site-bg: #eef2f5;
+    --site-surface: #ffffff;
+    --site-surface-soft: #f5f8fa;
+    --site-ink: #18202b;
+    --site-muted: #5b6770;
+    --site-rule: #c6d1da;
+    --site-accent: #107e65;
+    --site-accent-strong: #0b6754;
+    color-scheme: light;
+  }
+  html[data-theme="night"] {
+    --site-bg: #08111f;
+    --site-surface: #111827;
+    --site-surface-soft: #0f172a;
+    --site-ink: #e5edf7;
+    --site-muted: #9aa9bb;
+    --site-rule: #334155;
+    --site-accent: #2dd4bf;
+    --site-accent-strong: #5eead4;
+    color-scheme: dark;
+  }
+  html { background: var(--site-bg); }
+  body { background: var(--site-bg); color: var(--site-ink); }
+  .site-shell { background: var(--site-surface); color: var(--site-ink); }
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 100;
+    width: 100%;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid var(--site-rule);
+    background: color-mix(in srgb, var(--site-surface) 96%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .site-header-inner {
+    min-height: 66px;
+    padding: 10px 24px;
+    display: grid;
+    grid-template-columns: minmax(190px, auto) 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+  .site-brand {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--site-ink);
+    text-decoration: none;
+  }
+  .site-brand-mark {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    background: var(--site-accent);
+    color: #fff;
+    font-size: 21px;
+    font-weight: 750;
+  }
+  .site-brand-copy { min-width: 0; }
+  .site-brand-name {
+    display: block;
+    font-size: 16px;
+    line-height: 1.15;
+    font-weight: 720;
+    white-space: nowrap;
+  }
+  .site-page-label {
+    display: block;
+    margin-top: 3px;
+    color: var(--site-muted);
+    font-size: 12px;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+  .site-primary-nav {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+  }
+  .site-nav-link {
+    min-height: 38px;
+    padding: 8px 10px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--site-muted);
+    background: transparent;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 590;
+    white-space: nowrap;
+  }
+  .site-nav-link:hover {
+    color: var(--site-ink);
+    background: var(--site-surface-soft);
+  }
+  .site-nav-link[aria-current="page"] {
+    color: var(--site-accent-strong);
+    border-bottom-color: var(--site-accent);
+  }
+  .site-nav-link.site-print-link {
+    margin-left: 5px;
+    border: 1px solid var(--site-rule);
+    border-bottom-width: 1px;
+    color: var(--site-ink);
+  }
+  .site-mobile-menu { display: none; }
+  .site-context-nav {
+    min-height: 44px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--site-rule);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    background: var(--site-surface-soft);
+    scrollbar-width: thin;
+  }
+  .site-context-label {
+    margin-right: 5px;
+    color: var(--site-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .site-context-link {
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    color: var(--site-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .site-context-link:hover {
+    color: var(--site-ink);
+    border-color: var(--site-rule);
+    background: var(--site-surface);
+  }
+  .site-context-link[aria-current="page"] {
+    color: var(--site-accent-strong);
+    border-color: var(--site-rule);
+    background: var(--site-surface);
+  }
+  .site-footer {
+    padding: 24px;
+    border-top: 1px solid var(--site-rule);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    color: var(--site-muted);
+    background: var(--site-surface-soft);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .site-footer-credit { max-width: 720px; }
+  .site-footer strong { color: var(--site-ink); }
+  .site-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 14px;
+  }
+  .site-footer a {
+    color: var(--site-accent-strong);
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  html[data-theme="night"] .site-shell,
+  html[data-theme="night"] .shell,
+  html[data-theme="night"] .max-w-screen-xl {
+    background: var(--site-surface) !important;
+  }
+  html[data-theme="night"] code {
+    background: #1e293b;
+    color: #dbeafe;
+  }
+  @media (max-width: 980px) {
+    .site-header-inner {
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 10px 16px;
+    }
+    .site-primary-nav { display: none; }
+    .site-mobile-menu {
+      position: relative;
+      display: block;
+    }
+    .site-mobile-menu summary {
+      min-width: 74px;
+      min-height: 38px;
+      padding: 8px 11px;
+      border: 1px solid var(--site-rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--site-ink);
+      background: var(--site-surface);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 650;
+      list-style: none;
+    }
+    .site-mobile-menu summary::-webkit-details-marker { display: none; }
+    .site-mobile-menu[open] summary {
+      border-color: var(--site-accent);
+      color: var(--site-accent-strong);
+    }
+    .site-mobile-links {
+      position: absolute;
+      inset-block-start: calc(100% + 8px);
+      inset-inline-end: 0;
+      width: min(290px, calc(100vw - 32px));
+      padding: 8px;
+      border: 1px solid var(--site-rule);
+      background: var(--site-surface);
+      box-shadow: 0 14px 36px rgba(15, 23, 42, .18);
+      display: grid;
+      gap: 2px;
+    }
+    .site-mobile-links .site-nav-link {
+      width: 100%;
+      justify-content: flex-start;
+      border: 0;
+    }
+    .site-mobile-links .site-nav-link[aria-current="page"] {
+      background: var(--site-surface-soft);
+      box-shadow: inset 3px 0 0 var(--site-accent);
+    }
+    .site-mobile-links .site-print-link { margin: 5px 0 0; }
+    .site-context-nav { padding-inline: 16px; }
+    .site-footer {
+      padding: 22px 16px;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .site-footer-links { justify-content: flex-start; }
+  }
+  @media (max-width: 520px) {
+    .site-page-label { max-width: 190px; }
+    .site-brand-name { font-size: 15px; }
+  }
+
+</style></head><body><div class="shell site-shell"><header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="index.html">
+      <span class="site-brand-mark" aria-hidden="true">R</span>
+      <span class="site-brand-copy">
+        <span class="site-brand-name">RTLDI ATLAS 2026</span>
+        <span class="site-page-label">Nine Levers</span>
+      </span>
+    </a>
+    <nav class="site-primary-nav" aria-label="Primary"><a class="site-nav-link" href="index.html">Overview</a><a class="site-nav-link" href="global_interactive.html">Map</a><a class="site-nav-link" href="full_data.html">Full Data</a><a class="site-nav-link" href="levers.html" aria-current="page">Levers</a><a class="site-nav-link" href="regression.html">Regression</a><a class="site-nav-link" href="vdem.html">Sources</a><a class="site-nav-link" href="about.html">About</a><a class="site-nav-link site-print-link" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.5">Print Atlas</a></nav>
+    <details class="site-mobile-menu">
+      <summary>Menu</summary>
+      <nav class="site-mobile-links" aria-label="Primary mobile"><a class="site-nav-link" href="index.html">Overview</a><a class="site-nav-link" href="global_interactive.html">Map</a><a class="site-nav-link" href="full_data.html">Full Data</a><a class="site-nav-link" href="levers.html" aria-current="page">Levers</a><a class="site-nav-link" href="regression.html">Regression</a><a class="site-nav-link" href="vdem.html">Sources</a><a class="site-nav-link" href="about.html">About</a><a class="site-nav-link site-print-link" href="../atlas/RTLDI_ATLAS_2026_ebook.pdf?v=2026.8.5">Print Atlas</a></nav>
+    </details>
+  </div>
+</header><nav class="site-context-nav" aria-label="Methods &amp; Sources"><span class="site-context-label">Methods &amp; Sources</span><a class="site-context-link" href="levers.html" aria-current="page">Nine Levers</a><a class="site-context-link" href="regression.html">Regression &amp; Eta</a><a class="site-context-link" href="vdem.html">V-Dem</a><a class="site-context-link" href="world_bank.html">World Bank</a></nav><main><section class="hero"><div class="eyebrow">Executable crosswalk</div><h1>The Nine Levers: Fields, Thresholds, and Capital Exclusions</h1></section><p class='lede'>The RTLP equations come from the source material. Nested Causal Modelling identified the nine protections that most track with GDP gains, and this atlas operationalizes and extends that calculation across UN member states using the executable fields below.</p><nav class='jump-nav' aria-label='Jump to lever'><a href="#lever-1">L1</a><a href="#lever-2">L2</a><a href="#lever-3">L3</a><a href="#lever-4">L4</a><a href="#lever-5">L5</a><a href="#lever-6">L6</a><a href="#lever-7">L7</a><a href="#lever-8">L8</a><a href="#lever-9">L9</a></nav><div class='callout'><strong>How to read this page</strong><br>The dollar amount is each lever's globally attributed share after the national 25% cap is allocated. The listed source fields show how the atlas implements each RTLP protection in the released country dataset; they do not replace the source RTLP theory or the NCM identification of the nine protections.</div><div class='grid'><article class="card" id="lever-1"><div class="eyebrow">Lever 1</div><h2>Legal Protections</h2><div class="total">$2.78T annually</div><div class="bar"><span style="width:95.8%"></span></div><p>Present when ordinary law is applied consistently to state agents as well as everyone else. Absent when power can act without predictable legal constraint. Multiplies GDP by lowering the risk of arbitrary loss; people and businesses invest and trade more when they know the rules will be enforced fairly. Annual cost is low.</p><h3>RTLP question</h3><p>Does the entity have provisions explicitly protecting the right to life?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2cltrnslw</code><br>v2cltrnslw &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> Transparent laws with predictable enforcement</p></article><article class="card" id="lever-2"><div class="eyebrow">Lever 2</div><h2>Independent Judiciary</h2><div class="total">$2.83T annually</div><div class="bar"><span style="width:97.4%"></span></div><p>Present when there is a judiciary capable of upholding right-to-life laws even against the state. These protections represent opportunities for property rights and contracts to support reliable capital flows to productive uses. Annual cost is low relative to the scale unlocked.</p><h3>RTLP question</h3><p>Is there an independent judiciary capable of upholding right-to-life laws?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2juhcind</code>, <code>v2juncind</code><br>mean(v2juhcind, v2juncind) &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> High-court and lower-court independence</p></article><article class="card" id="lever-3"><div class="eyebrow">Lever 3</div><h2>Law Enforcement Accountability</h2><div class="total">$1.36T annually</div><div class="bar"><span style="width:46.8%"></span></div><p>Present when law enforcement agencies are accountable for unlawful killings and violence. These protections represent opportunities to support greater economic scale by reducing arbitrary risk that can deter investment, labor mobility, and everyday economic activity. Annual cost is primarily institutional oversight.</p><h3>RTLP question</h3><p>Are law-enforcement agencies accountable for unlawful killings?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2clkill</code><br>v2clkill &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> Freedom from political killings</p></article><article class="card" id="lever-4"><div class="eyebrow">Lever 4</div><h2>Protection Against Arbitrary Detention</h2><div class="total">$976.7B annually</div><div class="bar"><span style="width:33.6%"></span></div><p>Present when arbitrary detention is prohibited with real legal recourse. These protections represent opportunities for individuals and families to plan, work, and invest with greater security, supporting scale in the economy. Annual cost is low.</p><h3>RTLP question</h3><p>Is arbitrary detention prohibited with legal recourse?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2xcl_acjst</code><br>v2xcl_acjst &gt;= 0.5</p><p class="meta"><strong>Atlas field mapping:</strong> Access to justice index</p></article><article class="card" id="lever-5"><div class="eyebrow">Lever 5</div><h2>Freedom from Torture and Inhumane Treatment</h2><div class="total">$2.90T annually</div><div class="bar"><span style="width:100.0%"></span></div><p>Present when the state has effective measures to prevent torture. These protections represent opportunities to support human capital and cooperation. Annual cost is institutional and training: an investment toward realizing greater scale.</p><h3>RTLP question</h3><p>Are measures in place to prevent torture and inhumane treatment?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2cltort</code><br>v2cltort &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> Freedom from torture</p></article><article class="card" id="lever-6"><div class="eyebrow">Lever 6</div><h2>Civilian Protection in Conflict Zones</h2><div class="total">$1.36T annually</div><div class="bar"><span style="width:46.8%"></span></div><p>Present when mechanisms exist to protect civilians during conflict. These protections represent opportunities to preserve the productive capacity and future of entire regions. Annual cost is primarily military discipline and rules of engagement.</p><h3>RTLP question</h3><p>In conflict areas, are mechanisms protecting civilians?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2clkill</code><br>v2clkill &gt;= 2.0</p><p class="meta"><strong>Atlas field mapping:</strong> Freedom from political killings</p></article><article class="card" id="lever-7"><div class="eyebrow">Lever 7</div><h2>Access to Justice</h2><div class="total">$976.7B annually</div><div class="bar"><span style="width:33.6%"></span></div><p>Present when ordinary people can bring serious claims and have them heard fairly. These conditions represent opportunities for contracts and rights to function for a wider share of the population. Annual cost is court capacity and legal aid.</p><h3>RTLP question</h3><p>Can individuals obtain fair remedies for right-to-life violations?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2xcl_acjst</code><br>v2xcl_acjst &gt;= 0.5</p><p class="meta"><strong>Atlas field mapping:</strong> Access to justice index</p></article><article class="card" id="lever-8"><div class="eyebrow">Lever 8</div><h2>Freedom of Expression and Whistleblower Protections</h2><div class="total">$965.7B annually</div><div class="bar"><span style="width:33.3%"></span></div><p>Present when laws protect people who report corruption from retaliation. These conditions represent opportunities for information to flow more accurately and for public resources to be used more effectively. Annual cost is low: mainly passing and enforcing the law.</p><h3>RTLP question</h3><p>Are expression and whistleblower rights upheld?</p><h3>Executable crosswalk</h3><p><strong>V-Dem</strong> · <code>v2x_freexp</code><br>v2x_freexp &gt;= 0.5</p><p class="meta"><strong>Atlas field mapping:</strong> Freedom of expression and alternative information index</p></article><article class="card" id="lever-9"><div class="eyebrow">Lever 9</div><h2>Socioeconomic Conditions</h2><div class="total">$1.72T annually</div><div class="bar"><span style="width:59.1%"></span></div><p>Present when a society makes the deliberate choice to maintain a minimum floor against extreme deprivation. This reflects political will rather than just economic outcomes. When present, it increases the share of the population able to participate productively, expanding overall economic scale. Annual cost is a political decision about minimum security standards.</p><h3>RTLP question</h3><p>Are food and minimum material conditions adequate to sustain life?</p><h3>Executable crosswalk</h3><p><strong>World Bank WDI</strong> · <code>SN.ITK.DEFC.ZS</code>, <code>SI.POV.DDAY</code><br>undernourishment &lt;= 5% AND poverty headcount &lt;= 10%</p><p class="meta"><strong>Atlas field mapping:</strong> Prevalence of undernourishment and international-poverty headcount</p></article></div></main><footer class="site-footer">
+  <div class="site-footer-credit"><strong><a href="about.html">RTLDI Atlas Project</a></strong><br>Open-source atlas, data pipeline, and generated outputs released under the MIT License.</div>
+  <nav class="site-footer-links" aria-label="Project information">
+    <a href="about.html">About &amp; citation</a>
+    <a href="https://github.com/SJAH9/rtldi-atlas">GitHub repository</a>
+  </nav>
+</footer></div><script>
+(function () {
+  function applyAtlasTheme() {
+    var now = new Date();
+    var hour = now.getHours() + now.getMinutes() / 60;
+    var theme = (hour < 7 || hour >= 19) ? 'night' : 'day';
+    var previous = document.documentElement.dataset.theme;
+    document.documentElement.dataset.theme = theme;
+    if (document.body) document.body.classList.toggle('night-mode', theme === 'night');
+    if (previous !== theme) {
+      window.dispatchEvent(new CustomEvent('rtldi-theme-change', {detail: {theme: theme}}));
+    }
+  }
+  applyAtlasTheme();
+  window.setInterval(applyAtlasTheme, 60 * 1000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) applyAtlasTheme();
+  });
+})();
+</script></body></html>
