@@ -17,11 +17,13 @@ VDEM_DATASET_URL = "https://www.v-dem.net/data/the-v-dem-dataset/"
 VDEM_CORE_URL = "https://www.v-dem.net/data/the-v-dem-dataset/country-year-v-dem-core-v16/"
 VDEM_ARCHIVE_URL = "https://www.v-dem.net/data/dataset-archive/"
 VDEM_CODEBOOK_URL = "https://www.v-dem.net/documents/70/codebook_v16.pdf"
+VDEM_V15_SOURCE_URL = "https://raw.githubusercontent.com/vdeminstitute/vdemdata/V15/data/vdem.RData"
+VDEM_V15_SHA256 = "4b715190a1e351a81daf11cbe6f9f77e67d8914f0ed612b93e2d8fba5523e540"
 WORLD_BANK_DATA_URL = "https://data.worldbank.org/"
 WORLD_BANK_API_URL = "https://api.worldbank.org/v2/"
 
 
-# This table describes the executable 2026 pipeline, including reused proxies.
+# This table describes the executable nine-distinct-lever 2026 pipeline.
 LEVER_CROSSWALK: dict[int, dict[str, Any]] = {
     1: {
         "question": "Does the entity have provisions explicitly protecting the right to life?",
@@ -45,7 +47,7 @@ LEVER_CROSSWALK: dict[int, dict[str, Any]] = {
         "fields": ["v2clkill"],
         "transform": "v2clkill >= 2.0",
         "proxy": "Freedom from political killings",
-        "caveat": "Outcome/accountability proxy; the same field is reused by lever 6 in the processed 2026 data.",
+        "caveat": "Outcome/accountability proxy for unlawful state killings.",
     },
     4: {
         "question": "Is arbitrary detention prohibited with legal recourse?",
@@ -53,7 +55,7 @@ LEVER_CROSSWALK: dict[int, dict[str, Any]] = {
         "fields": ["v2xcl_acjst"],
         "transform": "v2xcl_acjst >= 0.5",
         "proxy": "Access to justice index",
-        "caveat": "There is no direct arbitrary-detention field in the current Core crosswalk; the same index is reused by lever 7.",
+        "caveat": "There is no direct arbitrary-detention field in the current Core crosswalk; access to justice is used as the closest recourse proxy.",
     },
     5: {
         "question": "Are measures in place to prevent torture and inhumane treatment?",
@@ -66,18 +68,18 @@ LEVER_CROSSWALK: dict[int, dict[str, Any]] = {
     6: {
         "question": "In conflict areas, are mechanisms protecting civilians?",
         "source": "V-Dem",
-        "fields": ["v2clkill"],
-        "transform": "v2clkill >= 2.0",
-        "proxy": "Freedom from political killings",
-        "caveat": "The processed 2026 data reuse lever 3's field. The loader contains v2x_clphy, but that field did not populate this released component table.",
+        "fields": ["v2x_clphy"],
+        "transform": "v2x_clphy >= 0.5",
+        "proxy": "Physical violence index",
+        "caveat": "High-level physical-integrity proxy, distinct from lever 3's political-killings component.",
     },
     7: {
         "question": "Can individuals obtain fair remedies for right-to-life violations?",
         "source": "V-Dem",
-        "fields": ["v2xcl_acjst"],
-        "transform": "v2xcl_acjst >= 0.5",
-        "proxy": "Access to justice index",
-        "caveat": "The processed 2026 data reuse lever 4's field. The loader contains v2clrspct, but that field did not populate this released component table.",
+        "fields": ["v2clrspct"],
+        "transform": "v2clrspct >= 2.0",
+        "proxy": "Rigorous and impartial public administration",
+        "caveat": "Administrative impartiality is the distinct operational proxy for whether remedies are applied fairly.",
     },
     8: {
         "question": "Are expression and whistleblower rights upheld?",

@@ -20,7 +20,7 @@ Then run loaders.
 from __future__ import annotations
 import pandas as pd
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import Any, List, Dict, Optional
 import warnings
 
 # Core variables we care about from crosswalk (add more as needed)
@@ -166,32 +166,45 @@ def load_vdem_for_rtlp(year: int = 2026, vdem_csv: Optional[str] = None) -> pd.D
     return df
 
 
-def compute_rtlp_vdem_row(row: pd.Series, cfg: Optional["RTLDIConfig"] = None) -> float:
-    """Return the 0-1 score from the 8 V-Dem components for one row (socio #9 added outside)."""
+def compute_rtlp_vdem_components(
+    row: pd.Series,
+    cfg: Optional["RTLDIConfig"] = None,
+) -> list[dict[str, Any]]:
+    """Return the eight distinct, executable V-Dem lever records for one row."""
     from .rtl_di import binarize_vdem_component, binarize_vdem_index, RTLDIConfig
     import numpy as _np
     cfg = cfg or RTLDIConfig()
-    bins = []
-    # 1. Legal: v2cltrnslw (component 0-4)
-    bins.append(binarize_vdem_component(row.get("v2cltrnslw"), cfg.thresh_vdem_0_4))
-    # 2. Judiciary
+
+    def clean(value: Any) -> Optional[float]:
+        return None if value is None or pd.isna(value) else float(value)
+
     j = float(_np.nanmean([row.get("v2juhcind"), row.get("v2juncind")])) if pd.notna(row.get("v2juhcind")) or pd.notna(row.get("v2juncind")) else _np.nan
-    bins.append(binarize_vdem_component(j, cfg.thresh_vdem_0_4))
-    # 3. Law enforcement accountability
-    bins.append(binarize_vdem_component(row.get("v2clkill"), cfg.thresh_vdem_0_4))
-    # 4. Arbitrary detention (use access index as strong proxy)
-    bins.append(binarize_vdem_index(row.get("v2xcl_acjst"), 0.5))
-    # 5. Torture
-    bins.append(binarize_vdem_component(row.get("v2cltort"), cfg.thresh_vdem_0_4))
-    # 6. Civilian protection in conflict (use physical violence index, distinct from killings)
-    bins.append(binarize_vdem_index(row.get("v2x_clphy"), 0.5))
-    # 7. Access to justice (use rigorous impartial admin as distinct proxy)
-    bins.append(binarize_vdem_component(row.get("v2clrspct"), cfg.thresh_vdem_0_4))
-    # 8. Expression + whistleblower
-    bins.append(binarize_vdem_index(row.get("v2x_freexp"), 0.5))
-    yes = sum(b for b in bins if pd.notna(b))
-    # Return as fraction of 8 for now; caller will combine with #9 to /9
-    return yes / 8.0
+    specs = (
+        (1, "v2cltrnslw", row.get("v2cltrnslw"), cfg.thresh_vdem_0_4, binarize_vdem_component),
+        (2, "mean(v2juhcind,v2juncind)", j, cfg.thresh_vdem_0_4, binarize_vdem_component),
+        (3, "v2clkill", row.get("v2clkill"), cfg.thresh_vdem_0_4, binarize_vdem_component),
+        (4, "v2xcl_acjst", row.get("v2xcl_acjst"), 0.5, binarize_vdem_index),
+        (5, "v2cltort", row.get("v2cltort"), cfg.thresh_vdem_0_4, binarize_vdem_component),
+        (6, "v2x_clphy", row.get("v2x_clphy"), 0.5, binarize_vdem_index),
+        (7, "v2clrspct", row.get("v2clrspct"), cfg.thresh_vdem_0_4, binarize_vdem_component),
+        (8, "v2x_freexp", row.get("v2x_freexp"), 0.5, binarize_vdem_index),
+    )
+    return [
+        {
+            "num": num,
+            "field": field,
+            "raw": clean(raw),
+            "thresh": threshold,
+            "bin": int(binarizer(raw, threshold)),
+        }
+        for num, field, raw, threshold, binarizer in specs
+    ]
+
+
+def compute_rtlp_vdem_row(row: pd.Series, cfg: Optional["RTLDIConfig"] = None) -> float:
+    """Return the 0-1 score from eight distinct V-Dem levers; lever 9 is added outside."""
+    components = compute_rtlp_vdem_components(row, cfg)
+    return sum(component["bin"] for component in components) / 8.0
 
 
 def get_vdem_r_for_iso3s(year: int = 2026, iso3s: Optional[list] = None) -> pd.DataFrame:

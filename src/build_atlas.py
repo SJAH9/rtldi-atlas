@@ -21,7 +21,9 @@ Run:
 
 from __future__ import annotations
 import argparse
+import json
 from pathlib import Path
+from typing import Any, Optional
 import pandas as pd
 import numpy as np
 from openpyxl import Workbook
@@ -36,7 +38,8 @@ from .rtl_di import (
     score_socioeconomic,
     RTLDIConfig,
 )
-from .fetch_vdem import get_vdem_r_for_iso3s, load_vdem_for_rtlp, compute_rtlp_vdem_row
+from .fetch_vdem import compute_rtlp_vdem_components, get_vdem_r_for_iso3s, load_vdem_for_rtlp, compute_rtlp_vdem_row
+from .lever_display import LEVER_DISPLAY
 
 
 def load_un_members(path: str = "data/raw/un_member_states.csv") -> pd.DataFrame:
@@ -92,6 +95,79 @@ def compute_real_r(
     return float(max(0.0, min(1.0, r)))
 
 
+def build_component_records(
+    vdem_row: Optional[pd.Series],
+    undernourish_pct: Optional[float],
+    poverty_pct: Optional[float],
+    cfg: Optional[RTLDIConfig] = None,
+) -> list[dict[str, Any]]:
+    """Build all nine display and scoring records from the canonical source fields."""
+    cfg = cfg or RTLDIConfig()
+    empty_row = pd.Series(dtype=float)
+    records = compute_rtlp_vdem_components(vdem_row if vdem_row is not None else empty_row, cfg)
+
+    for record in records:
+        display = LEVER_DISPLAY[record["num"]]
+        record.update({
+            "name": display["name"],
+            "yes": "Yes" if record["bin"] else "No",
+            "desc": display["description"],
+        })
+
+    under = 100.0 if undernourish_pct is None or pd.isna(undernourish_pct) else float(undernourish_pct)
+    poverty = 100.0 if poverty_pct is None or pd.isna(poverty_pct) else float(poverty_pct)
+    socio_bin = score_socioeconomic(under, poverty, cfg)
+    records.append({
+        "num": 9,
+        "field": "SN.ITK.DEFC.ZS + SI.POV.DDAY",
+        "name": LEVER_DISPLAY[9]["name"],
+        "raw": f"undernourish={under:.1f}%, poverty={poverty:.1f}% (thresh <=5% and <=10%)",
+        "thresh": "und<=5 & pov<=10",
+        "bin": int(socio_bin),
+        "yes": "Yes" if socio_bin else "No",
+        "desc": LEVER_DISPLAY[9]["description"],
+    })
+    return records
+
+
+def write_nation_breakdown(df: pd.DataFrame, path_base: Path) -> None:
+    """Write the canonical nine-lever country payload consumed by every atlas surface."""
+    records = []
+    flat_rows = []
+    for _, row in df.iterrows():
+        components = row["components"]
+        record = {
+            "iso3": row["iso3"],
+            "country": row["country"],
+            "un_region": row["UNregion"],
+            "r": float(row["r"]),
+            "g0": None if pd.isna(row["g0"]) else float(row["g0"]),
+            "g0_year": None if pd.isna(row["g0_year"]) else int(row["g0_year"]),
+            "vdem_year": int(row["vdem_year"]),
+            "delta_g_per_capita": None if pd.isna(row["delta_g_per_capita"]) else float(row["delta_g_per_capita"]),
+            "total_deficit_usd": None if pd.isna(row["total_deficit_usd"]) else float(row["total_deficit_usd"]),
+            "population": None if pd.isna(row["population"]) else float(row["population"]),
+            "components": components,
+            "r_computed": sum(component["bin"] for component in components) / 9.0,
+        }
+        records.append(record)
+        flat = {key: value for key, value in record.items() if key not in {"components", "r_computed"}}
+        for component in components:
+            num = component["num"]
+            flat.update({
+                f"ind{num}_name": component["name"],
+                f"ind{num}_field": component["field"],
+                f"ind{num}_raw": component["raw"],
+                f"ind{num}_yes": component["yes"],
+            })
+        flat_rows.append(flat)
+
+    path_base.parent.mkdir(parents=True, exist_ok=True)
+    path_base.with_suffix(".json").write_text(json.dumps(records, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    pd.DataFrame(flat_rows).to_csv(path_base.with_suffix(".csv"), index=False)
+    print(f"Saved canonical breakdown: {path_base.with_suffix('.json')} and {path_base.with_suffix('.csv')}")
+
+
 def compute_placeholder_r(
     row: pd.Series,
     base_r_other: float = 0.70,
@@ -112,7 +188,7 @@ def compute_placeholder_r(
 
 def build_atlas(
     year: int = 2026,
-    eta: float = 0.30,  # population-weighted from 2026 UN cross-section (~30.5% per indicator)
+    eta: float = 0.36,  # population-weighted from corrected 2026 UN cross-section (~35.6% per lever)
     un_path: str = "data/raw/un_member_states.csv",
     wb_path: str = "data/processed/wb_un_members_2023_2024_latest.csv",
     out_dir: str = "outputs/atlas",
@@ -173,17 +249,17 @@ def build_atlas(
         vdem_full["iso3"] = vdem_full["country_text_id"].astype(str).str.upper()
         vdem_full = vdem_full.set_index("iso3")
 
-        def _real_r_for_row(row):
+        def _components_for_row(row):
             iso = row["iso3"]
             vrow = vdem_full.loc[iso] if iso in vdem_full.index else None
-            return compute_real_r(
-                iso,
+            return build_component_records(
                 vrow,
                 row.get("undernourish_pct"),
                 row.get("poverty_215_pct"),
             )
 
-        df["r"] = df.apply(_real_r_for_row, axis=1)
+        df["components"] = df.apply(_components_for_row, axis=1)
+        df["r"] = df["components"].apply(lambda components: sum(component["bin"] for component in components) / 9.0)
         r_col = "r"
         note = f"R from 8 V-Dem components (crosswalk, year={vdem_year_used}) + real WB socio #9 + 2026-fresh G0 (GDP is the more dynamic variable). See docs/indicator_crosswalk.md"
         df["vdem_year"] = vdem_year_used
@@ -230,6 +306,9 @@ def build_atlas(
     ]
     master = df[[c for c in master_cols if c in df.columns]].copy()
     master = master.sort_values("rank_by_total_deficit")
+
+    breakdown_base = Path("data/processed") / f"rtl_di_nation_breakdown_{year}"
+    write_nation_breakdown(df.sort_values("rank_by_total_deficit"), breakdown_base)
 
     # Save
     out_dir_p = Path(out_dir)
@@ -370,7 +449,7 @@ def write_xlsx_atlas(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", type=int, default=2026)
-    parser.add_argument("--eta", type=float, default=0.30)
+    parser.add_argument("--eta", type=float, default=0.36)
     parser.add_argument("--output-dir", default="outputs/atlas")
     args = parser.parse_args()
 

@@ -3,12 +3,12 @@
   "scope": "Eurozone member states",
   "n_countries": 21,
   "total_population": 357603357.0,
-  "weighted_r": 0.8000495563331949,
-  "mean_r": 0.8253968253968255,
-  "mean_g0": 46990.57525649082,
-  "eta": 0.3,
+  "weighted_r": 0.7465129280403011,
+  "mean_r": 0.7619047619047619,
+  "mean_g0": 46990.57525649083,
+  "eta": 0.36,
   "regression": {
-    "eta": 0.3,
+    "eta": 0.36,
     "n": 21,
     "intercept": null,
     "slope_per_lever_log": null,
@@ -16,6 +16,6 @@
     "weighted_r_squared": null,
     "note": "Canonical global UN-atlas eta; no Eurozone-scoped eta recalculation is used in this report."
   },
-  "total_eurozone_capital_exclusions_usd": 887098841048.7125,
+  "total_eurozone_capital_exclusions_usd": 1340318049017.0605,
   "membership_note": "21 euro-area member states as of 2026, including Bulgaria from 2026-01-01; excludes non-EU microstates using the euro by monetary agreement."
 }

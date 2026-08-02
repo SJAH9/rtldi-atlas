@@ -49,6 +49,8 @@ from src.atlas_evidence import (
     VDEM_CORE_URL,
     VDEM_DATASET_URL,
     VDEM_ARCHIVE_URL,
+    VDEM_V15_SHA256,
+    VDEM_V15_SOURCE_URL,
     WORLD_BANK_API_URL,
     WORLD_BANK_DATA_URL,
     evidence_bundle,
@@ -421,7 +423,7 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
     <div>
       <div class="text-sm font-semibold mb-2 text-slate-950">9-Lever Breakdown</div>
       <div>{ind_html}</div>
-    {univ_html}
+{univ_html}
     </div>
     <div>
       <div class="text-sm font-semibold mb-2 text-slate-950">Member Nations</div>
@@ -820,8 +822,8 @@ html[data-theme="night"] .card,html[data-theme="night"] td{{background:var(--sit
         "Reproducible model evidence",
         f"""<p class="lede">The canonical model is a population-weighted cross-sectional regression of log GDP per capita on the number of activated levers. It estimates association with GDP level, not a causal time-series growth effect.</p>
         <div class="grid"><div class="card"><h3>η (eta)</h3><div class="total">{main_reg['eta']:.3f}</div><p>Implied proportional GDP-per-capita difference per additional activated lever: <code>exp(slope)-1</code>.</p></div><div class="card"><h3>Uncertainty</h3><div class="total">{main_reg['ci_low']:.1%} to {main_reg['ci_high']:.1%}</div><p>Approximate 95% robust interval for η.</p></div><div class="card"><h3>Model fit</h3><div class="total">R² {main_reg['r2']:.3f}</div><p>n={main_reg['n']}; log slope={main_reg['slope']:.3f}; robust SE={main_reg['se']:.3f}; p={main_reg['p']:.3g}.</p></div></div>
-        <h2>Exact specification</h2><p><code>log(GDP per capita) = intercept + beta × activated-lever count + error</code>, fitted by population-weighted least squares. <code>η = exp(beta)-1</code>. The atlas rounds the estimated {main_reg['eta']:.3f} to 0.30, then applies <code>ΔG = min(η × (1-R) × G₀, 0.25 × G₀)</code>.</p>
-        <div class="callout"><strong>Significance is not causality.</strong> The coefficient is statistically distinguishable from zero in this specification, but cross-sectional omitted variables, reverse causation, proxy reuse, threshold choices, and source-year mismatch remain. The 25% cap limits attribution; it does not solve identification.</div>
+        <h2>Exact specification</h2><p><code>log(GDP per capita) = intercept + beta × activated-lever count + error</code>, fitted by population-weighted least squares. <code>η = exp(beta)-1</code>. The atlas rounds the estimated {main_reg['eta']:.3f} to 0.36, then applies <code>ΔG = min(η × (1-R) × G₀, 0.25 × G₀)</code>.</p>
+        <div class="callout"><strong>Significance is not causality.</strong> The coefficient is statistically distinguishable from zero in this specification, but cross-sectional omitted variables, reverse causation, proxy validity, threshold choices, and source-year mismatch remain. The 25% cap limits attribution; it does not solve identification.</div>
         <h2>Comparator checks</h2><table><thead><tr><th>Single predictor</th><th class="num">n</th><th class="num">Slope</th><th class="num">R²</th><th class="num">p</th></tr></thead><tbody>{comparator_rows}</tbody></table><p class="meta">These unweighted, one-predictor comparisons use log GDP per capita as the outcome. Undernourishment and poverty are themselves development outcomes and lever 9 inputs, so they are descriptive comparators, not independent controls. Different sample sizes reflect missing data.</p>
         <h2>Growth falsification check</h2><p>{growth_text}</p><p>The available 2023–2024 current-US$ change does <strong>not</strong> show a statistically significant relationship with lever count. This is why the atlas describes a strong association with the cross-sectional GDP level and does not claim that the nine levers predict one-year GDP growth.</p>""",
         "regression",
@@ -830,7 +832,7 @@ html[data-theme="night"] .card,html[data-theme="night"] td{{background:var(--sit
     vdem_html = reference_page(
         "V-Dem Data Used by the Atlas",
         "Dataset provenance",
-        f"""<p class="lede">The committed 2026 score table identifies V-Dem Country-Year Full+Others v15 as its source and uses 2024 country-year observations. The large raw CSV is not redistributed in this repository.</p><div class="grid"><div class="card"><h3>Published score provenance</h3><div class="total">V-Dem v15</div><p>Full+Others country-year file; observation year 2024.</p></div><div class="card"><h3>Current update workflow</h3><div class="total">V-Dem v16</div><p>Core is sufficient for current fields; Full+Others is also accepted.</p></div></div><h2>Download and rebuild</h2><ol><li>For the committed release vintage, open the <a href="{VDEM_ARCHIVE_URL}">official V-Dem archive</a> and obtain Country-Year Full+Others v15 in CSV format.</li><li>For a current-data update, open the <a href="{VDEM_DATASET_URL}">official dataset page</a> and choose <a href="{VDEM_CORE_URL}">Country-Year Core v16</a>.</li><li>Extract the CSV into <code>data/raw/</code> using the matching v15 or v16 filename.</li><li>Run <code>python3 -m src.build_atlas --year 2026 --eta 0.30</code>.</li></ol><p>Use the codebook distributed with the chosen dataset; the <a href="{VDEM_CODEBOOK_URL}">official v16 codebook</a> documents the current release. V-Dem model-estimate columns are latent interval estimates, not original 0–4 coder categories.</p><div class="callout"><strong>Replication boundary:</strong> a v16 rebuild is a refreshed analysis and may revise scores because V-Dem re-estimates historical values between releases. Bit-for-bit replication requires the exact archived v15 source file and its checksum; that checksum is not present in the repository.</div>""",
+        f"""<p class="lede">The corrected 2026 score table uses V-Dem Country-Year Core v15 and 2024 country-year observations. The raw source artifact is not redistributed in this repository.</p><div class="grid"><div class="card"><h3>Atlas score provenance</h3><div class="total">V-Dem v15</div><p>Official Core country-year data; observation year 2024.</p></div><div class="card"><h3>Current update workflow</h3><div class="total">V-Dem v16</div><p>Core is sufficient for every V-Dem field in the nine-lever crosswalk.</p></div></div><h2>Download and rebuild</h2><ol><li>Download the <a href="{VDEM_V15_SOURCE_URL}">official v15 R data artifact</a> used for this correction.</li><li>Verify SHA-256 <code>{VDEM_V15_SHA256}</code>.</li><li>Export the required country-year columns to <code>data/raw/V-Dem-CY-Core-v15.csv</code>.</li><li>Run <code>python3 -m src.build_atlas --year 2026 --eta 0.36</code>.</li></ol><p>For a current-data update, use the <a href="{VDEM_DATASET_URL}">official dataset page</a> and <a href="{VDEM_CORE_URL}">Country-Year Core v16</a>. The <a href="{VDEM_CODEBOOK_URL}">official v16 codebook</a> documents the current fields. V-Dem model-estimate columns are latent interval estimates, not original 0–4 coder categories.</p><div class="callout"><strong>Replication boundary:</strong> a v16 rebuild is a refreshed analysis and may revise scores because V-Dem re-estimates historical values between releases. The source URL and checksum above identify the exact official v15 artifact used by this local build.</div>""",
         "vdem",
     )
 
@@ -980,7 +982,7 @@ html[data-theme="night"] .card,html[data-theme="night"] td{{background:var(--sit
       </div>
       <div class="bg-slate-50 border border-slate-200 p-5">
         <div class="text-xs uppercase tracking-wider text-slate-500">Coefficient eta</div>
-        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">0.30</div>
+        <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">{ETA:.2f}</div>
         <div class="text-sm mt-1 text-slate-500">25% institutional cap</div>
       </div>
     </div>

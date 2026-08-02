@@ -115,7 +115,7 @@ BLACK = (0, 0, 0)
 # Current model parameters (keep in sync with src/rtl_di.py)
 # eta from population-weighted cross-section; cap from the "Contextual Bounding" template
 # (study of archetypal nations to limit claims to what is plausible once industry/locale/history are credited).
-ETA = 0.30
+ETA = 0.36
 MAX_INSTITUTIONAL_SHARE = 0.25
 
 # Modular PDF part filenames (outputs/atlas always holds the most current of each)
@@ -655,8 +655,8 @@ def build_front_matter(data: dict) -> Path:
         "3. Law Enforcement Accountability — v2clkill ≥ 2.0\n"
         "4. Protection Against Arbitrary Detention — v2xcl_acjst ≥ 0.5\n"
         "5. Freedom from Torture — v2cltort ≥ 2.0\n"
-        "6. Civilian Protection in Conflict — v2clkill ≥ 2.0 (reuses lever 3 proxy in released component data)\n"
-        "7. Access to Justice — v2xcl_acjst ≥ 0.5 (reuses lever 4 proxy in released component data)\n"
+        "6. Civilian Protection in Conflict — v2x_clphy ≥ 0.5\n"
+        "7. Access to Justice — v2clrspct ≥ 2.0\n"
         "8. Freedom of Expression & Whistleblower Protections — v2x_freexp ≥ 0.5\n\n"
         "9. Socioeconomic Conditions — World Bank: undernourishment ≤ 5 % AND poverty headcount ($2.15) ≤ 10 %.\n\n"
         "R = (number of 'Yes' indicators) / 9\n\n"
@@ -837,8 +837,8 @@ def build_front_matter(data: dict) -> Path:
     pdf.set_font(FONT_NAME, "", 9)
     pdf.set_text_color(30, 30, 30)
     desc_text = (
-        f"These figures paint a picture of a world where the greatest measured disparities are associated with failures to prevent torture and inhumane treatment and to ensure independent judiciaries and basic legal protections—together accounting for a large share of the bounded global total. "
-        f"Strengths appear in freedom of expression/whistleblowing and access to justice/arbitrary detention, where the associated disparities are comparatively lower. "
+        f"These figures paint a picture of a world where the greatest measured disparities are associated with access to justice, preventing torture and inhumane treatment, independent judiciaries, and basic legal protections—together accounting for a large share of the bounded global total. "
+        f"The associated exclusions are comparatively lower for civilian protection in conflict, freedom of expression and whistleblowing, and protection against arbitrary detention. "
         f"Socioeconomic shortfalls remain a persistent burden. After applying the contextual cap derived from case studies of archetypal nations, the data show how weaknesses in the nine core protections are linked to substantial differences in prosperity once other determinants (resources, industry, history, location) are credited."
     )
     pdf.multi_cell(0, 3.6, desc_text)
@@ -1426,7 +1426,7 @@ def build_back_matter(data: dict) -> Path:
     pdf.body_text(
         "Primary Data\n"
         "• V-Dem (Varieties of Democracy) Country-Year Full+Others, version 15 (2024 data release). "
-        "Released component fields: v2cltrnslw, v2juhcind, v2juncind, v2clkill, v2cltort, v2xcl_acjst, and v2x_freexp. The loader also reads v2x_clphy and v2clrspct, but the released 2026 component table reuses v2clkill for lever 6 and v2xcl_acjst for lever 7.\n"
+        "Released component fields: v2cltrnslw, v2juhcind, v2juncind, v2clkill, v2xcl_acjst, v2cltort, v2x_clphy, v2clrspct, and v2x_freexp. Each of the eight V-Dem levers has a distinct operational field or field composite; World Bank indicators supply lever 9.\n"
         "• World Bank World Development Indicators (WDI) via API — GDP per capita (current US$), "
         "population, prevalence of undernourishment, and poverty headcount at $2.15 (2017 PPP). "
         "Values are the most recent published as of atlas production (labeled 2026 baseline).\n"
@@ -1546,13 +1546,13 @@ def build_back_matter(data: dict) -> Path:
     pdf.body_text(
         f"Specification: log(GDP per capita) = intercept + beta x activated-lever count + error. "
         f"The fitted log slope is {main_reg['slope']:.3f} with robust standard error {main_reg['se']:.3f}. "
-        f"Eta is exp(beta)-1 = {main_reg['eta']:.3f}; the operational atlas rounds this to 0.30 and applies "
+        f"Eta is exp(beta)-1 = {main_reg['eta']:.3f}; the operational atlas rounds this to 0.36 and applies "
         "Delta G = min(eta x (1-R) x G0, 0.25 x G0)."
     )
     pdf.section_label("Interpretation limit", HEADER_COLOR)
     pdf.body_text(
         "Statistical significance is not causal identification. Omitted variables, reverse causation, proxy "
-        "reuse, binary thresholds, and source-year mismatch remain. The 25% cap limits attribution but does "
+        "validity, binary thresholds, and source-year mismatch remain. The 25% cap limits attribution but does "
         "not resolve those identification problems."
     )
 
@@ -1591,22 +1591,23 @@ def build_back_matter(data: dict) -> Path:
     pdf.add_page()
     pdf.chapter_title("V-Dem Dataset and Reproduction")
     pdf.body_text(
-        "The committed 2026 score table identifies V-Dem Country-Year Full+Others v15 as its source and uses "
-        "2024 country-year observations. The current update workflow targets Country-Year Core v16; Full+Others "
-        "v16 is also accepted. The repository does not redistribute the large raw source CSV.\n\n"
+        "The corrected 2026 score table uses V-Dem Country-Year Core v15 and 2024 country-year observations. "
+        "The current update workflow targets Country-Year Core v16. The repository does not redistribute the "
+        "large raw source artifact.\n\n"
         f"Official v15 archive: {VDEM_ARCHIVE_URL}\n"
+        "Exact v15 artifact: https://raw.githubusercontent.com/vdeminstitute/vdemdata/V15/data/vdem.RData\n"
+        "SHA-256: 4b715190a1e351a81daf11cbe6f9f77e67d8914f0ed612b93e2d8fba5523e540\n"
         f"Official current dataset page: {VDEM_DATASET_URL}\n"
         f"Official v16 codebook: {VDEM_CODEBOOK_URL}\n\n"
-        "For release-vintage replication, download Full+Others v15. For a current-data update, download Core or "
-        "Full+Others v16. Extract the CSV into data/raw/ with its matching versioned filename, then run "
-        "python3 -m src.build_atlas --year 2026 --eta 0.30."
+        "For exact replication, download the v15 artifact identified above and export the required columns as "
+        "data/raw/V-Dem-CY-Core-v15.csv. For a current-data update, download Core v16, then run "
+        "python3 -m src.build_atlas --year 2026 --eta 0.36."
     )
     pdf.body_text(
         "V-Dem's unsuffixed expert-coded fields are measurement-model point estimates on a standardized interval "
         "scale, not the original ordinal coder categories. The atlas cutoffs are project operationalizations. "
         "A v16 rebuild may revise historical scores and is therefore an update rather than guaranteed bit-for-bit "
-        "replication. Exact replication requires the archived v15 source and checksum; that checksum is not present "
-        "in this repository."
+        "replication. The URL and checksum above identify the exact official v15 artifact used by this build."
     )
 
     pdf.add_page()
@@ -1667,7 +1668,7 @@ def build_back_matter(data: dict) -> Path:
         ("Enclosure (nested causal / human)", "The source document's central metaphor: the interdependent, layered structures of protection whose strength or weakness shapes higher-order economic and social steady states."),
         ("Causality and Attraction", "The source monograph (Hubbard 2026V3, Zenodo 19468550) that supplies the RTLDI equation, the nine RTLP indicators, the nested-enclosures paradigm, and the cartographic critique of distortion. This atlas extends the source RTLDI to quantify capital exclusions."),
         ("Binarization / threshold", "The documented conversion of continuous V-Dem and World Bank values into the binary 0/1 scores for the nine indicators (e.g., ≥2.0 on 0-4 scales, ≤5 % undernourishment + ≤10 % poverty for #9)."),
-        ("η (eta)", "The sensitivity coefficient (current data-driven default 0.30 from population-weighted 2026 UN cross-section). In the bounded model ΔG = min(η(1 − R) × G₀, 0.25 × G₀); the cross-sectional premium per indicator, then capped so the nine RTLP indicators are never credited with more than 25% of observed G₀ after other determinants are given due weight. (Source document used a more conservative 0.05 structural value.)"),
+        ("η (eta)", "The sensitivity coefficient (current data-driven default 0.36 from the corrected population-weighted 2026 UN cross-section). In the bounded model ΔG = min(η(1 − R) × G₀, 0.25 × G₀); the cross-sectional premium per indicator, then capped so the nine RTLP indicators are never credited with more than 25% of observed G₀ after other determinants are given due weight. (Source document used a more conservative 0.05 structural value.)"),
         ("Steady state", "A balanced biological, economic, or social condition that the framework argues is supported or undermined by the strength of the nine life protections and the resulting causal enclosures."),
    #     ("Malthusian theory","The proposition (Thomas Malthus) that population grows exponentially while resources grow linearly, inevitably producing scarcity and misery unless population is checked. The source and this atlas present geometric and empirical counter-evidence under conditions of equal right-to-life protection. There is no evidence of high population leading to lower GDP per capita. Strong corollary across many data sets links population and GDP suggesting resource development may be a direct consequence of population growth and greater economic capacity."),
 

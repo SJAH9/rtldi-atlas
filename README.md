@@ -1,6 +1,6 @@
 # RTLDI ATLAS — UN Member States
 
-**Project**: Build a comprehensive, reproducible **RTLDI ATLAS** of all 193 United Nations Member States using the Right to Life Deficit Index (RTLDI) from the source document (Zenodo 10.5281/zenodo.19468550), extended to quantify **capital exclusions** — the lost potential GDP where capital is excluded from the economy because the nine protections necessary for it to operate are not present. The global total is on the order of 15 trillion dollars in excluded capital waiting to be brought back in through the levers.
+**Project**: Build a comprehensive, reproducible **RTLDI ATLAS** of all 193 United Nations Member States using the Right to Life Deficit Index (RTLDI) from the source document (Zenodo 10.5281/zenodo.19468550), extended to quantify **capital exclusions** — the lost potential GDP where capital is excluded from the economy because the nine protections necessary for it to operate are not present. The corrected 2026 atlas estimates `$19.29T` in bounded annual capital exclusions.
 
 > Sid J.A. Hubbard, *Causality and Attraction: A Continuum of Steady States* (Version 3, May 2026).  
 > DOI: [10.5281/zenodo.19468550](https://doi.org/10.5281/zenodo.19468550)
@@ -32,7 +32,21 @@ Direct deployed atlas links:
 - [World Bank Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/world_bank.html)
 - [About, Authorship, and Citation](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/about.html)
 
-### v2026.8.5 (Current — refined web atlas navigation and attribution)
+### v2026.8.6 (Current — corrected nine-lever model)
+
+This release corrects the executable crosswalk so all nine conceptual levers use distinct operational signals and regenerates the entire atlas from the canonical data pipeline.
+
+- Demonstrates that the former duplicated-proxy representation was exactly equivalent to seven unique signals when the two paired signals retained their two-ninths weights; it did not arithmetically add national capital exclusions twice.
+- Replaces lever 6's reused `v2clkill` value with `v2x_clphy` and lever 7's reused `v2xcl_acjst` value with `v2clrspct`.
+- Recomputes 193 national records through one canonical component-and-score path; 65 national RTLP scores change.
+- Updates the data-derived coefficient from `eta=0.305` to `eta=0.356`, operationally rounded to `0.36` under the unchanged 25% cap.
+- Raises the corrected bounded global estimate from `$15.87T` to `$19.29T` annually.
+- Regenerates the print atlas, web atlas, interactive map, Full Data View, choropleths, RDF/XML, Eurozone report, and open data outputs.
+- The release contains one PDF asset only: the complete 278-page `RTLDI_ATLAS_2026_ebook.pdf`.
+
+See [the complete v2026.8.6 release notes](docs/releases/v2026.8.6.md) for the weighting identity, field-level correction, provenance, and validation details.
+
+### v2026.8.5 (Refined web atlas navigation and attribution)
 
 This release brings every web-atlas view into one coherent, responsive information architecture.
 
@@ -90,7 +104,7 @@ This release adds a focused **RTLDI 2026 Eurozone Capital Exclusion Map** as a s
 - New Eurozone PDF: `outputs/atlas/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf`.
 - New Eurozone data outputs: `outputs/atlas/rtl_di_atlas_eurozone_2026.csv` and `outputs/atlas/rtl_di_atlas_eurozone_summary_2026.json`.
 - Scope: 21 euro-area member states as of 2026, including Bulgaria from January 1, 2026; excludes non-EU microstates using the euro by monetary agreement.
-- Uses the canonical global atlas model: `eta = 0.30` with the 25% contextual cap, so the Eurozone figures remain directly comparable to the main UN atlas.
+- Uses the corrected canonical global atlas model: `eta = 0.36` with the 25% contextual cap, so the Eurozone figures remain directly comparable to the main UN atlas.
 - Current Eurozone total capital exclusions: approximately `$887.1B` annually.
 
 Generate it after the main atlas data exists:
@@ -223,7 +237,7 @@ cd rtldi-atlas
 python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter plotly kaleido
 
 # 1. Build the core data (uses live World Bank API + your local V-Dem CSV)
-python3 -m src.build_atlas --year 2026 --eta 0.30
+python3 -m src.build_atlas --year 2026 --eta 0.36
 
 # 2. Generate the choropleth maps (global + 22 regional) that get embedded in the PDF
 #    This step is REQUIRED to match the released atlas. It produces PNGs (for embedding),
@@ -242,7 +256,7 @@ python3 -m src.generate_atlas_ebook
 python3 -m src.generate_html_atlas
 
 # 5. (Optional focused report) Generate the Eurozone capital exclusion report
-#    using the canonical global eta=0.30 and the same 25% cap as the UN atlas.
+#    using the canonical global eta=0.36 and the same 25% cap as the UN atlas.
 python3 -m src.generate_eurozone_atlas
 ```
 

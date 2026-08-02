@@ -1,6 +1,17 @@
 # RTLDI Atlas Handoff Notes
 
-Last updated while preparing release `v2026.8.4` on `main`.
+Last updated while preparing release `v2026.8.6` on `main`.
+
+## v2026.8.6 Work
+
+- Corrected the executable crosswalk so levers 3, 4, 6, and 7 use distinct V-Dem signals: `v2clkill`, `v2xcl_acjst`, `v2x_clphy`, and `v2clrspct`.
+- Unified component breakdown and aggregate score generation in `src/build_atlas.py`; the master table and national JSON now derive from the same nine records.
+- Verified the old representation was exactly equivalent to seven unique signals with preserved two-ninths weights for the two repeated pairs; maximum score delta `0.0`.
+- Corrected 65 national RTLP scores and recalculated the population-weighted regression to eta `0.356`, operationally `0.36` under the unchanged 25% cap.
+- Updated the bounded global capital-exclusion estimate from `$15.87T` to `$19.29T`.
+- Regenerated all print, web, map, linked-data, Eurozone, spreadsheet, and component outputs. The complete ebook remains 278 pages.
+- Added `tests/test_lever_pipeline.py` to enforce distinct fields and exact nine-record score aggregation.
+- Release notes: `docs/releases/v2026.8.6.md`.
 
 ## v2026.8.4 Work
 
@@ -9,7 +20,7 @@ Last updated while preparing release `v2026.8.4` on `main`.
 - Mirrored those evidence sections in print before the glossary.
 - Ebook order is front, regions, 193 nation profiles, 27-page Eurozone report, evidence/data pages, then glossary and credits; total is 278 pages.
 - Published scores identify V-Dem Full+Others v15 with 2024 observations. The current update workflow targets v16; exact historical replication is limited because the raw v15 checksum is not committed.
-- Regression reproduces eta=0.305 (n=187, robust p=0.00568, weighted R2=0.252); the one-year current-US$ growth check is non-significant (p=0.207).
+- Corrected regression yields eta=0.356 (n=187, robust p=0.0177, weighted R2=0.242); the operational coefficient is 0.36 and remains bounded by the 25% cap.
 - Release `v2026.8.4` should attach only `outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf`.
 
 ## Prior Published Git State
