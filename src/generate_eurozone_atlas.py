@@ -49,6 +49,7 @@ from .generate_atlas_ebook import (
     load_g0_series,
     load_iso2_lookup,
 )
+from .print_access import WEB_ATLAS_URL, draw_qr_gateway
 from .map_geometry import (
     RTLDI_COLOR_SCALE,
     add_metropolitan_france_trace,
@@ -96,6 +97,9 @@ OUT_SUMMARY = Path("outputs/atlas/rtl_di_atlas_eurozone_summary_2026.json")
 
 class EurozonePDF(RTLDIAtlasPDF):
     def header(self):
+        if self._suppress_next_header:
+            self._suppress_next_header = False
+            return
         if self.page_no() > 1:
             self.set_y(7)
             self.set_font(FONT_NAME, "", 7.5)
@@ -108,15 +112,8 @@ class EurozonePDF(RTLDIAtlasPDF):
             self.ln(7)
 
     def footer(self):
-        self.set_y(-12)
-        self.set_font(FONT_NAME, "", 8)
-        self.set_text_color(*MUTED)
-        self.cell(
-            0,
-            10,
-            f"Page {self.page_no()} | RTLDI 2026 | V-Dem 2024 + World Bank 2026 baseline",
-            align="C",
-        )
+        # Continuous physical folios are applied once, after modular PDF assembly.
+        return
 
 
 def _canonical_eta_note(rows: list[dict]) -> dict:
@@ -493,13 +490,13 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
     rows_by_loss = sorted(rows, key=lambda x: x.get("total_deficit_usd") or 0, reverse=True)
     rows_alpha = sorted(rows, key=lambda x: x["country"])
 
-    pdf.add_page()
-    pdf.set_fill_color(247, 250, 252)
+    pdf.add_chromeless_page()
+    pdf.set_fill_color(255, 255, 255)
     pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, style="F")
     pdf.set_fill_color(*HEADER_COLOR)
-    pdf.rect(0, 0, 18, PAGE_HEIGHT, style="F")
+    pdf.rect(18, 22, 3, PAGE_HEIGHT - 44, style="F")
     pdf.set_fill_color(*ACCENT_COLOR)
-    pdf.rect(18, 0, 4, PAGE_HEIGHT, style="F")
+    pdf.rect(22, 22, 1.5, PAGE_HEIGHT - 44, style="F")
     pdf.set_y(38)
     pdf.set_x(34)
     pdf.set_font(FONT_NAME, "", 27)
@@ -528,7 +525,7 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
     pdf.chapter_title("Executive Description")
     pdf.body_text(
         "This focused atlas applies the RTLDI 2026 model to the Eurozone. It uses the same nine-protection RTLP score, V-Dem 2024 component crosswalk, World Bank GDP baseline, population weighting, canonical global eta, and 25% contextual cap used in the UN member-state atlas.\n\n"
-        f"Across the 21 euro-area member states, the bounded model identifies {format_money(summary['total_lost_gdp'])} in annual capital exclusions. These are measured as lost potential GDP associated with missing or incomplete foundational protections necessary for capital to operate safely."
+        f"Across the 21 euro-area member states, the bounded cross-sectional model estimates {format_money(summary['total_lost_gdp'])} in annual capital exclusions associated with missing or incomplete foundational protections. This is not directly observed capital or a guaranteed causal effect."
     )
     pdf.body_text(
         "The map is not a judgment on Eurozone members. It is an economic intelligence view: which levers are not yet fully activated, where the largest excluded-capital volumes sit, and how each member state's current RTLP profile compares inside the shared currency area."
@@ -537,12 +534,24 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
     pdf.add_page()
     pdf.chapter_title("Methodology and Data Sources")
     pdf.body_text(
-        "R is the simple average of nine binary indicators. Eight are derived from the committed V-Dem Full+Others v15 score source (2024 observation year) using the same executable crosswalk as the UN atlas; the ninth uses World Bank undernourishment and poverty data. The current update workflow targets V-Dem v16 and may revise historical scores. This Eurozone report intentionally does not recalculate eta on the smaller regional sample. It uses the canonical global UN-atlas coefficient so the Eurozone figures are directly comparable to the main atlas.\n\n"
+        "R is the simple average of nine binary indicators. Eight are derived from V-Dem Country-Year Core v15 (2024 observation year) using the same executable crosswalk as the UN atlas; the ninth uses World Bank undernourishment and poverty data. The current update workflow targets V-Dem v16 and may revise historical scores. This Eurozone report intentionally does not recalculate eta on the smaller regional sample. It uses the canonical global UN-atlas coefficient so the Eurozone figures are directly comparable to the main atlas.\n\n"
         f"The canonical coefficient is eta = {summary['eta']:.2f}. The economic projection is therefore:\n\n"
         f"Delta G per capita = min({summary['eta']:.2f} x (1 - R) x G0, 0.25 x G0).\n\n"
         "Total capital exclusions = Delta G per capita x population. G0 is the most recent published World Bank GDP per capita value used in the 2026 atlas baseline. V-Dem components reflect 2024 data, the latest source year available in this pipeline."
     )
     pdf.small_text("Full crosswalk: docs/indicator_crosswalk.md. Source framework: Hubbard, Causality and Attraction v3, DOI 10.5281/zenodo.19468550.")
+
+    # Place the cartographic QR title on a recto in the assembled duplex volume.
+    pdf.add_chromeless_page()
+    draw_qr_gateway(
+        pdf,
+        title="Eurozone Maps and Member Profiles",
+        subtitle="A cartographic view of the 21 euro-area member states, linked directly to the global interactive Atlas.",
+        url=WEB_ATLAS_URL,
+        slug="web-atlas-eurozone-map",
+        kicker="Part IV / Cartographic section",
+        note="The maps and profiles that follow use the global RTLP score and eta. Scan to inspect members in full national context and compare every canonical field.",
+    )
 
     pdf.add_page()
     pdf.chapter_title("Cartographic Approach and Eurozone Summary")
@@ -672,7 +681,7 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
     pdf.add_page()
     pdf.chapter_title("Data Attribution and Sources")
     pdf.body_text(
-        "Primary data: V-Dem Country-Year Full+Others v15 (2024 observation year), World Bank World Development Indicators, and the canonical RTLDI 2026 processed member-state table. The current fresh-data workflow targets V-Dem v16, which is an update rather than guaranteed bit-for-bit replication. Scope is the 21 euro-area member states as of 2026.\n\n"
+        "Primary data: V-Dem Country-Year Core v15 (2024 observation year), World Bank World Development Indicators, and the canonical RTLDI 2026 processed member-state table. The current fresh-data workflow targets V-Dem v16, which is an update rather than guaranteed bit-for-bit replication. Scope is the 21 euro-area member states as of 2026.\n\n"
         f"Source framework: Sid J.A. Hubbard, Causality and Attraction: A Continuum of Steady States (Version 3, May 2026), DOI 10.5281/zenodo.19468550. The Eurozone atlas is a scoped derivative: it does not change the RTLDI equation, thresholds, component crosswalk, canonical global eta, or 25% contextual cap. This report uses eta={summary['eta']:.2f}."
     )
     pdf.body_text(

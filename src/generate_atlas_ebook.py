@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
 """
 Generate a print-ready PDF ebook for the RTLDI ATLAS 2026 (modular parts + concatenated release).
-RTLDI = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Extended via population-weighted regression (25% cap) to quantify capital exclusions — the lost potential GDP where capital is excluded from the economy because the nine protections necessary for it to operate are not present. The atlas makes visible the ~15 trillion in global capital exclusions so nations can act to bring that capital back in.
+RTLDI = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Extended via population-weighted regression (25% cap) to estimate capital exclusions associated with missing protections.
 
-Structure (four separately-generated parts for fast iteration; no duplication):
+Structure (five separately-generated parts for fast iteration; no duplicated nation generation):
   FRONT MATTER
-  - Title / cover page
-  - Executive description / foreword
-  - Methodology (condensed)
-  - Using the RTLDI to Identify Capital Exclusions
-  - Cartographic Approach + global choropleth + global capital exclusions by 9 levers + world description + total
-  - Table of Contents
-  - Summary Table of All 193 UN Member Nations (paginated, by capital exclusions)
+  - Cover, publication record, About, authorship, production disclosure, and contents
+  - Executive description, methodology, causal projection, reader guide, and limitations
+  - Global choropleth, global capital exclusions by nine levers, and 193-country summary
+  - Full-page Web Atlas gateway before regional summaries
 
   REGIONS (22 UN regional summary pages)
   - One page per region: choropleth, aggregates, two-para cumulative description,
@@ -21,11 +18,13 @@ Structure (four separately-generated parts for fast iteration; no duplication):
   - Detailed profiles: one page per nation (A-Z order), with capital exclusions figures + full 9-lever
     RTLDI breakdown + three-year RTLDI trend stated in text + country-only map
 
+  EUROZONE FOCUS
+  - Cover, executive description, methods, Web Atlas gateway, map, 21 profiles, and sources
+
   BACK MATTER
-  - Data Attribution and Sources
-  # - Falsification of Malthusian Scarcity (short note on the conditional nature of Malthusian outcomes)
-  - Index of Terms (alphabetical, includes the 9 levers + key sub-terms)
-  - Credits and Acknowledgments
+  - Executable crosswalk, regression evidence, datasets, attribution, citation, and licensing
+  - Full-page source-code and data gateway
+  - Expanded glossary, credits, acknowledgments, and print colophon
 
 Usage (recommended for fast iteration):
   python -m src.generate_atlas_ebook                 # build all four parts + concatenate release
@@ -42,7 +41,7 @@ Outputs (always the most current of each):
   outputs/atlas/RTLDI_ATLAS_2026_back.pdf
   outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf   # concatenated release (front + regions + nations + back)
 
-The final step before tagging a GitHub release is the concatenation of the four parts.
+The final step before tagging a GitHub release is the concatenation of the five modular parts.
 This split prevents re-generating heavy sections when iterating on front matter or regions.
 """
 
@@ -63,6 +62,9 @@ from src.atlas_evidence import (
     VDEM_ARCHIVE_URL,
     VDEM_CODEBOOK_URL,
     VDEM_DATASET_URL,
+    VDEM_V15_SHA256,
+    VDEM_V15_SOURCE_URL,
+    WORLD_BANK_API_URL,
     WORLD_BANK_DATA_URL,
     evidence_bundle,
 )
@@ -74,6 +76,15 @@ from src.map_geometry import (
     apply_atlas_geo_style,
     apply_european_france_bounds,
     split_france_for_metropolitan_display,
+)
+from src.print_access import (
+    FULL_DATA_URL,
+    INTERACTIVE_MAP_URL,
+    REPOSITORY_URL,
+    WEB_ATLAS_URL,
+    draw_mini_link,
+    draw_qr_gateway,
+    draw_section_opener,
 )
 
 # PDF concatenation (PyPDF2 is already available in the env; pypdf is a modern alternative)
@@ -143,8 +154,24 @@ class RTLDIAtlasPDF(FPDF):
         self.add_font(FONT_NAME, "B", FONT_PATH)  # reuse for bold, fpdf2 will fake or use same
         self.set_auto_page_break(auto=True, margin=MARGIN)
         self.page_count_for_toc = 0  # not used in v1
+        self._suppress_next_header = False
+        self._chromeless_pages: set[int] = set()
+        self.set_title("RTLDI Atlas 2026: UN Member States")
+        self.set_author("RTLDI Atlas Project; Sid J.A. Hubbard, Principal Investigator")
+        self.set_subject("Right to Life Deficit Index, RTLP scores, capital exclusions, and nine-lever country profiles")
+        self.set_keywords("RTLDI, RTLP, V-Dem, World Bank, capital exclusions, atlas")
+        self.set_creator("RTLDI Atlas open-source publication pipeline")
+        self.set_producer("fpdf2 and PyPDF2")
+
+    def add_chromeless_page(self):
+        self._suppress_next_header = True
+        self.add_page()
+        self._chromeless_pages.add(self.page_no())
 
     def header(self):
+        if self._suppress_next_header:
+            self._suppress_next_header = False
+            return
         if self.page_no() > 1:
             self.set_y(7)
             self.set_font(FONT_NAME, "", 7.5)
@@ -157,10 +184,8 @@ class RTLDIAtlasPDF(FPDF):
             self.ln(7)
 
     def footer(self):
-        self.set_y(-12)
-        self.set_font(FONT_NAME, "", 8)
-        self.set_text_color(*MUTED)
-        self.cell(0, 10, f"Page {self.page_no()} | Hubbard, Causality and Attraction v3 | V-Dem 2024 + World Bank 2026 baseline", align="C")
+        # Continuous physical folios are applied once, after modular PDF assembly.
+        return
 
     def chapter_title(self, title):
         self.set_font(FONT_NAME, "", 15)
@@ -177,13 +202,13 @@ class RTLDIAtlasPDF(FPDF):
     def body_text(self, text, size=10):
         self.set_font(FONT_NAME, "", size)
         self.set_text_color(*INK)
-        self.multi_cell(0, 5, text)
+        self.multi_cell(0, 5, text, align="L")
         self.ln(2)
 
     def small_text(self, text):
         self.set_font(FONT_NAME, "", 8)
         self.set_text_color(*MUTED)
-        self.multi_cell(0, 4, text)
+        self.multi_cell(0, 4, text, align="L")
         self.ln(1)
 
     def section_label(self, text, color=ACCENT_COLOR):
@@ -219,8 +244,8 @@ def load_detailed_data():
 
 
 def load_g0_series(iso3_list, years=(2023, 2024, 2025)):
-    """Load 3 years of G0 (GDP per capita current US$) for the given ISO3s.
-    Prefers local WB bulk CSV (if present, as used by build_atlas), falls back to wbgapi.
+    """Load up to 3 years of G0 (GDP per capita current US$) for the given ISO3s.
+    Prefers local WB files used by the pipeline, then fills any gaps via wbgapi.
     Returns dict iso3 -> {year: g0_value or None}
     """
     iso3s = {i.upper() for i in iso3_list}
@@ -239,10 +264,29 @@ def load_g0_series(iso3_list, years=(2023, 2024, 2025)):
                         g0s[r["iso3"]][y] = float(r[col])
                     has_bulk_data = True
             if has_bulk_data:
-                print("  3yr G0: loaded from local bulk")
-                return g0s
+                print("  Recent G0: loaded available years from local bulk")
         except Exception as e:
             print(f"  3yr G0 bulk load failed ({e}), trying wbgapi...")
+
+    processed = Path("data/processed/wb_2023_2024_raw.csv")
+    has_processed_data = False
+    if processed.exists():
+        try:
+            df = pd.read_csv(processed)
+            df = df[df["series"] == "NY.GDP.PCAP.CD"].copy()
+            df["iso3"] = df["economy"].astype(str).str.upper()
+            for y in years:
+                col = str(y)
+                if col in df.columns:
+                    sub = df[df["iso3"].isin(iso3s)][["iso3", col]].dropna(subset=[col])
+                    for _, r in sub.iterrows():
+                        g0s[r["iso3"]][y] = float(r[col])
+                    has_processed_data = True
+            if has_processed_data:
+                print("  Recent G0: loaded available years from canonical processed World Bank data")
+        except Exception as e:
+            print(f"  Processed G0 load failed ({e}), trying wbgapi...")
+
     # Fallback to live API (requires wbgapi; already used in core pipeline)
     try:
         import wbgapi as wb
@@ -255,9 +299,12 @@ def load_g0_series(iso3_list, years=(2023, 2024, 2025)):
                 sub = df[df["iso3"].isin(iso3s)][["iso3", y]].dropna(subset=[y])
                 for _, r in sub.iterrows():
                     g0s[r["iso3"]][y] = float(r[y])
-        print("  3yr G0: loaded via wbgapi fallback")
+        print("  Recent G0: filled available years via wbgapi")
     except Exception as e:
-        print(f"  3yr G0 wbgapi failed ({e}); trends will be partial/missing for some nations.")
+        if has_bulk_data or has_processed_data:
+            print(f"  Live G0 refresh unavailable ({e}); using canonical local years.")
+        else:
+            print(f"  Recent G0 wbgapi failed ({e}); trends will be missing for some nations.")
     return g0s
 
 
@@ -282,7 +329,7 @@ def format_money(n: float) -> str:
 
 def format_trend_text(iso3: str, r: float, population: float, g0_by_year: dict,
                       years=(2023, 2024, 2025)) -> str:
-    """Compact text replacement for the previous 3-point trend graphic."""
+    """Compact text replacement for the previous trend graphic."""
     points = []
     for y in years:
         g0 = g0_by_year.get(y)
@@ -294,7 +341,7 @@ def format_trend_text(iso3: str, r: float, population: float, g0_by_year: dict,
         total = dg * float(population)
         points.append((int(y), float(g0), float(dg), float(total)))
     if not points:
-        return "Three-year RTLDI projection: insufficient recent GDP data for a reliable 3-position text trend."
+        return "Recent RTLDI projection: insufficient GDP data for an up-to-three-year text trend."
     pieces = [f"{year}: {format_money(total)} total capital exclusions (${dg:,.0f}/cap)" for year, _, dg, total in points]
     if len(points) >= 2:
         start = points[0][3]
@@ -302,11 +349,11 @@ def format_trend_text(iso3: str, r: float, population: float, g0_by_year: dict,
         change = end - start
         direction = "increase" if change > 0 else "decrease" if change < 0 else "no change"
         return (
-            "Three-position RTLDI projection (R fixed at latest V-Dem value; G0 varies by year): "
+            "Recent RTLDI projection (up to three years; R fixed at latest V-Dem value; G0 varies by year): "
             + "; ".join(pieces)
             + f". Net {direction} from {points[0][0]} to {points[-1][0]}: {format_money(abs(change))}."
         )
-    return "Three-position RTLDI projection (partial data): " + "; ".join(pieces) + "."
+    return "Recent RTLDI projection (partial data): " + "; ".join(pieces) + "."
 
 
 def get_nation_country_map(iso3: str, country: str, r: float) -> Optional[Path]:
@@ -588,14 +635,14 @@ def build_front_matter(data: dict) -> Path:
     indicator_names = data["indicator_names"]
     indicator_descs = data["indicator_descs"]
 
-    # ========== TITLE PAGE ==========
-    pdf.add_page()
-    pdf.set_fill_color(247, 250, 252)
+    # ========== COVER ==========
+    pdf.add_chromeless_page()
+    pdf.set_fill_color(255, 255, 255)
     pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, style="F")
     pdf.set_fill_color(*HEADER_COLOR)
-    pdf.rect(0, 0, 18, PAGE_HEIGHT, style="F")
+    pdf.rect(18, 22, 3, PAGE_HEIGHT - 44, style="F")
     pdf.set_fill_color(*ACCENT_COLOR)
-    pdf.rect(18, 0, 4, PAGE_HEIGHT, style="F")
+    pdf.rect(22, 22, 1.5, PAGE_HEIGHT - 44, style="F")
     pdf.set_y(42)
     pdf.set_x(34)
     pdf.set_font(FONT_NAME, "", 34)
@@ -615,7 +662,7 @@ def build_front_matter(data: dict) -> Path:
     gap = 5
     pdf.metric_card(34, card_y, card_w, 28, "Global capital exclusions", format_money(global_total_lost), "annual, capped", PANEL_ALT)
     pdf.metric_card(34 + card_w + gap, card_y, card_w, 28, "UN member states", "193", "22 regions")
-    pdf.metric_card(34 + (card_w + gap) * 2, card_y, card_w, 28, "Coefficient eta", "0.30", "population-weighted")
+    pdf.metric_card(34 + (card_w + gap) * 2, card_y, card_w, 28, "Coefficient eta", f"{ETA:.2f}", "population-weighted")
 
     pdf.set_xy(34, 157)
     pdf.set_font(FONT_NAME, "", 9)
@@ -626,20 +673,117 @@ def build_front_matter(data: dict) -> Path:
     pdf.set_text_color(*MUTED)
     pdf.multi_cell(142, 4.4, "Data: V-Dem 2024 components + latest World Bank GDP baseline as of 2026. Prepared for NGOs, researchers, policymakers, analysts, and public-interest users.")
 
+    # ========== PUBLICATION RECORD ==========
+    pdf.add_page()
+    pdf.chapter_title("Publication Record, Rights, and Citation")
+    pdf.section_label("Edition")
+    pdf.body_text(
+        "RTLDI Atlas of UN Member States, 2026 print edition. Generated from the corrected nine-lever "
+        "public pipeline and synchronized with the web atlas, interactive map, Full Data View, and linked-data export."
+    )
+    pdf.section_label("Project and authorship")
+    pdf.body_text(
+        "Published by the RTLDI Atlas Project. Sid J.A. Hubbard is Principal Investigator and is responsible "
+        "for the project's methods, decisions, interpretation, engineering direction, and publication."
+    )
+    pdf.section_label("Rights")
+    pdf.body_text(
+        "The RTLDI Atlas repository — code, data-processing pipeline, project documentation, and generated "
+        "outputs — is open source under the MIT License. The underlying theoretical framework and book content "
+        "are separate works. Causality and Attraction remains under its original copyright and CC BY-NC-ND 4.0 "
+        "terms and is not relicensed by the repository's MIT License."
+    )
+    pdf.section_label("Recommended citation")
+    pdf.body_text(
+        "RTLDI Atlas Project. (2026). RTLDI Atlas of UN Member States [Data set, software, and atlas]. "
+        "Sid J.A. Hubbard, Principal Investigator."
+    )
+    draw_mini_link(pdf, label="Atlas repository", url=REPOSITORY_URL, slug="publication-repository")
+    pdf.small_text(
+        "Source theory: Hubbard, Sid J.A. (2026). Causality and Attraction: A Continuum of Steady States, "
+        "Volume I, Version 3."
+    )
+    draw_mini_link(pdf, label="Source theory DOI", url="https://doi.org/10.5281/zenodo.19468550", slug="publication-doi")
+
+    # ========== ABOUT ==========
+    pdf.add_page()
+    pdf.chapter_title("About the RTLDI Atlas")
+    pdf.body_text(
+        "The RTLDI Atlas is an open, reproducible atlas of the conditions that protect human life and allow "
+        "capital to operate across all 193 United Nations Member States. It originates in Sid J.A. Hubbard's "
+        "Causality and Attraction: A Continuum of Steady States, Volume I. The Atlas operationalizes the "
+        "book's Right-to-Life Protection method by translating nine protections into country classifications, "
+        "an RTLP score, the Right to Life Deficit Index, and bounded estimates of capital exclusion."
+    )
+    pdf.section_label("Related works")
+    draw_mini_link(pdf, label="Causality and Attraction, Volume I", url="https://doi.org/10.5281/zenodo.19468550", slug="about-volume-one")
+    draw_mini_link(pdf, label="Nested Causal Modelling book", url="https://www.amazon.com/dp/B0H8K4C3S6", slug="about-ncm-book")
+    draw_mini_link(pdf, label="Nested Causal Modelling audiobook", url="https://elevenreader.io/audiobooks/nested-causal-modelling-audiobook/8Mj5lsaUYs3WwjKAn1Xu", slug="about-ncm-audio")
+
+    pdf.add_page()
+    pdf.chapter_title("Authorship and Production Disclosure")
+    pdf.section_label("Principal Investigator")
+    pdf.body_text(
+        "Sid J.A. Hubbard is the Principal Investigator of the RTLDI Atlas Project. He is an independent "
+        "research technologist designing mathematical and architectural interventions for systemic complexity "
+        "across economics, governance, technology, and AI."
+    )
+    draw_mini_link(pdf, label="Sid J.A. Hubbard", url="https://sidhubbard.com/", slug="pi-website")
+    draw_mini_link(pdf, label="Published project work", url="https://sidhubbard.com/#interventions", slug="pi-projects")
+    draw_mini_link(pdf, label="LinkedIn", url="https://www.linkedin.com/in/sidhubbard", slug="pi-linkedin")
+    pdf.section_label("Production disclosure")
+    pdf.body_text(
+        "At this stage, the entirety of the Atlas project is written, directed, and engineered by its Principal "
+        "Investigator with the assistance of multiple AI and data-science tools used in research, software "
+        "development, analysis, validation, and production. Responsibility for the project's methods, decisions, "
+        "interpretations, and releases rests with the Principal Investigator."
+    )
+    pdf.section_label("Contributing public projects")
+    pdf.body_text(
+        "V-Dem supplies the institutional measurements used for levers 1–8. World Bank World Development "
+        "Indicators supply GDP, population, undernourishment, and poverty observations. The United Nations "
+        "Member States list defines the 193-country scope. These projects provide source observations; RTLP, "
+        "RTLDI, lever classifications, capital-exclusion estimates, maps, and generated atlas products are RTLDI "
+        "Atlas Project outputs."
+    )
+
+    # ========== CONTENTS ==========
+    pdf.add_page()
+    pdf.chapter_title("Contents and Reading Sequence")
+    contents = [
+        ("Part I", "Project record and global overview", "About, methods, responsible interpretation, global map, and 193-country summary."),
+        ("Part II", "UN regional summaries", "Twenty-two regional comparisons with common metrics, maps, and lever breakdowns."),
+        ("Part III", "Nation profiles", "One page for each UN Member State, ordered alphabetically."),
+        ("Part IV", "Eurozone focused report", "A 21-member shared-currency comparison using the canonical global model."),
+        ("Part V", "Evidence, data, and project record", "Executable crosswalk, regression, datasets, attribution, source access, glossary, and credits."),
+    ]
+    for part, title, description in contents:
+        pdf.section_label(part, HEADER_COLOR)
+        pdf.set_font(FONT_NAME, "", 12)
+        pdf.set_text_color(*INK)
+        pdf.cell(0, 6, title, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.small_text(description)
+        pdf.ln(2)
+    pdf.body_text(
+        "QR title pages introduce the regional summaries, nation profiles, Eurozone maps, and glossary/source "
+        "section. Every other printed web link is paired with a compact QR symbol, and every destination is also "
+        "printed as a URL so access does not depend on QR scanning."
+    )
+
     # ========== EXECUTIVE DESCRIPTION ==========
     pdf.add_page()
     pdf.chapter_title("Executive Description")
     pdf.body_text(
-        "The RTLDI — Right to Life Deficit Index — is taken from the source framework (Hubbard, Zenodo 10.5281/zenodo.19468550) and extended here so that the world can see and capture the lost potential GDP caused by missing protections.\n\n"
-        "We call this lost potential GDP \"capital exclusions\": places and economies where capital is excluded from productive use because the nine foundational protections necessary for it to operate safely are not present. The RTLDI shows that the global economy currently has approximately 15 trillion dollars in capital exclusions sitting outside the economy — waiting for nations to decide to put the necessary protections in place."
+        "The RTLDI — Right to Life Deficit Index — is taken from the source framework (Hubbard, Zenodo 10.5281/zenodo.19468550) and extended here to estimate potential GDP statistically associated with missing protections.\n\n"
+        f"The Atlas calls this modeled quantity \"capital exclusions.\" The corrected 2026 cross-sectional model estimates {format_money(global_total_lost)} in bounded annual capital exclusions. It is not observed money, a causal estimate for any single lever, or a guaranteed reform dividend."
     )
     pdf.ln(3)
     pdf.body_text(
-        "This 2026 Atlas applies the source RTLDI to all 193 UN Member States using V-Dem (2024 components) and the most recent World Bank GDP per capita data. Through population-weighted regression analysis of countries that have these protections versus those that do not, and with a conservative 25% attribution (the portion of observed national wealth associated with the institutional capacity to protect life and capital), the atlas quantifies the scale of these exclusions. The nine levers are low-cost, high-return institutional conditions. Activating them is how nations can bring excluded capital back into the economy."
+        "This 2026 Atlas applies the source RTLDI to all 193 UN Member States using V-Dem 2024 observations and the most recent World Bank baseline assembled for the edition. A population-weighted cross-sectional regression estimates the association between activated protections and GDP per capita. The projection is then bounded so the nine conditions are never assigned more than 25% of observed GDP."
     )
     pdf.ln(3)
     pdf.body_text(
-        "This is practical economic intelligence. The findings are not judgments on nations but measurements of where specific, actionable protections correspond to large capital exclusions (lost potential GDP). The nine levers and the method behind the extension are described in the sections that follow."
+        "This is practical economic intelligence, not a causal forecast or judgment on nations. The atlas identifies where specific protections are absent and reports the bounded economic scale associated with those absences. Raw observations, thresholds, regression evidence, uncertainty, and source ownership are disclosed in the evidence section."
     )
 
     # ========== METHODOLOGY ==========
@@ -661,7 +805,7 @@ def build_front_matter(data: dict) -> Path:
         "9. Socioeconomic Conditions — World Bank: undernourishment ≤ 5 % AND poverty headcount ($2.15) ≤ 10 %.\n\n"
         "R = (number of 'Yes' indicators) / 9\n\n"
         "Economic Projection\n"
-        "ΔG (per-capita) = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with η≈0.30 (the 25% cap from the regression). G₀ is the most recent published GDP per capita (World Bank, labeled 2026 baseline). Total capital exclusions = ΔG × population.\n\n"
+        f"ΔG (per-capita) = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with operational η={ETA:.2f}. The regression estimate is 0.356; the separate 25% contextual cap bounds attribution. G₀ is the most recent published GDP per capita used by this edition. Total capital exclusions = ΔG × population.\n\n"
         "Data Vintage Note for 2026 Edition\n"
         "V-Dem components reflect the latest available year in the source file (2024). GDP per capita (G₀) "
         "uses the freshest published values available at the time of atlas production. This follows the "
@@ -673,70 +817,64 @@ def build_front_matter(data: dict) -> Path:
         "Source equations: Sid J.A. Hubbard, Causality and Attraction v3 (2026), DOI 10.5281/zenodo.19468550"
     )
 
-    # ========== NESTED CAUSAL MODELLING/MAPPING ==========
+    # ========== CAUSAL PROJECTION FROM OUTER ENCLOSURES ==========
     pdf.add_page()
-    pdf.chapter_title("Nested Causal Modelling/Mapping")
-
+    pdf.chapter_title("Causal Projection from Outer Enclosures")
     pdf.body_text(
-        "The RTLDI in this atlas begins with the source framework (Hubbard, Zenodo DOI 10.5281/zenodo.19468550) and extends it through population-weighted regression on the full UN cross-section. The target is to quantify \"capital exclusions\" — the lost potential GDP that exists because the nine foundational protections required for capital to operate safely are not present.\n\n"
-        "R (0.0 to 1.0) is the simple average of the nine binary indicators from the source. The model is verified by the strong population-weighted correlation between higher R and higher observed GDP. A conservative 25% attribution cap is applied so that no more than one-quarter of any nation's observed wealth is credited to these institutional conditions (the raw regression suggests a higher coefficient, closer to 0.33).\n\n"
-        "The nine conditions function as the institutional prerequisites that allow capital to enter and remain in an economy without unacceptable risk of arbitrary loss. Where they are absent, capital is excluded. The RTLDI extension makes the scale of these exclusions visible so that nations can see the concrete economic opportunity in putting the protections in place."
+        "Causal projection distinguishes a change in what can happen from a forecast that says exactly what will happen next. An outer enclosure is a protective institutional boundary around the actions of people inside a system. Switching a lever changes that boundary and therefore changes the feasible set of responses. Movement becomes possible; its timing, scale, and path remain contingent."
+    )
+    pdf.ln(3)
+    pdf.section_label("The projection", ACCENT_COLOR)
+    pdf.ln(1)
+    pdf.body_text(
+        "A causal projection follows the consequences of opening or closing a pathway. While a protection is absent, benefits that require that protected pathway are structurally unavailable. Once an effective protection is present, those benefits enter the system's reachable set. This is an institutional availability claim, not a point prediction of immediate GDP movement. Implementation, credibility, enforcement, information, and the choices of real actors still determine realization."
+    )
+    pdf.ln(3)
+    pdf.section_label("Worked example: whistleblower protection", ACCENT_COLOR)
+    pdf.ln(1)
+    pdf.body_text(
+        "Corruption commonly produces a financial benefit for the people or organizations sustaining it. Insiders are often best placed to reveal the arrangement. Without credible protection from dismissal, prosecution, violence, or other retaliation, disclosure can impose concentrated personal costs while the beneficiaries retain the corrupt rent. Corruption is not logically guaranteed in every unprotected system, but concealment is favored and the protected inside-to-outside evidence channel is closed or severely constrained.\n\n"
+        "Effective whistleblower protection opens that channel. A protected disclosure, investigation, recovery, and deterrence pathway becomes institutionally available. The reform does not guarantee that a whistleblower appears immediately, that enforcement succeeds, or that a particular sum is recovered. It does guarantee the relevant change in modeled possibility: a benefit that cannot be reached through a protected reporting channel while that channel is absent can become reachable once the channel exists and is credible."
+    )
+    pdf.ln(3)
+    pdf.set_fill_color(*PANEL_BG)
+    pdf.set_draw_color(*RULE)
+    callout_y = pdf.get_y()
+    pdf.rect(MARGIN, callout_y, CONTENT_WIDTH, 29, style="DF")
+    pdf.set_xy(MARGIN + 4, callout_y + 3)
+    pdf.set_font(FONT_NAME, "", 7)
+    pdf.set_text_color(*ACCENT_COLOR)
+    pdf.cell(0, 3.5, "EVIDENCE AND CLAIM BOUNDARY", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_x(MARGIN + 4)
+    pdf.set_font(FONT_NAME, "", 8.2)
+    pdf.set_text_color(*INK)
+    pdf.multi_cell(
+        CONTENT_WIDTH - 8,
+        4.1,
+        "The Atlas cross-section shows that high-RTLP countries are generally more prosperous, supporting the direction and economic relevance of the projection. It does not establish that one newly activated lever alone causes the full estimated difference. The defensible causal statement is that effective outer enclosures remove specified barriers and create institutional option value; realized gains remain empirical outcomes to measure after a lever change.",
     )
 
-    # ========== DIAGNOSTIC GUIDE ==========
+    # ========== READER GUIDE ==========
     pdf.add_page()
-    pdf.chapter_title("Using the RTLDI to Identify Capital Exclusions")
-
+    pdf.chapter_title("Reading and Using the Atlas")
     pdf.body_text(
-        "This atlas extends the source RTLDI to make visible the capital exclusions — the lost potential GDP — that result when the nine protections are not in place. The global total is on the order of 15 trillion dollars sitting outside productive economic activity.\n\n"
-        "Governments, investors, and analysts can use the R scores and the 9-component breakdowns to see exactly where specific, low-cost institutional changes correspond to large volumes of currently excluded capital. Activating the levers is how that capital can be brought back into the economy."
+        "Begin with R, the share of nine protections meeting the operational thresholds. Read the green/red lever strip to identify which conditions are present, then inspect each raw value rather than treating the binary classification as the whole observation. G₀ is the GDP-per-capita baseline. ΔG is the bounded per-capita capital-exclusion estimate; the national total multiplies ΔG by population.\n\n"
+        "Regional pages support comparison inside a shared geographic context. Nation pages support diagnosis of one country. The Eurozone report applies the same global coefficient to a shared-currency subset. Lever-level amounts allocate a country's bounded total across missing components; they are not nine independent causal estimates.\n\n"
+        "Policymakers and civil society can use the profiles to identify candidate reforms and questions for deeper investigation. Analysts should use the Full Data View and source fields for comparison. Investors should treat the results as one governance-risk lens, not as investment advice or a forecast."
     )
 
-    pdf.chapter_title("The Core Translation")
+    pdf.add_page()
+    pdf.chapter_title("Interpretation, Scope, and Limitations")
     pdf.body_text(
-        "The bounded equation is ΔG = min( η × (1 − R) × G₀ , 0.25 × G₀ ) with η≈0.30 from the population-weighted 2026 cross-section.\n\n"
-        "R is the average of the nine binary indicators from the source RTLDI. G₀ is GDP per capita. ΔG is the estimated per-person capital exclusion (lost potential GDP) associated with the current level of these protections (capped so the nine indicators are never credited with more than 25% of observed G₀ after other factors are given their due). Total capital exclusions ≈ ΔG × population.\n\n"
-        "A country with R = 0.44 and G₀ = $10,000 shows roughly $1,512 per person per year in capital exclusions under the current cross-sectional relationship (0.30 × 0.56 × 10,000). The 25% cap is the conservative adjustment from the population-weighted regression. The figure is the measured volume of capital currently excluded from that economy — the potential GDP that can be brought back in once the protections are in place."
-    )
-
-    pdf.chapter_title("The Nine Levers")
-    pdf.body_text(
-        "Each lever is a simple binary condition — either present or absent. When present, it removes a barrier that otherwise excludes capital from the economy. The nine levers were identified by the source modelling (extended here via population-weighted regression) with the target of maximal economic scale. Activating them is how nations can reduce capital exclusions and bring excluded GDP back into productive use.\n\n"
-        "1. Legal Protections\nPresent when ordinary law is applied consistently to state agents as well as everyone else. These protections represent opportunities to support greater economic scale by lowering the risk of arbitrary loss; people and businesses invest and trade more when rules are known and fairly enforced. Annual cost is low.\n\n"
-        "2. Independent Judiciary\nPresent when judges are protected from political pressure so they rule according to law. These protections represent opportunities for contracts and property rights to be reliable for everyone. Annual cost is low.\n\n"
-        "3. Law Enforcement Accountability\nPresent when police and security forces are investigated and punished when they break the law. These protections represent opportunities for people to travel, work, and invest with greater security. Annual cost is low.\n\n"
-        "4. Protection Against Arbitrary Detention\nPresent when no one can be held without charge, time limits, or judicial review. These protections represent opportunities to protect continuity of talent and enterprise. Annual cost is low.\n\n"
-        "5. Freedom from Torture\nPresent when torture is a crime with no exceptions and evidence obtained by it is excluded. These protections represent opportunities to build social trust and accurate information flows. Annual cost is low.\n\n"
-        "6. Civilian Protection in Conflict\nPresent when armed forces distinguish civilians from combatants and are held accountable. These protections represent opportunities to preserve human and physical capital for recovery. Annual cost is training and accountability.\n\n"
-        "7. Access to Justice\nPresent when ordinary people can bring serious claims against the powerful and have them heard. These protections represent opportunities for contracts and rights to be meaningful for everyone. Annual cost is legal aid and court capacity.\n\n"
-        "8. Freedom of Expression & Whistleblower Protections\nPresent when laws protect people who report government corruption from retaliation. These protections represent opportunities for corruption to be exposed and stopped, public money to go further, and investors to see lower risk. Annual cost is low — mainly passing and enforcing the law. When the law protects whistleblowers, the whistles blow and tell you where the corruption is.\n\n"
-        "9. Commitment to Basic Human Security\nPresent when a society deliberately sets and maintains a floor against extreme deprivation (through nutrition, basic health access, and minimal material security). This is a measurable expression of political will and institutional priority. When present, it expands the share of the population that can participate productively in the economy, increasing overall scale and velocity. Annual cost is a fiscal and political choice about minimum security standards.\n\n"
-        "These nine work together as a system of low-cost, high-return institutional conditions. Societies that activate more of them consistently realize greater economic scale and velocity."
-    )
-
-    pdf.chapter_title("How the Levers Work in Practice")
-    pdf.body_text(
-        "Each lever is either present or absent. When present, it removes a barrier that otherwise excludes capital from the economy. The nine levers come from the source RTLDI and are extended here so the volume of capital exclusions (lost potential GDP) associated with each missing lever becomes visible.\n\n"
-        "Governments, investors, and analysts can use the R score and the 9-component breakdown as practical economic intelligence: identify which levers are not yet activated in a jurisdiction and see the corresponding scale of excluded capital that could be brought back in once the protections are in place. The levers are low-cost relative to the GDP they help unlock."
-    )
-
-    pdf.chapter_title("Practical Use")
-    pdf.body_text(
-        "For national policymakers: Open your profile. Note your R and the specific levers that are not yet activated. Compare the total annual capital exclusions (lost potential GDP) in your jurisdiction to relevant budgets. Ask the civil service to cost the effort required to activate one or two levers and the volume of excluded capital that could be brought back into the economy.\n\n"
-        "For civil society and media: Use the numbers in domestic advocacy to highlight the opportunity. 'We have $2.3 billion in capital exclusions every year associated with law enforcement accountability. That is more than the entire health budget. Here is one change that can bring that excluded capital back in.'\n\n"
-        "For citizens: The data is public. When leaders promise 'development,' ask which of the nine protections they will strengthen and how we will know in four years whether R has moved — and what capital exclusions that could eliminate.\n\n"
-        "For international actors: Target governance and security assistance to the specific levers that currently show the largest capital exclusions in that country."
-    )
-
-    pdf.chapter_title("Limitations")
-    pdf.body_text(
-        "R uses 2024 V-Dem data paired with the freshest published GDP figures. Binarization thresholds are modeling choices; always examine the raw values. The 25 % cap is a deliberate conservative adjustment from the population-weighted regression on the UN cross-section (raw analysis suggests a higher coefficient, closer to 0.33). The identity of the levers with the largest associated capital exclusions is more robust than the precise dollar figure. The atlas quantifies the scale of exclusions based on the source RTLDI; whether and how much capital returns when protections are strengthened depends on many other factors."
+        "Association is not causal identification. The regression is cross-sectional and may reflect omitted variables, reverse causation, measurement error, model specification, and common causes of both institutional protection and GDP. The one-year growth check reported in the evidence section is not statistically significant.\n\n"
+        "R uses V-Dem 2024 observations paired with the freshest World Bank values assembled for the 2026 baseline. Binarization thresholds and proxy choices are RTLDI Atlas Project operationalizations. Missing socioeconomic observations are conservatively scored as lever 9 absent. Current-US-dollar GDP includes exchange-rate and price-level movement.\n\n"
+        "The operational eta is 0.36, based on a corrected estimate of 0.356. The separate 25% contextual cap prevents the model from assigning more than one quarter of observed GDP to the nine conditions. That bound limits the claim but does not establish the counterfactual. Whether any measured exclusion is realized after reform depends on industry, resources, human capital, geography, conflict, history, implementation quality, and other conditions outside this reduced model."
     )
 
     pdf.small_text(
-        "Full version and updates: docs/diagnostic_guide.md\n"
         "Source framework: Sid J.A. Hubbard, Causality and Attraction v3 (2026), DOI 10.5281/zenodo.19468550"
     )
+    draw_mini_link(pdf, label="Full Data View", url=FULL_DATA_URL, slug="limitations-full-data")
 
     # ========== CARTOGRAPHIC APPROACH AND THE NESTED MAP ==========
     pdf.add_page()
@@ -854,7 +992,7 @@ def build_front_matter(data: dict) -> Path:
     pdf.set_font(FONT_NAME, "", 9)
     pdf.set_text_color(*HEADER_COLOR)
     total_t = global_total_lost / 1e12
-    pdf.multi_cell(CONTENT_WIDTH - 6, 4, f"Total global capital exclusions: ${total_t:,.2f} trillion. This is lost potential GDP sitting outside the economy because the nine protections are not present.")
+    pdf.multi_cell(CONTENT_WIDTH - 6, 4, f"Total modeled global capital exclusions: ${total_t:,.2f} trillion. This bounded cross-sectional estimate is associated with missing protections; it is not directly observed capital or a guaranteed causal effect.")
     pdf.set_y(y_total + 19)
 
     pdf.ln(0.5)
@@ -863,33 +1001,6 @@ def build_front_matter(data: dict) -> Path:
     pdf.set_text_color(85, 85, 85)
     pdf.multi_cell(0, 2.8,
         "Data in outputs/atlas/ supports re-projection in external tools for AuthaGraph/Dymaxion if desired. See source Ch. 2 and Epilogue on maps and nested causality (DOI 10.5281/zenodo.19468550)."
-    )
-
-    # ========== TABLE OF CONTENTS ==========
-    pdf.add_page()
-    pdf.chapter_title("Table of Contents")
-    pdf.set_font(FONT_NAME, "", 10)
-    toc_items = [
-        ("Executive Description", "2"),
-        ("Methodology and Data Sources", "3"),
-        ("Using RTLDI as Economic Intelligence", "4"),
-        ("Cartographic Approach and the Nested Map", "5"),
-        ("Summary Table of All 193 UN Member Nations", "6"),
-        ("UN Regional Summaries (22 regions)", "12"),
-        ("Detailed Nation Profiles (A–Z)", "~35"),
-        ("Data Attribution and Sources", "~210"),
-       #("Falsification of Malthusian Scarcity", "~211"),
-        ("Index of Terms", "~212"),
-        ("Credits and Acknowledgments", "~213"),
-    ]
-    for title, page in toc_items:
-        pdf.cell(0, 6, f"{title}", border=0)
-        pdf.cell(0, 6, page, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.ln(4)
-    pdf.small_text(
-        "Note: Detailed profiles are ordered alphabetically by country name. "
-        "The Summary Table is sorted by estimated total annual GDP loss (highest first). "
-        "Exact page numbers for profiles depend on final layout; profiles begin after the summary tables."
     )
 
     # ========== SUMMARY TABLE OF ALL NATIONS ==========
@@ -971,6 +1082,19 @@ def build_front_matter(data: dict) -> Path:
         pdf.cell(col_widths[5], 4.2, total_str, border=1, align="R", fill=zebra_fill)
         pdf.cell(col_widths[6], 4.2, pop_str, border=1, align="R", fill=zebra_fill, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
+    # Keep the QR title page on a recto in the assembled duplex volume.
+    if pdf.page_no() % 2 == 1:
+        pdf.add_chromeless_page()
+    draw_qr_gateway(
+        pdf,
+        title="UN Regional Summaries",
+        subtitle="Twenty-two comparable geographic views, with direct access to the interactive Web Atlas.",
+        url=WEB_ATLAS_URL,
+        slug="web-atlas-regions",
+        kicker="Part II / Print and web",
+        note="The summaries that follow use the same 193 canonical country records. Scan to compare regions, open countries, and inspect every lever online.",
+    )
+
     # End of front matter (global 193-nation summary table). Regions are now in their own independent PDF
     # for fast iteration without re-generating front or the heavy nations section.
     out_path = Path(FRONT_PDF)
@@ -990,21 +1114,6 @@ def build_regions(data: dict) -> Path:
     pdf = RTLDIAtlasPDF()
     detailed_all = data["detailed_all"]
     sorted_regions = data["sorted_regions"]
-
-    # Intro page for the regions section
-    pdf.add_page()
-    pdf.chapter_title("UN Regional Summaries")
-    pdf.body_text(
-        "The 193 UN Member States are grouped into 22 geographic regions. Below are one-page overviews for each region, "
-        "aggregating the RTLDI metrics. For each region we show a choropleth of enclosure strength (R) for its member "
-        "countries (zoomed to the region using the same RTLDI atlas scale as the global map), key aggregates (population-weighted "
-        "average R, total annual capital exclusions), and a breakdown of the 9 RTLP indicators. The breakdown reports the percentage "
-        "of countries in the region scoring 'Yes' on each indicator and the estimated portion of the region's total capital exclusions "
-        "attributable to shortfalls on that indicator (using the current η=0.30 scaled by each country's contextual 25% cap)."
-    )
-    pdf.small_text(
-        "Regional statistics are derived directly from the per-country 2026 atlas values (with the 25% contextual cap applied). Regions with the largest capital exclusions are shown first."
-    )
 
     for reg_name, reg_sum in sorted_regions:
         pdf.add_page()
@@ -1204,7 +1313,7 @@ def build_regions(data: dict) -> Path:
         pdf.set_font(FONT_NAME, "", 5.5)
         pdf.set_text_color(100, 100, 100)
         pdf.multi_cell(0, 2.3,
-            "Note: Weighted R is population-weighted mean of member countries' R. Attributable lost for an indicator = sum over countries with 'No' on that indicator of (η/9 × G₀ × pop) with current η=0.30. "
+            f"Note: Weighted R is population-weighted mean of member countries' R. Attributable lost for an indicator = sum over countries with 'No' on that indicator of (η/9 × G₀ × pop) with current η={ETA:.2f}. "
             "See individual nation profiles for country-level detail and 3-year trends."
         )
 
@@ -1224,8 +1333,17 @@ def build_nations(data: dict) -> Path:
     g0_series = data["g0_series"]
     iso2_lookup = load_iso2_lookup()
 
-    pdf.add_page()
-    pdf.chapter_title("Detailed Nation Profiles (Alphabetical)")
+    # In the assembled volume, this blank verso places the Part III QR title on a recto.
+    pdf.add_chromeless_page()
+    draw_qr_gateway(
+        pdf,
+        title="Detailed Nation Profiles",
+        subtitle="One archival profile for every United Nations Member State, with direct access to interactive country exploration.",
+        url=WEB_ATLAS_URL,
+        slug="web-atlas-nations",
+        kicker="Part III / Print and web",
+        note="The 193 profiles that follow are ordered alphabetically. Scan to search Full Data, compare every field, and open a country in the interactive map.",
+    )
 
     for d in detailed_alpha:
         pdf.add_page()
@@ -1420,26 +1538,43 @@ def build_back_matter(data: dict) -> Path:
     pdf = RTLDIAtlasPDF()
     detailed_all = data["detailed_all"]
 
+    # The preceding Eurozone module ends on a recto; preserve the Part V recto opening.
+    pdf.add_chromeless_page()
+    draw_section_opener(
+        pdf,
+        part="Part V",
+        title="Evidence, Data, and Project Record",
+        subtitle="The methods, sources, rights, and production record required to inspect and reproduce the Atlas.",
+        facts=[
+            ("Crosswalk", "Nine fields, thresholds, proxies, caveats, and allocations"),
+            ("Regression", "Specification, robust uncertainty, comparators, and growth check"),
+            ("Provenance", "Exact V-Dem artifact, checksum, and World Bank indicators"),
+            ("Publication record", "Ownership, citation, license, source access, glossary, and colophon"),
+        ],
+    )
+
     # ========== DATA ATTRIBUTION ==========
     pdf.add_page()
-    pdf.chapter_title("Data Attribution and Sources")
+    pdf.chapter_title("Data Attribution and Source Ownership")
     pdf.body_text(
         "Primary Data\n"
-        "• V-Dem (Varieties of Democracy) Country-Year Full+Others, version 15 (2024 data release). "
+        "• V-Dem (Varieties of Democracy) Country-Year Core, version 15, using 2024 country-year observations. "
         "Released component fields: v2cltrnslw, v2juhcind, v2juncind, v2clkill, v2xcl_acjst, v2cltort, v2x_clphy, v2clrspct, and v2x_freexp. Each of the eight V-Dem levers has a distinct operational field or field composite; World Bank indicators supply lever 9.\n"
         "• World Bank World Development Indicators (WDI) via API — GDP per capita (current US$), "
         "population, prevalence of undernourishment, and poverty headcount at $2.15 (2017 PPP). "
         "Values are the most recent published as of atlas production (labeled 2026 baseline).\n"
-        "• United Nations Member States list (193 sovereign states) for country scope and ISO3 codes.\n\n"
+        "• United Nations Member States list for the 193-country publication scope; repository ISO tables provide operational codes and regional grouping.\n\n"
+        "Field-level ownership\n"
+        "V-Dem is credited for its institutional measurements. The World Bank is credited for GDP, population, undernourishment, and poverty observations. RTLP scores, RTLDI values, lever classifications, potential-GDP and capital-exclusion estimates, rankings, maps, narratives, and generated data products are attributable to the RTLDI Atlas Project.\n\n"
         "Source Framework\n"
-        "The RTLDI equation, the nine RTLP indicators, and the nested causal interpretation are taken from:\n"
+        "The RTLDI equation and the nine RTLP indicators are taken from:\n"
         "Sid J.A. Hubbard, Causality and Attraction: A Continuum of Steady States (Version 3, May 2026), "
         "DOI: 10.5281/zenodo.19468550. The operational crosswalk and binarization thresholds used here "
         "are documented in docs/indicator_crosswalk.md of this project."
     )
     pdf.small_text(
         "This PDF was generated programmatically from the open RTLDI ATLAS toolkit. "
-        "No proprietary or restricted data were used."
+        "No proprietary or restricted source data were used. V-Dem and World Bank remain the authoritative sources for their observations."
     )
 
     # ========== REPOSITORY / ATLAS SUITE ==========
@@ -1449,12 +1584,12 @@ def build_back_matter(data: dict) -> Path:
         "This PDF atlas was produced by the RTLDI Atlas Suite, the open repository that contains the "
         "canonical data crosswalks, Python build pipeline, choropleth map generation, PDF ebook generator, "
         "and self-contained HTML atlas generator used for the public release.\n\n"
-        "Repository: https://github.com/SJAH9/rtldi-atlas\n\n"
         "Users of this atlas are invited to download the RTLDI Atlas Suite and reproduce the published "
         "RTLP scores and RTLDI capital-exclusion projections directly from the public-release V-Dem and "
         "World Bank datasets. The suite is designed so NGOs, researchers, policymakers, analysts, and "
         "investors can rerun the atlas as new public data releases become available."
     )
+    draw_mini_link(pdf, label="RTLDI Atlas public repository", url=REPOSITORY_URL, slug="suite-repository")
     pdf.body_text(
         "The same tools can also be used to generate an RTLDI Atlas from proprietary, internal, or field "
         "data. The implementation separates the conceptual nine-lever RTLDI model from the data crosswalk: "
@@ -1476,12 +1611,13 @@ def build_back_matter(data: dict) -> Path:
         "clearly identify themselves as experimental derivatives."
     )
 
-    # ========== NESTED CAUSAL MODELLING (short note) ==========
+    # ========== EVIDENCE ROADMAP ==========
     pdf.add_page()
-    pdf.chapter_title("Nested Causal Modelling")
+    pdf.chapter_title("Evidence and Transparency Roadmap")
 
     pdf.body_text(
-        "The atlas takes the RTLDI from the source document and extends it via population-weighted regression (25% cap) to quantify capital exclusions — the lost potential GDP where capital is excluded from the economy because the nine protections required for it to operate are not present. The nine levers are the conditions from the source modelling. Their descriptions and the scale of exclusions associated with each are given in the front-matter section. The 25 % cap is a practical limiter on projections; the levers are low-cost conditions whose activation can bring excluded capital back in."
+        "The pages that follow mirror the web atlas's methods and source views. Each lever page states the RTLP question, source field, threshold, operational proxy, caveat, and global bounded allocation. Regression pages report specification, robust uncertainty, statistical significance, comparators, and a non-significant one-year growth check. Dataset pages identify the exact V-Dem artifact and World Bank indicators used for reproduction.\n\n"
+        "This evidence should be read with the interpretation limits in Part I. Lever-level allocations partition a bounded national total; they are not independent causal estimates. Cross-sectional significance does not establish a reform counterfactual."
     )
 
     evidence = evidence_bundle(data)
@@ -1495,9 +1631,6 @@ def build_back_matter(data: dict) -> Path:
         "The lever amounts allocate each country's bounded total across its missing components; they are not "
         "nine independent causal estimates and should not be summed without the shared cap."
     )
-    pdf.section_label("What is the NCM Isolated Entity?", HEADER_COLOR)
-    pdf.body_text(evidence["ncm_note"])
-
     for num in range(1, 10):
         meta = LEVER_DISPLAY[num]
         cross = LEVER_CROSSWALK[num]
@@ -1594,15 +1727,15 @@ def build_back_matter(data: dict) -> Path:
         "The corrected 2026 score table uses V-Dem Country-Year Core v15 and 2024 country-year observations. "
         "The current update workflow targets Country-Year Core v16. The repository does not redistribute the "
         "large raw source artifact.\n\n"
-        f"Official v15 archive: {VDEM_ARCHIVE_URL}\n"
-        "Exact v15 artifact: https://raw.githubusercontent.com/vdeminstitute/vdemdata/V15/data/vdem.RData\n"
-        "SHA-256: 4b715190a1e351a81daf11cbe6f9f77e67d8914f0ed612b93e2d8fba5523e540\n"
-        f"Official current dataset page: {VDEM_DATASET_URL}\n"
-        f"Official v16 codebook: {VDEM_CODEBOOK_URL}\n\n"
+        "SHA-256 for the exact v15 artifact: 4b715190a1e351a81daf11cbe6f9f77e67d8914f0ed612b93e2d8fba5523e540\n\n"
         "For exact replication, download the v15 artifact identified above and export the required columns as "
         "data/raw/V-Dem-CY-Core-v15.csv. For a current-data update, download Core v16, then run "
         "python3 -m src.build_atlas --year 2026 --eta 0.36."
     )
+    draw_mini_link(pdf, label="Official V-Dem v15 archive", url=VDEM_ARCHIVE_URL, slug="vdem-v15-archive")
+    draw_mini_link(pdf, label="Exact V-Dem v15 artifact", url=VDEM_V15_SOURCE_URL, slug="vdem-v15-artifact")
+    draw_mini_link(pdf, label="Current V-Dem dataset", url=VDEM_DATASET_URL, slug="vdem-current")
+    draw_mini_link(pdf, label="V-Dem v16 codebook", url=VDEM_CODEBOOK_URL, slug="vdem-v16-codebook")
     pdf.body_text(
         "V-Dem's unsuffixed expert-coded fields are measurement-model point estimates on a standardized interval "
         "scale, not the original ordinal coder categories. The atlas cutoffs are project operationalizations. "
@@ -1617,14 +1750,55 @@ def build_back_matter(data: dict) -> Path:
         "(population), SN.ITK.DEFC.ZS (undernourishment), and SI.POV.DDAY (international-poverty headcount). "
         "GDP is G0 and the regression outcome; population is the regression weight and aggregation factor; the "
         "last two fields populate lever 9.\n\n"
-        f"World Bank Data portal: {WORLD_BANK_DATA_URL}\n"
-        "Public API: https://api.worldbank.org/v2/\n\n"
         "The pipeline fetches the public API through wbgapi and stores processed snapshots under data/processed/."
     )
+    draw_mini_link(pdf, label="World Bank Data portal", url=WORLD_BANK_DATA_URL, slug="world-bank-data")
+    draw_mini_link(pdf, label="World Bank public API", url=WORLD_BANK_API_URL, slug="world-bank-api")
     pdf.body_text(
         "The 2026 baseline is the freshest published value available at build time, not a claim that every value "
         "was observed in 2026. Missing undernourishment or poverty is conservatively scored as lever 9 absent. "
         "Current-US$ GDP supports current-dollar totals but also reflects price-level and exchange-rate movement."
+    )
+
+    pdf.add_page()
+    pdf.chapter_title("Citation, Licensing, and Reuse")
+    pdf.section_label("Cite Atlas outputs")
+    pdf.body_text(
+        "RTLDI Atlas Project. (2026). RTLDI Atlas of UN Member States [Data set, software, and atlas]. "
+        "Sid J.A. Hubbard, Principal Investigator."
+    )
+    draw_mini_link(pdf, label="Atlas repository", url=REPOSITORY_URL, slug="citation-repository")
+    pdf.section_label("Cite the source theory")
+    pdf.body_text(
+        "Hubbard, Sid J.A. (2026). Causality and Attraction: A Continuum of Steady States, Volume I, "
+        "Version 3."
+    )
+    draw_mini_link(pdf, label="Source theory DOI", url="https://doi.org/10.5281/zenodo.19468550", slug="citation-doi")
+    pdf.section_label("Cite source observations")
+    pdf.body_text(
+        "For institutional observations, cite the V-Dem Institute and the v15 dataset/codebook appropriate to "
+        "the observation. For GDP, population, undernourishment, and poverty observations, cite the relevant "
+        "World Development Indicators series and access date. Do not attribute RTLDI Project transformations "
+        "or projections to V-Dem or the World Bank."
+    )
+    pdf.section_label("License boundary")
+    pdf.body_text(
+        "Atlas repository materials are available under the MIT License. Preserve the copyright and license notice when "
+        "redistributing licensed materials. The source books and theoretical framework retain their separately "
+        "stated rights."
+    )
+    draw_mini_link(pdf, label="MIT License", url="https://github.com/SJAH9/rtldi-atlas/blob/main/LICENSE", slug="citation-license")
+
+    # Preserve a recto opening for the glossary/source-access title in the full volume.
+    pdf.add_chromeless_page()
+    draw_qr_gateway(
+        pdf,
+        title="Glossary and Source Access",
+        subtitle="Definitions for the Atlas, with direct access to the executable crosswalk, source code, canonical records, and reproduction commands.",
+        url=REPOSITORY_URL,
+        slug="source-code-and-data",
+        kicker="Part V / Reference",
+        note="The glossary follows this title page. Scan to inspect the code and project-generated data; V-Dem and World Bank remain authoritative for their observations.",
     )
 
     # ========== NEW: FALSIFICATION OF MALTHUS (streamlined from source) ==========
@@ -1647,24 +1821,25 @@ def build_back_matter(data: dict) -> Path:
    #     "The important distinction is that this analysis does not negate the efficacy of Malthusian regimes. A nation can choose the Malthusian relationship to its population and receive the expected constraints on per-capita resources, or it can activate more of the nine levers and enjoy the scaling benefits of an optimized institutional environment. The opportunity to realize greater economic scale through these levers is now visible in the data."
   #  )
 
-    # ========== INDEX OF TERMS ==========
+    # ========== GLOSSARY ==========
     pdf.add_page()
-    pdf.chapter_title("Index of Terms")
+    pdf.chapter_title("Glossary of Terms")
 
     terms = [
         ("ΔG (delta G)", "Annual per-capita capital exclusions (lost potential GDP) associated with the current level of the nine levers. Core output of the RTLDI equation."),
         ("G₀ (G-zero)", "Baseline GDP per capita (World Bank, current US$). The 'current' economic size against which capital exclusions are measured."),
-        ("R (lever activation score)", "Average activation level (0–1) of the nine Right to Life Deficit Index levers. 1 = full activation across all dimensions."),
-        ("RTLDI", "Right to Life Deficit Index — the full framework from the source (Zenodo 10.5281/zenodo.19468550), extended here to quantify capital exclusions (lost potential GDP where capital is excluded because the nine protections necessary for it to operate are absent)."),
-        ("The Nine Levers", "The nine binary institutional conditions (RTLDI) that are averaged to produce R. Low-cost, high-return switches identified through modelling for maximal prosperity."),
+        ("R (RTLP score)", "The arithmetic mean (0–1) of the nine binary Right-to-Life Protection lever values. R=1 means all nine operational thresholds are met."),
+        ("RTLP", "Right-to-Life Protection. In the Atlas, RTLP refers to the nine-component protection score R and its component classifications."),
+        ("RTLDI", "Right to Life Deficit Index — the source framework operationalized here to report RTLP scores and bounded capital-exclusion estimates."),
+        ("The Nine Levers", "The nine conceptual protections averaged to produce R. Each is populated by a distinct operational field or field composite in the corrected pipeline."),
         ("V-Dem", "Varieties of Democracy project. Supplies the expert-coded governance and civil liberties indicators for eight of the nine RTLP components."),
         ("Crosswalk", "The explicit mapping from the nine verbatim RTLP questions to observable V-Dem variables and World Bank statistics, with defined binarization thresholds."),
         ("2026-fresh G0", "The most recent published GDP per capita values used as the dynamic baseline for the 2026 edition (even when RTLP components are from 2024)."),
-        ("Mollweide", "Equal-area pseudocylindrical map projection used for all choropleths (global, regional, and per-nation zooms) to ensure visual area corresponds to geographic reality."),
+        ("Mollweide", "Equal-area pseudocylindrical map projection used for global and regional choropleths. Nation profiles use fitted country views for legibility."),
         ("Choropleth", "Thematic map in which countries or regions are shaded by enclosure strength R (0–1) using the RTLDI atlas scale; primary visual for the global, regional, and focus views."),
         ("Economic Intelligence (tool)", "The use of R scores, component breakdowns, and attributable capital exclusions figures as practical information for governments, businesses, and analysts to identify high-leverage institutional opportunities."),
-        ("Trend (3-year)", "The per-nation GDP-driven RTLDI plots (R held fixed at 2024 values) that illustrate recent dynamics in capital exclusions alongside the regional and global maps."),
-        ("Attributable capital exclusions", "The share of a country or region's total capital exclusions (lost potential GDP) that is directly traceable to the current implementation level of one specific protection (sum of η/9 × G₀ × pop over countries where the protection is not fully present, with current η≈0.30 from population-weighted cross-section)."),
+        ("Trend (up to 3 years)", "A text summary of available GDP-driven projection points with R held fixed at its latest V-Dem value. It is not a measured RTLP time series."),
+        ("Attributable capital exclusions", f"The allocation of a country or region's bounded total across missing levers, using η/9 × G₀ × population and each country's cap ratio. Current operational η={ETA:.2f}. These allocations are not independent causal estimates."),
         ("Enclosure (nested causal / human)", "The source document's central metaphor: the interdependent, layered structures of protection whose strength or weakness shapes higher-order economic and social steady states."),
         ("Causality and Attraction", "The source monograph (Hubbard 2026V3, Zenodo 19468550) that supplies the RTLDI equation, the nine RTLP indicators, the nested-enclosures paradigm, and the cartographic critique of distortion. This atlas extends the source RTLDI to quantify capital exclusions."),
         ("Binarization / threshold", "The documented conversion of continuous V-Dem and World Bank values into the binary 0/1 scores for the nine indicators (e.g., ≥2.0 on 0-4 scales, ≤5 % undernourishment + ≤10 % poverty for #9)."),
@@ -1676,6 +1851,27 @@ def build_back_matter(data: dict) -> Path:
         ("Member-nations table", "The compact table on each regional summary page that lists every country in the region together with its R, G0, population, and capital exclusions, plus a bottom row of regional totals."),
         ("RTLDI atlas R scale", "The shared perceptual color scale used for every enclosure-strength choropleth in the atlas: deep low-R tones through teal midrange values to warm high-R values."),
         ("Country view", "The country-only choropleth on each nation page, fitted to the national boundary and shaded by enclosure strength R without using the regional context map."),
+        ("Capital exclusion", "The Atlas term for bounded lost potential GDP associated with missing RTLP protections under the stated cross-sectional model. It is an estimate, not observed money or a guaranteed reform dividend."),
+        ("Contextual cap", "The rule limiting projected capital exclusions to 25% of G₀ so the nine protections are not assigned more than one quarter of observed GDP. The cap limits attribution but does not establish causality."),
+        ("Cross-sectional association", "A relationship measured across countries at one analytical period. It can be statistically significant without showing that changing one variable will cause the other to change."),
+        ("Causal projection", "A projection of how changing an enclosure alters the set of reachable outcomes. It identifies an enabled or disabled pathway without guaranteeing the timing, magnitude, or realization of a particular response."),
+        ("Feasible set", "The outcomes and actions that remain institutionally possible under the current enclosures. Activating a lever can add pathways to this set without forcing actors to use them immediately."),
+        ("Institutional option value", "The value created when an effective protection makes a beneficial action or remedy available. Availability can be established by the protection even when the eventual uptake and financial return remain uncertain."),
+        ("Outer enclosure", "A legal, institutional, or social boundary that protects and constrains actions inside a modeled system. In the whistleblower example, credible protection surrounds the reporting pathway and changes what insiders can safely do."),
+        ("Full Data View", "The web table exposing one record per UN Member State with RTLP, lever, GDP, population, potential-GDP, and capital-exclusion fields."),
+        ("Linked open data", "Atlas data published in RDF/XML with stable concepts and relationships so machines can consume and connect the observations semantically."),
+        ("Operational proxy", "An available measured field used to represent a conceptual lever when no source variable directly measures the full RTLP question."),
+        ("Provenance", "The documented origin, version, transformation path, and checksum needed to understand or reproduce a data product."),
+        ("Robust standard error", "An uncertainty estimate designed to remain valid under heteroskedastic regression residuals; used in the Atlas regression interval and significance test."),
+        ("Source ownership", "The attribution boundary separating V-Dem and World Bank observations from RTLDI Atlas Project classifications, transformations, projections, maps, and narratives."),
+        ("Weighted seven-signal equivalence", "The algebraic rewriting of the former duplicated-proxy nine-row score as seven unique signals while retaining two-ninths weights for the two repeated pairs. It is not an unweighted seven-variable model."),
+        ("AI-assisted production", "The disclosed use of AI and data-science tools in research, software development, analysis, validation, and publication under the direction and responsibility of the Principal Investigator."),
+        ("DOI", "Digital Object Identifier: a persistent identifier for a publication. The Atlas source framework is identified by doi:10.5281/zenodo.19468550."),
+        ("MIT License", "The permissive open-source license governing Atlas repository code, pipeline, documentation, and generated outputs. It does not relicense the source books or theoretical framework."),
+        ("p-value", "The probability, under the fitted null model, of observing a test statistic at least as extreme as the one reported. It is not the probability that the model is true or causal."),
+        ("Population weighting", "Regression or aggregation weights proportional to national population, so the fitted relationship or mean reflects people rather than treating every country as equally sized."),
+        ("QR gateway", "A full-page print-to-digital bridge containing a high-redundancy QR symbol and its visible destination URL. The URL remains usable without QR scanning."),
+        ("R-squared (R2)", "The share of outcome variation described by a fitted regression in its sample. It is a model-fit statistic, not evidence of causality."),
     ]
 
     if detailed_all and "components" in detailed_all[0]:
@@ -1730,32 +1926,151 @@ def build_back_matter(data: dict) -> Path:
     pdf.add_page()
     pdf.chapter_title("Credits and Acknowledgments")
     pdf.body_text(
-        "Conceptual Framework and Equations\n"
-        "Sid J.A. Hubbard — author of Causality and Attraction: A Continuum of Steady States (v3, 2026). "
-        "All rights to the RTLDI equations, the nine RTLP indicators, and the nested causal paradigm remain with the author.\n\n"
-        "Data\n"
-        "• V-Dem Institute (https://www.v-dem.net) — published scores use Country-Year Full+Others v15, 2024 observation year; current update workflow targets v16.\n"
-        "• World Bank Open Data (https://data.worldbank.org) — WDI via API.\n"
-        "• United Nations — list of 193 Member States.\n\n"
-        "Code and Atlas Production\n"
-        "RTLDI ATLAS project (2026). The open-source toolkit, crosswalk implementation, data pipeline, "
-        "and this PDF generator are provided to make the framework usable by NGOs and researchers.\n\n"
-        "This work is released in the spirit of the original document: to map, with transparent data and "
-        "reproducible math, the economic consequences of failing to protect the right to life equally."
+        "Principal Investigator and Production\n"
+        "Sid J.A. Hubbard conceived, wrote, directed, and engineered the RTLDI Atlas Project and is responsible "
+        "for its methods, crosswalk decisions, interpretation, software direction, and publication. The project "
+        "was produced with assistance from multiple AI and data-science tools under the production disclosure stated in Part I.\n\n"
+        "Conceptual Framework\n"
+        "Causality and Attraction: A Continuum of Steady States, Volume I, Version 3 — Sid J.A. Hubbard.\n\n"
+        "Institutional Data\n"
+        f"V-Dem Institute — Country-Year Core v15, 2024 observations. SHA-256 {VDEM_V15_SHA256}.\n\n"
+        "Economic and Population Data\n"
+        "World Bank World Development Indicators through the public API.\n\n"
+        "Country Scope\n"
+        "United Nations Member States."
     )
-    pdf.ln(5)
-    pdf.set_font(FONT_NAME, "", 8)
-    pdf.set_text_color(100, 100, 100)
-    pdf.multi_cell(0, 4,
-        "For the full source code, 2026 data tables, and previous editions (2023, 2024), see the project repository. "
-        "Users are encouraged to download the latest V-Dem and World Bank releases and re-run the pipeline for updated figures."
+    draw_mini_link(pdf, label="Conceptual framework DOI", url="https://doi.org/10.5281/zenodo.19468550", slug="credits-framework")
+    draw_mini_link(pdf, label="Exact V-Dem v15 artifact", url=VDEM_V15_SOURCE_URL, slug="credits-vdem-artifact")
+    draw_mini_link(pdf, label="V-Dem Institute", url="https://www.v-dem.net/", slug="credits-vdem")
+    draw_mini_link(pdf, label="World Bank Data", url=WORLD_BANK_DATA_URL, slug="credits-world-bank")
+    draw_mini_link(pdf, label="World Bank API", url=WORLD_BANK_API_URL, slug="credits-world-bank-api")
+    draw_mini_link(pdf, label="United Nations Member States", url="https://www.un.org/en/about-us/member-states", slug="credits-un")
+    pdf.section_label("Open-source production stack")
+    pdf.body_text(
+        "Python, pandas, NumPy, SciPy, Plotly, Kaleido, fpdf2, PyPDF2, Pillow, qrcode, openpyxl, and wbgapi. "
+        "Plotly's geographic rendering uses public map geometry derived from established open cartographic sources, "
+        "including Natural Earth. Each project retains its own license and attribution requirements."
     )
+
+    pdf.add_page()
+    pdf.chapter_title("Colophon and Print Specification")
+    pdf.body_text(
+        "Format\n"
+        "A4 portrait (210 × 297 mm), designed without required bleed. All essential text, QR quiet zones, maps, "
+        "folios, and rules remain inside the trim safety area. Section gateways and covers use white trim edges so "
+        "the file can be printed without edge-to-edge finishing.\n\n"
+        "Typography and graphics\n"
+        "Unicode-capable TrueType fonts are embedded by the PDF generator. Global and regional maps are rendered "
+        "from the canonical atlas data; QR symbols are generated at high resolution with error-correction level H. "
+        "Rules and text remain vector content.\n\n"
+        "Assembly\n"
+        "The publication is generated as modular front, regional, nation, Eurozone, and evidence PDFs, then "
+        "assembled in canonical order. Final processing adds continuous physical folios, document metadata, a "
+        "two-page reading layout preference, and PDF outline navigation.\n\n"
+        "Production note\n"
+        "This general-purpose print file uses a device-independent digital workflow suitable for office, digital, "
+        "and print-on-demand production. A commercial offset printer may apply its required CMYK output intent, "
+        "paper profile, imposition, and trapping during prepress."
+    )
+    draw_mini_link(pdf, label="Repository", url=REPOSITORY_URL, slug="colophon-repository")
+    draw_mini_link(pdf, label="Web Atlas", url=WEB_ATLAS_URL, slug="colophon-web")
+    draw_mini_link(pdf, label="Interactive map", url=INTERACTIVE_MAP_URL, slug="colophon-map")
+    draw_mini_link(pdf, label="Full Data View", url=FULL_DATA_URL, slug="colophon-data")
 
     out_path = Path(BACK_PDF)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     pdf.output(out_path)
     print(f"Back matter PDF written to: {out_path}  ({pdf.page_no()} pages)")
     return out_path
+
+
+def _finalize_print_pdf(assembled: Path, out: Path) -> Path:
+    """Apply continuous folios, metadata, duplex layout, and outline navigation."""
+    reader = PdfReader(str(assembled))
+    page_text = [(page.extract_text() or "") for page in reader.pages]
+    total_pages = len(reader.pages)
+
+    overlay_path = out.with_name(out.stem + "_folios.pdf")
+    overlay = FPDF(format="A4", unit="mm")
+    overlay.add_font(FONT_NAME, "", FONT_PATH)
+    overlay.set_auto_page_break(False)
+    for index, text in enumerate(page_text):
+        overlay.add_page()
+        suppress = (
+            index == 0
+            or not text.strip()
+            or "Scan with a phone camera" in text
+            or "RTLDI 2026 Eurozone Capital Exclusion Map" in text
+        )
+        if suppress:
+            continue
+        overlay.set_draw_color(*RULE)
+        overlay.line(MARGIN, 286, PAGE_WIDTH - MARGIN, 286)
+        overlay.set_y(287)
+        overlay.set_font(FONT_NAME, size=7)
+        overlay.set_text_color(*MUTED)
+        overlay.cell(90, 5, "RTLDI ATLAS 2026 | PRINT EDITION")
+        overlay.cell(90, 5, f"PAGE {index + 1} OF {total_pages}", align="R")
+    overlay.output(overlay_path)
+
+    overlay_reader = PdfReader(str(overlay_path))
+    writer = PdfWriter()
+    for page, folio in zip(reader.pages, overlay_reader.pages):
+        page.merge_page(folio)
+        writer.add_page(page)
+
+    def locate(phrase: str) -> Optional[int]:
+        return next((i for i, text in enumerate(page_text) if phrase in text), None)
+
+    sections = [
+        ("Part I — Project Record and Global Overview", "Publication Record, Rights, and Citation", [
+            ("About the RTLDI Atlas", "About the RTLDI Atlas"),
+            ("Executive Description", "Executive Description"),
+            ("Methodology and Data Sources", "Methodology and Data Sources"),
+            ("Causal Projection from Outer Enclosures", "Causal Projection from Outer Enclosures"),
+            ("Global Map and Lever Overview", "Cartographic Approach and the Nested Map"),
+            ("Summary of 193 UN Member States", "Summary Table of All 193 UN Member Nations"),
+        ]),
+        ("Part II — UN Regional Summaries", "UN Regional Summaries", []),
+        ("Part III — Nation Profiles", "Detailed Nation Profiles", []),
+        ("Part IV — Eurozone Focus", "EUROZONE EXCLUSIONS", []),
+        ("Part V — Evidence, Data, and Project Record", "The methods, sources, rights, and production record", [
+            ("Nine-Lever Executable Crosswalk", "The Nine Levers: Executable Crosswalk"),
+            ("GDP Regression and Eta", "GDP Regression, Significance, and Eta"),
+            ("V-Dem Reproduction", "V-Dem Dataset and Reproduction"),
+            ("World Bank Reproduction", "World Bank Dataset and Reproduction"),
+            ("Citation and Licensing", "Citation, Licensing, and Reuse"),
+            ("Glossary", "Glossary of Terms"),
+            ("Credits", "Credits and Acknowledgments"),
+            ("Colophon", "Colophon and Print Specification"),
+        ]),
+    ]
+    for title, phrase, children in sections:
+        page_number = locate(phrase)
+        if page_number is None:
+            continue
+        parent = writer.add_outline_item(title, page_number)
+        for child_title, child_phrase in children:
+            child_page = locate(child_phrase)
+            if child_page is not None:
+                writer.add_outline_item(child_title, child_page, parent=parent)
+
+    writer.add_metadata({
+        "/Title": "RTLDI Atlas 2026: UN Member States",
+        "/Author": "RTLDI Atlas Project; Sid J.A. Hubbard, Principal Investigator",
+        "/Subject": "Right to Life Deficit Index, RTLP scores, capital exclusions, and nine-lever country profiles",
+        "/Keywords": "RTLDI, RTLP, V-Dem, World Bank, capital exclusions, atlas",
+        "/Creator": "RTLDI Atlas open-source publication pipeline",
+        "/Producer": "fpdf2, PyPDF2, Plotly, Kaleido, Pillow, and qrcode",
+    })
+    writer.page_layout = "/TwoPageRight"
+    writer.page_mode = "/UseOutlines"
+    with out.open("wb") as file_obj:
+        writer.write(file_obj)
+
+    overlay_path.unlink(missing_ok=True)
+    assembled.unlink(missing_ok=True)
+    return out
 
 
 def concat_pdfs(front: Optional[Path], regions: Optional[Path], nations: Optional[Path], back: Optional[Path], out: Path, eurozone: Optional[Path] = None) -> Path:
@@ -1782,10 +2097,17 @@ def concat_pdfs(front: Optional[Path], regions: Optional[Path], nations: Optiona
         total_pages += len(reader.pages)
         print(f"  Added {label}: {len(reader.pages)} pages")
 
+    if total_pages % 2:
+        writer.add_blank_page(width=595.28, height=841.89)
+        total_pages += 1
+        print("  Added final blank verso for duplex print alignment")
+
     out.parent.mkdir(parents=True, exist_ok=True)
-    with open(out, "wb") as f:
+    assembled = out.with_name(out.stem + "_assembled.pdf")
+    with assembled.open("wb") as f:
         writer.write(f)
-    print(f"Concatenated release PDF written to: {out}  (total {total_pages} pages)")
+    _finalize_print_pdf(assembled, out)
+    print(f"Concatenated print-ready PDF written to: {out}  (total {total_pages} pages)")
     return out
 
 

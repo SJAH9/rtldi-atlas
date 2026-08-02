@@ -1,6 +1,18 @@
 # RTLDI Atlas Handoff Notes
 
-Last updated while preparing release `v2026.8.6` on `main`.
+Last updated while preparing release `v2026.8.7` on `main`.
+
+## v2026.8.7 Work
+
+- Rebuilt the complete print Atlas as a 290-page, five-part A4 publication.
+- Added continuous folios, PDF outlines, metadata, print-safe margins, and recto/verso section alignment.
+- Converted full-page web/source QR gateways into section title pages.
+- Added compact QR symbols beside every visible print URL.
+- Added publication record, rights, citation, authorship, production disclosure, source ownership, expanded glossary, credits, and colophon.
+- Added the causal-projection/outer-enclosure page with whistleblower protection as the worked example.
+- Integrated the 29-page Eurozone module into the common design and sequence.
+- Verified 193 nation profiles, 290 total pages, all URL-to-QR annotations, strict PDF parsing, Ghostscript rendering, and tests.
+- Release notes: `docs/releases/v2026.8.7.md`.
 
 ## v2026.8.6 Work
 

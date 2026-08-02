@@ -2,7 +2,7 @@
 """
 Generate a totally self-contained HTML atlas (outputs/html-atlas/) containing
 the same data as the print atlas front matter + 22 regional summaries.
-RTLDI = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Extended to quantify capital exclusions — lost potential GDP where capital is excluded because the nine protections are absent. ~15T globally. Population-weighted regression with 25% cap.
+RTLDI = Right to Life Deficit Index (source: Zenodo 10.5281/zenodo.19468550). Extended to quantify capital exclusions — lost potential GDP where capital is excluded because the nine protections are absent. Population-weighted regression with a 25% cap.
 
 - Reuses prepare_atlas_data() so numbers, caps, 9-indicator breakdowns, region
   aggregates, and member lists are identical to the PDF.
@@ -756,10 +756,10 @@ def build_html_atlas(data: Dict[str, Any]) -> Path:
       <p>This table combines original RTLDI Project classifications and computed outputs with observations from two public statistical sources. Cite the project and the underlying source appropriate to the fields you use.</p>
       <div class="citation-grid">
         <article class="citation-item"><h4>RTLDI Project fields</h4><p>The RTLP score, RTLDI and capital-exclusion estimates, annual and per-capita potential GDP, and all nine binary lever classifications are attributable to the RTLDI Atlas Project.</p></article>
-        <article class="citation-item"><h4>V-Dem source fields</h4><p>The institutional observations used to classify the levers are attributable to the V-Dem Institute. Cite the Country-Year Full+Others v15 dataset and consult the <a href="vdem.html">atlas V-Dem guide</a>.</p></article>
+        <article class="citation-item"><h4>V-Dem source fields</h4><p>The institutional observations used to classify the levers are attributable to the V-Dem Institute. Cite the Country-Year Core v15 dataset and consult the <a href="vdem.html">atlas V-Dem guide</a>.</p></article>
         <article class="citation-item"><h4>World Bank source fields</h4><p>GDP per capita, population, undernourishment, and poverty observations are attributable to the World Bank's World Development Indicators. Consult the <a href="world_bank.html">atlas World Bank guide</a>.</p></article>
       </div>
-      <code class="citation-text">RTLDI Atlas Project. (2026). RTLDI Atlas of UN Member States (Version 2026.8.4) [Data set and software]. https://github.com/SJAH9/rtldi-atlas</code>
+      <code class="citation-text">RTLDI Atlas Project. (2026). RTLDI Atlas of UN Member States [Data set and software]. Sid J.A. Hubbard, Principal Investigator. https://github.com/SJAH9/rtldi-atlas</code>
       <p class="note">The complete project and theoretical-framework citations are provided on the <a href="about.html">About page</a>.</p>
     </section>
   </main>
@@ -863,7 +863,7 @@ html[data-theme="night"] .card,html[data-theme="night"] td{{background:var(--sit
         <p>The RTLDI Atlas repository, including its code, data-processing pipeline, documentation, and generated outputs, is open source under the <a href="https://github.com/SJAH9/rtldi-atlas/blob/main/LICENSE">MIT License</a>. The license permits use, modification, redistribution, and commercial use while requiring preservation of the copyright and license notice.</p>
         <p>The underlying theoretical framework and book content are separate works. <em>Causality and Attraction</em> remains under its original copyright and CC BY-NC-ND 4.0 terms; it is not relicensed by the Atlas repository's MIT License.</p>
         <h2>How to cite the Atlas</h2>
-        <code class="citation-text">RTLDI Atlas Project. (2026). RTLDI Atlas of UN Member States (Version 2026.8.4) [Data set and software]. Sid J.A. Hubbard, Principal Investigator. https://github.com/SJAH9/rtldi-atlas</code>
+        <code class="citation-text">RTLDI Atlas Project. (2026). RTLDI Atlas of UN Member States [Data set and software]. Sid J.A. Hubbard, Principal Investigator. https://github.com/SJAH9/rtldi-atlas</code>
         <p>For the source theory, also cite Hubbard, Sid J.A. (2026), <em>Causality and Attraction: A Continuum of Steady States</em>, Volume I, Version 3, <a href="https://doi.org/10.5281/zenodo.19468550">doi:10.5281/zenodo.19468550</a>. Field-level attribution for the combined table is documented in the <a href="full_data.html#data-citation-heading">Full Data View</a>.</p>""",
         "about",
     )

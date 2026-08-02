@@ -32,19 +32,19 @@ Direct deployed atlas links:
 - [World Bank Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/world_bank.html)
 - [About, Authorship, and Citation](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/about.html)
 
-### v2026.8.6 (Current — corrected nine-lever model)
+### v2026.8.7 (Current — print atlas publication design overhaul)
 
-This release corrects the executable crosswalk so all nine conceptual levers use distinct operational signals and regenerates the entire atlas from the canonical data pipeline.
+This release rebuilds the Atlas as a cohesive, print-ready reference publication while preserving the canonical data pipeline and all 193 national profiles.
 
-- Demonstrates that the former duplicated-proxy representation was exactly equivalent to seven unique signals when the two paired signals retained their two-ninths weights; it did not arithmetically add national capital exclusions twice.
-- Replaces lever 6's reused `v2clkill` value with `v2x_clphy` and lever 7's reused `v2xcl_acjst` value with `v2clrspct`.
-- Recomputes 193 national records through one canonical component-and-score path; 65 national RTLP scores change.
-- Updates the data-derived coefficient from `eta=0.305` to `eta=0.356`, operationally rounded to `0.36` under the unchanged 25% cap.
-- Raises the corrected bounded global estimate from `$15.87T` to `$19.29T` annually.
-- Regenerates the print atlas, web atlas, interactive map, Full Data View, choropleths, RDF/XML, Eurozone report, and open data outputs.
-- The release contains one PDF asset only: the complete 278-page `RTLDI_ATLAS_2026_ebook.pdf`.
+- Reorganizes the 290-page A4 ebook into five clearly navigable parts with continuous folios, PDF outlines, metadata, and deliberate recto/verso alignment.
+- Turns the large web and repository QR gateways into section title pages for regional summaries, nation profiles, Eurozone maps, and glossary/source access.
+- Pairs every visible print URL with a compact, clickable QR code while retaining the printed destination.
+- Adds conventional publication matter: rights, citation, authorship and production disclosure, source ownership, expanded glossary, credits, and print colophon.
+- Adds a causal-projection page explaining movement from outer enclosures, with whistleblower protection as a worked example and a clear boundary between enabled pathways and guaranteed timing.
+- Integrates the Eurozone report into the same editorial sequence and visual language as the global and national Atlas.
+- The release contains one PDF asset only: the complete 290-page `RTLDI_ATLAS_2026_ebook.pdf`.
 
-See [the complete v2026.8.6 release notes](docs/releases/v2026.8.6.md) for the weighting identity, field-level correction, provenance, and validation details.
+See [the complete v2026.8.7 release notes](docs/releases/v2026.8.7.md) for the publication architecture and validation record.
 
 ### v2026.8.5 (Refined web atlas navigation and attribution)
 
@@ -234,7 +234,7 @@ git clone https://github.com/SJAH9/rtldi-atlas.git
 cd rtldi-atlas
 
 # Install all dependencies required for data processing + PDF generation + choropleth maps
-python3 -m pip install --break-system-packages pandas numpy requests openpyxl wbgapi country-converter plotly kaleido
+python3 -m pip install --break-system-packages pandas numpy scipy requests openpyxl wbgapi country-converter plotly kaleido fpdf2 PyPDF2 qrcode[pil]
 
 # 1. Build the core data (uses live World Bank API + your local V-Dem CSV)
 python3 -m src.build_atlas --year 2026 --eta 0.36
@@ -244,9 +244,10 @@ python3 -m src.build_atlas --year 2026 --eta 0.36
 #    a vector PDF, and an interactive HTML version.
 python3 -m src.generate_enclosure_map --year 2026
 
-# 3. Generate the print-ready PDF ebook (four modular parts + concatenated release)
+# 3. Generate the print-ready PDF ebook (five modular parts + concatenated release)
 #    Because the maps were generated in step 2, the PDFs will contain the actual choropleths
 #    (global map in front matter, per-region maps, per-nation country views) instead of placeholders.
+#    The finalizer adds continuous folios, PDF outline navigation, metadata, and print-to-web QR gateways.
 python3 -m src.generate_atlas_ebook
 
 # 4. (Optional for the launch web companion) Generate the self-contained HTML atlas
@@ -305,7 +306,7 @@ python3 -m src.generate_atlas_ebook --back
 python3 -m src.generate_atlas_ebook --concat-only
 ```
 
-The final concatenated `RTLDI_ATLAS_2026_ebook.pdf` (front + regions + nations + back) is the artifact attached to the GitHub release.
+The final concatenated `RTLDI_ATLAS_2026_ebook.pdf` (front + regions + nations + Eurozone + evidence/reference back matter) is the artifact attached to the GitHub release.
 
 ### Getting the V-Dem Data (one-time, ~few hundred MB)
 1. Go to https://www.v-dem.net/data/the-v-dem-dataset/
