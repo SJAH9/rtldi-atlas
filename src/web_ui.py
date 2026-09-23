@@ -353,6 +353,7 @@ def site_footer(*, prefix: str = "") -> str:
   <div class="site-footer-credit"><strong><a href="{escape(prefix + 'about.html')}">RTLDI Atlas Project</a></strong><br>Open-source atlas, data pipeline, and generated outputs released under the MIT License.</div>
   <nav class="site-footer-links" aria-label="Project information">
     <a href="{escape(prefix + 'about.html')}">About &amp; citation</a>
+    <a href="../../donate.html">Support the atlas</a>
     <a href="https://github.com/SJAH9/rtldi-atlas">GitHub repository</a>
   </nav>
 </footer>"""
