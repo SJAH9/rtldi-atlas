@@ -20,7 +20,7 @@ VDEM_CODEBOOK_URL = "https://www.v-dem.net/documents/70/codebook_v16.pdf"
 VDEM_V15_SOURCE_URL = "https://raw.githubusercontent.com/vdeminstitute/vdemdata/V15/data/vdem.RData"
 VDEM_V15_SHA256 = "4b715190a1e351a81daf11cbe6f9f77e67d8914f0ed612b93e2d8fba5523e540"
 WORLD_BANK_DATA_URL = "https://data.worldbank.org/"
-WORLD_BANK_API_URL = "https://api.worldbank.org/v2/"
+WORLD_BANK_API_URL = "https://datahelpdesk.worldbank.org/knowledgebase/topics/125589-developer-information"
 
 
 # This table describes the executable nine-distinct-lever 2026 pipeline.
