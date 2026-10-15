@@ -13,6 +13,35 @@ The **RTLDI Atlas** in this repository (code, data processing pipeline, document
 
 ## Releases
 
+### v2026.8.8: World Bank Eurozone data in the print Atlas
+
+The featured update restores the Eurozone report's originally intended data
+basis: World Bank data for the euro-area member states, in euros. The earlier
+report reused the global USD baselines; this release calculates the Eurozone
+report directly from the World Bank's euro-denominated national observations.
+It is a source-data correction, not a currency-symbol replacement.
+
+The Eurozone report presents all monetary figures in euros, including totals,
+member-state profiles, lever allocations, and trend text. It uses the World Bank's
+[GDP per capita in current local currency](https://data.worldbank.org/indicator/NY.GDP.PCAP.CN)
+for the 21 members, verified as Euro in World Bank country metadata, with
+matching-year population. There is no USD conversion. R, eta, the cap, the global
+USD atlas, and the web atlas remain unchanged. GDP baselines use the latest
+matched observation in 2023-2025; profiles identify the actual year.
+The cached source responses and currency metadata are in
+`data/raw/wb_eurozone_eur_2026.json`; refresh with
+`python -m src.generate_eurozone_atlas --refresh-wb`.
+Eurozone CSV and JSON outputs explicitly label EUR amounts. Bulgaria's pre-2026
+baseline is retrospectively euro-denominated by the World Bank, not actual euros
+in circulation at that time. The report retains that qualification; its 21-member
+model sum is not an official historical euro-area GDP aggregate.
+
+The Eurozone section's QR gateway now opens the standalone Eurozone PDF at a
+version-specific release URL, rather than the web Atlas landing page. The
+release includes both the complete print Atlas and the standalone report.
+
+See [the v2026.8.8 release notes](docs/releases/v2026.8.8.md).
+
 All releases (including the full PDF ebook as an asset) are available on the [GitHub Releases page](https://github.com/SJAH9/rtldi-atlas/releases).
 
 ## Web Atlas
@@ -32,7 +61,7 @@ Direct deployed atlas links:
 - [World Bank Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/world_bank.html)
 - [About, Authorship, and Citation](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/about.html)
 
-### v2026.8.7 (Current — print atlas publication design overhaul)
+### v2026.8.7 (Print atlas publication design overhaul)
 
 This release rebuilds the Atlas as a cohesive, print-ready reference publication while preserving the canonical data pipeline and all 193 national profiles.
 

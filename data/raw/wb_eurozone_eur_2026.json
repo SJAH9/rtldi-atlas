@@ -1,0 +1,4350 @@
+{
+  "retrieved_at": "2026-10-15T20:50:26.603366+00:00",
+  "responses": {
+    "NY.GDP.PCAP.CN": {
+      "url": "https://api.worldbank.org/v2/country/AUT;BEL;BGR;CYP;DEU;ESP;EST;FIN;FRA;GRC;HRV;IRL;ITA;LTU;LUX;LVA;MLT;NLD;PRT;SVK;SVN/indicator/NY.GDP.PCAP.CN?format=json&date=2023:2025&per_page=1000",
+      "data": [
+        {
+          "page": 1,
+          "pages": 1,
+          "per_page": 1000,
+          "total": 63,
+          "sourceid": "2",
+          "lastupdated": "2026-10-08"
+        },
+        [
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "AT",
+              "value": "Austria"
+            },
+            "countryiso3code": "AUT",
+            "date": "2025",
+            "value": 55691.1276440263,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "AT",
+              "value": "Austria"
+            },
+            "countryiso3code": "AUT",
+            "date": "2024",
+            "value": 53834.0079551256,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "AT",
+              "value": "Austria"
+            },
+            "countryiso3code": "AUT",
+            "date": "2023",
+            "value": 52326.9636601308,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "BE",
+              "value": "Belgium"
+            },
+            "countryiso3code": "BEL",
+            "date": "2025",
+            "value": 53762.1063390796,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "BE",
+              "value": "Belgium"
+            },
+            "countryiso3code": "BEL",
+            "date": "2024",
+            "value": 52275.4606146926,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "BE",
+              "value": "Belgium"
+            },
+            "countryiso3code": "BEL",
+            "date": "2023",
+            "value": 51092.4668075728,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "BG",
+              "value": "Bulgaria"
+            },
+            "countryiso3code": "BGR",
+            "date": "2025",
+            "value": 18034.0156579001,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "BG",
+              "value": "Bulgaria"
+            },
+            "countryiso3code": "BGR",
+            "date": "2024",
+            "value": 16264.6133516192,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "BG",
+              "value": "Bulgaria"
+            },
+            "countryiso3code": "BGR",
+            "date": "2023",
+            "value": 14662.7935114904,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "CY",
+              "value": "Cyprus"
+            },
+            "countryiso3code": "CYP",
+            "date": "2025",
+            "value": 36976.73828125,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "CY",
+              "value": "Cyprus"
+            },
+            "countryiso3code": "CYP",
+            "date": "2024",
+            "value": 35730.79296875,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "CY",
+              "value": "Cyprus"
+            },
+            "countryiso3code": "CYP",
+            "date": "2023",
+            "value": 33871.0546875,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "DE",
+              "value": "Germany"
+            },
+            "countryiso3code": "DEU",
+            "date": "2025",
+            "value": 53537.4671422151,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "DE",
+              "value": "Germany"
+            },
+            "countryiso3code": "DEU",
+            "date": "2024",
+            "value": 51833.6517870167,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "DE",
+              "value": "Germany"
+            },
+            "countryiso3code": "DEU",
+            "date": "2023",
+            "value": 50659.7208435435,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "ES",
+              "value": "Spain"
+            },
+            "countryiso3code": "ESP",
+            "date": "2025",
+            "value": 34183.9147340734,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "ES",
+              "value": "Spain"
+            },
+            "countryiso3code": "ESP",
+            "date": "2024",
+            "value": 32638.0319368894,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "ES",
+              "value": "Spain"
+            },
+            "countryiso3code": "ESP",
+            "date": "2023",
+            "value": 30975.8571464971,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "EE",
+              "value": "Estonia"
+            },
+            "countryiso3code": "EST",
+            "date": "2025",
+            "value": 30458.5360141971,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "EE",
+              "value": "Estonia"
+            },
+            "countryiso3code": "EST",
+            "date": "2024",
+            "value": 29036.3284344051,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "EE",
+              "value": "Estonia"
+            },
+            "countryiso3code": "EST",
+            "date": "2023",
+            "value": 27989.350398384,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "FI",
+              "value": "Finland"
+            },
+            "countryiso3code": "FIN",
+            "date": "2025",
+            "value": 49689.7511988093,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "FI",
+              "value": "Finland"
+            },
+            "countryiso3code": "FIN",
+            "date": "2024",
+            "value": 49109.8524514,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "FI",
+              "value": "Finland"
+            },
+            "countryiso3code": "FIN",
+            "date": "2023",
+            "value": 48891.3594790461,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "FR",
+              "value": "France"
+            },
+            "countryiso3code": "FRA",
+            "date": "2025",
+            "value": 43350.8511461462,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "FR",
+              "value": "France"
+            },
+            "countryiso3code": "FRA",
+            "date": "2024",
+            "value": 42594.1574304561,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "FR",
+              "value": "France"
+            },
+            "countryiso3code": "FRA",
+            "date": "2023",
+            "value": 41340.456277855,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "GR",
+              "value": "Greece"
+            },
+            "countryiso3code": "GRC",
+            "date": "2025",
+            "value": 23848.1497243796,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "GR",
+              "value": "Greece"
+            },
+            "countryiso3code": "GRC",
+            "date": "2024",
+            "value": 22751.8408700936,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "GR",
+              "value": "Greece"
+            },
+            "countryiso3code": "GRC",
+            "date": "2023",
+            "value": 21589.1868161264,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "HR",
+              "value": "Croatia"
+            },
+            "countryiso3code": "HRV",
+            "date": "2025",
+            "value": 23986.1204272225,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "HR",
+              "value": "Croatia"
+            },
+            "countryiso3code": "HRV",
+            "date": "2024",
+            "value": 22219.4920076561,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "HR",
+              "value": "Croatia"
+            },
+            "countryiso3code": "HRV",
+            "date": "2023",
+            "value": 20516.1767045299,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "IE",
+              "value": "Ireland"
+            },
+            "countryiso3code": "IRL",
+            "date": "2025",
+            "value": 116455.244515912,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "IE",
+              "value": "Ireland"
+            },
+            "countryiso3code": "IRL",
+            "date": "2024",
+            "value": 104302.467108616,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "IE",
+              "value": "Ireland"
+            },
+            "countryiso3code": "IRL",
+            "date": "2023",
+            "value": 98790.3601555708,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "IT",
+              "value": "Italy"
+            },
+            "countryiso3code": "ITA",
+            "date": "2025",
+            "value": 38326.8023019212,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "IT",
+              "value": "Italy"
+            },
+            "countryiso3code": "ITA",
+            "date": "2024",
+            "value": 37352.5054932171,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "IT",
+              "value": "Italy"
+            },
+            "countryiso3code": "ITA",
+            "date": "2023",
+            "value": 36327.4202033981,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LT",
+              "value": "Lithuania"
+            },
+            "countryiso3code": "LTU",
+            "date": "2025",
+            "value": 29167.400426617,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LT",
+              "value": "Lithuania"
+            },
+            "countryiso3code": "LTU",
+            "date": "2024",
+            "value": 27350.6203350232,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LT",
+              "value": "Lithuania"
+            },
+            "countryiso3code": "LTU",
+            "date": "2023",
+            "value": 25880.1236947539,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LU",
+              "value": "Luxembourg"
+            },
+            "countryiso3code": "LUX",
+            "date": "2025",
+            "value": 130313.607581117,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LU",
+              "value": "Luxembourg"
+            },
+            "countryiso3code": "LUX",
+            "date": "2024",
+            "value": 127295.055331368,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LU",
+              "value": "Luxembourg"
+            },
+            "countryiso3code": "LUX",
+            "date": "2023",
+            "value": 123216.947016191,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LV",
+              "value": "Latvia"
+            },
+            "countryiso3code": "LVA",
+            "date": "2025",
+            "value": 23285.2794020949,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LV",
+              "value": "Latvia"
+            },
+            "countryiso3code": "LVA",
+            "date": "2024",
+            "value": 21784.3605248097,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "LV",
+              "value": "Latvia"
+            },
+            "countryiso3code": "LVA",
+            "date": "2023",
+            "value": 21003.3503033906,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "MT",
+              "value": "Malta"
+            },
+            "countryiso3code": "MLT",
+            "date": "2025",
+            "value": 42396.1193988656,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "MT",
+              "value": "Malta"
+            },
+            "countryiso3code": "MLT",
+            "date": "2024",
+            "value": 40672.9753343166,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "MT",
+              "value": "Malta"
+            },
+            "countryiso3code": "MLT",
+            "date": "2023",
+            "value": 37856.0173099085,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "NL",
+              "value": "Netherlands"
+            },
+            "countryiso3code": "NLD",
+            "date": "2025",
+            "value": 65207.9793967514,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "NL",
+              "value": "Netherlands"
+            },
+            "countryiso3code": "NLD",
+            "date": "2024",
+            "value": 62330.5046243126,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "NL",
+              "value": "Netherlands"
+            },
+            "countryiso3code": "NLD",
+            "date": "2023",
+            "value": 58741.7423066594,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "PT",
+              "value": "Portugal"
+            },
+            "countryiso3code": "PRT",
+            "date": "2025",
+            "value": 28391.406523965,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "PT",
+              "value": "Portugal"
+            },
+            "countryiso3code": "PRT",
+            "date": "2024",
+            "value": 27096.1160038341,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "PT",
+              "value": "Portugal"
+            },
+            "countryiso3code": "PRT",
+            "date": "2023",
+            "value": 25557.588200005,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "SK",
+              "value": "Slovak Republic"
+            },
+            "countryiso3code": "SVK",
+            "date": "2025",
+            "value": 25260.2577887341,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "SK",
+              "value": "Slovak Republic"
+            },
+            "countryiso3code": "SVK",
+            "date": "2024",
+            "value": 24014.3605697382,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "SK",
+              "value": "Slovak Republic"
+            },
+            "countryiso3code": "SVK",
+            "date": "2023",
+            "value": 22764.8087065163,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "SI",
+              "value": "Slovenia"
+            },
+            "countryiso3code": "SVN",
+            "date": "2025",
+            "value": 33076.795905745,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "SI",
+              "value": "Slovenia"
+            },
+            "countryiso3code": "SVN",
+            "date": "2024",
+            "value": 31690.3647645013,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "NY.GDP.PCAP.CN",
+              "value": "GDP per capita (current LCU)"
+            },
+            "country": {
+              "id": "SI",
+              "value": "Slovenia"
+            },
+            "countryiso3code": "SVN",
+            "date": "2023",
+            "value": 30205.6996096604,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          }
+        ]
+      ]
+    },
+    "SP.POP.TOTL": {
+      "url": "https://api.worldbank.org/v2/country/AUT;BEL;BGR;CYP;DEU;ESP;EST;FIN;FRA;GRC;HRV;IRL;ITA;LTU;LUX;LVA;MLT;NLD;PRT;SVK;SVN/indicator/SP.POP.TOTL?format=json&date=2023:2025&per_page=1000",
+      "data": [
+        {
+          "page": 1,
+          "pages": 1,
+          "per_page": 1000,
+          "total": 63,
+          "sourceid": "2",
+          "lastupdated": "2026-10-08"
+        },
+        [
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "AT",
+              "value": "Austria"
+            },
+            "countryiso3code": "AUT",
+            "date": "2025",
+            "value": 9208163,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "AT",
+              "value": "Austria"
+            },
+            "countryiso3code": "AUT",
+            "date": "2024",
+            "value": 9177982,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "AT",
+              "value": "Austria"
+            },
+            "countryiso3code": "AUT",
+            "date": "2023",
+            "value": 9131761,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "BE",
+              "value": "Belgium"
+            },
+            "countryiso3code": "BEL",
+            "date": "2025",
+            "value": 11941781,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "BE",
+              "value": "Belgium"
+            },
+            "countryiso3code": "BEL",
+            "date": "2024",
+            "value": 11858610,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "BE",
+              "value": "Belgium"
+            },
+            "countryiso3code": "BEL",
+            "date": "2023",
+            "value": 11779946,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "BG",
+              "value": "Bulgaria"
+            },
+            "countryiso3code": "BGR",
+            "date": "2025",
+            "value": 6433302,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "BG",
+              "value": "Bulgaria"
+            },
+            "countryiso3code": "BGR",
+            "date": "2024",
+            "value": 6441421,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "BG",
+              "value": "Bulgaria"
+            },
+            "countryiso3code": "BGR",
+            "date": "2023",
+            "value": 6446596,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "CY",
+              "value": "Cyprus"
+            },
+            "countryiso3code": "CYP",
+            "date": "2025",
+            "value": 1370754,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "CY",
+              "value": "Cyprus"
+            },
+            "countryiso3code": "CYP",
+            "date": "2024",
+            "value": 1358282,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "CY",
+              "value": "Cyprus"
+            },
+            "countryiso3code": "CYP",
+            "date": "2023",
+            "value": 1344976,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "DE",
+              "value": "Germany"
+            },
+            "countryiso3code": "DEU",
+            "date": "2025",
+            "value": 83491249,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "DE",
+              "value": "Germany"
+            },
+            "countryiso3code": "DEU",
+            "date": "2024",
+            "value": 83516593,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "DE",
+              "value": "Germany"
+            },
+            "countryiso3code": "DEU",
+            "date": "2023",
+            "value": 83287273,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "ES",
+              "value": "Spain"
+            },
+            "countryiso3code": "ESP",
+            "date": "2025",
+            "value": 49355143,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "ES",
+              "value": "Spain"
+            },
+            "countryiso3code": "ESP",
+            "date": "2024",
+            "value": 48848840,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "ES",
+              "value": "Spain"
+            },
+            "countryiso3code": "ESP",
+            "date": "2023",
+            "value": 48352528,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "EE",
+              "value": "Estonia"
+            },
+            "countryiso3code": "EST",
+            "date": "2025",
+            "value": 1366475,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "EE",
+              "value": "Estonia"
+            },
+            "countryiso3code": "EST",
+            "date": "2024",
+            "value": 1372341,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "EE",
+              "value": "Estonia"
+            },
+            "countryiso3code": "EST",
+            "date": "2023",
+            "value": 1370286,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "FI",
+              "value": "Finland"
+            },
+            "countryiso3code": "FIN",
+            "date": "2025",
+            "value": 5646436,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "FI",
+              "value": "Finland"
+            },
+            "countryiso3code": "FIN",
+            "date": "2024",
+            "value": 5619911,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "FI",
+              "value": "Finland"
+            },
+            "countryiso3code": "FIN",
+            "date": "2023",
+            "value": 5583911,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "FR",
+              "value": "France"
+            },
+            "countryiso3code": "FRA",
+            "date": "2025",
+            "value": 68720337,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "FR",
+              "value": "France"
+            },
+            "countryiso3code": "FRA",
+            "date": "2024",
+            "value": 68551653,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "FR",
+              "value": "France"
+            },
+            "countryiso3code": "FRA",
+            "date": "2023",
+            "value": 68372286,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "GR",
+              "value": "Greece"
+            },
+            "countryiso3code": "GRC",
+            "date": "2025",
+            "value": 10413962,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "GR",
+              "value": "Greece"
+            },
+            "countryiso3code": "GRC",
+            "date": "2024",
+            "value": 10405134,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "GR",
+              "value": "Greece"
+            },
+            "countryiso3code": "GRC",
+            "date": "2023",
+            "value": 10407351,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "HR",
+              "value": "Croatia"
+            },
+            "countryiso3code": "HRV",
+            "date": "2025",
+            "value": 3876200,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "HR",
+              "value": "Croatia"
+            },
+            "countryiso3code": "HRV",
+            "date": "2024",
+            "value": 3866200,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "HR",
+              "value": "Croatia"
+            },
+            "countryiso3code": "HRV",
+            "date": "2023",
+            "value": 3859686,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "IE",
+              "value": "Ireland"
+            },
+            "countryiso3code": "IRL",
+            "date": "2025",
+            "value": 5484367,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "IE",
+              "value": "Ireland"
+            },
+            "countryiso3code": "IRL",
+            "date": "2024",
+            "value": 5395790,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "IE",
+              "value": "Ireland"
+            },
+            "countryiso3code": "IRL",
+            "date": "2023",
+            "value": 5311538,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "IT",
+              "value": "Italy"
+            },
+            "countryiso3code": "ITA",
+            "date": "2025",
+            "value": 58915656,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "IT",
+              "value": "Italy"
+            },
+            "countryiso3code": "ITA",
+            "date": "2024",
+            "value": 58952704,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "IT",
+              "value": "Italy"
+            },
+            "countryiso3code": "ITA",
+            "date": "2023",
+            "value": 58984216,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LT",
+              "value": "Lithuania"
+            },
+            "countryiso3code": "LTU",
+            "date": "2025",
+            "value": 2888774,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LT",
+              "value": "Lithuania"
+            },
+            "countryiso3code": "LTU",
+            "date": "2024",
+            "value": 2888278,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LT",
+              "value": "Lithuania"
+            },
+            "countryiso3code": "LTU",
+            "date": "2023",
+            "value": 2871585,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LU",
+              "value": "Luxembourg"
+            },
+            "countryiso3code": "LUX",
+            "date": "2025",
+            "value": 686970,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LU",
+              "value": "Luxembourg"
+            },
+            "countryiso3code": "LUX",
+            "date": "2024",
+            "value": 677012,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LU",
+              "value": "Luxembourg"
+            },
+            "countryiso3code": "LUX",
+            "date": "2023",
+            "value": 666430,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LV",
+              "value": "Latvia"
+            },
+            "countryiso3code": "LVA",
+            "date": "2025",
+            "value": 1847785,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LV",
+              "value": "Latvia"
+            },
+            "countryiso3code": "LVA",
+            "date": "2024",
+            "value": 1866124,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "LV",
+              "value": "Latvia"
+            },
+            "countryiso3code": "LVA",
+            "date": "2023",
+            "value": 1883710,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "MT",
+              "value": "Malta"
+            },
+            "countryiso3code": "MLT",
+            "date": "2025",
+            "value": 579704,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "MT",
+              "value": "Malta"
+            },
+            "countryiso3code": "MLT",
+            "date": "2024",
+            "value": 568847,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "MT",
+              "value": "Malta"
+            },
+            "countryiso3code": "MLT",
+            "date": "2023",
+            "value": 552747,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "NL",
+              "value": "Netherlands"
+            },
+            "countryiso3code": "NLD",
+            "date": "2025",
+            "value": 18087633,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "NL",
+              "value": "Netherlands"
+            },
+            "countryiso3code": "NLD",
+            "date": "2024",
+            "value": 17993485,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "NL",
+              "value": "Netherlands"
+            },
+            "countryiso3code": "NLD",
+            "date": "2023",
+            "value": 17877117,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "PT",
+              "value": "Portugal"
+            },
+            "countryiso3code": "PRT",
+            "date": "2025",
+            "value": 10804871,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "PT",
+              "value": "Portugal"
+            },
+            "countryiso3code": "PRT",
+            "date": "2024",
+            "value": 10694681,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "PT",
+              "value": "Portugal"
+            },
+            "countryiso3code": "PRT",
+            "date": "2023",
+            "value": 10578174,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "SK",
+              "value": "Slovak Republic"
+            },
+            "countryiso3code": "SVK",
+            "date": "2025",
+            "value": 5413813,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "SK",
+              "value": "Slovak Republic"
+            },
+            "countryiso3code": "SVK",
+            "date": "2024",
+            "value": 5422069,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "SK",
+              "value": "Slovak Republic"
+            },
+            "countryiso3code": "SVK",
+            "date": "2023",
+            "value": 5426740,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "SI",
+              "value": "Slovenia"
+            },
+            "countryiso3code": "SVN",
+            "date": "2025",
+            "value": 2130986,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "SI",
+              "value": "Slovenia"
+            },
+            "countryiso3code": "SVN",
+            "date": "2024",
+            "value": 2127400,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          },
+          {
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "value": "Population, total"
+            },
+            "country": {
+              "id": "SI",
+              "value": "Slovenia"
+            },
+            "countryiso3code": "SVN",
+            "date": "2023",
+            "value": 2120461,
+            "unit": "",
+            "obs_status": "",
+            "decimal": 0
+          }
+        ]
+      ]
+    }
+  },
+  "country_metadata": {
+    "url": "https://api.worldbank.org/v2/sources/2/country/AUT;BEL;BGR;CYP;DEU;ESP;EST;FIN;FRA;GRC;HRV;IRL;ITA;LTU;LUX;LVA;MLT;NLD;PRT;SVK;SVN/metadata?format=json",
+    "data": {
+      "page": 1,
+      "pages": 1,
+      "per_page": "5000",
+      "total": 543,
+      "source": [
+        {
+          "id": "2",
+          "name": "World Development Indicators",
+          "concept": [
+            {
+              "id": "Country",
+              "variable": [
+                {
+                  "id": "AUT",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "AT"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Austria"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Austria"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 13.7603 Austrian schilling. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Austria"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "AT"
+                    }
+                  ]
+                },
+                {
+                  "id": "BEL",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "BE"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard (SDDS)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Kingdom of Belgium"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Belgium"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 40.3399 Belgian franc. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Belgium"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "BE"
+                    }
+                  ]
+                },
+                {
+                  "id": "BGR",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "BG"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "Multitopic Household Survey 2007"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "Lendingcategory",
+                      "value": "IBRD"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Bulgaria"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Bulgaria"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Expenditure survey/budget survey (ES/BS), 2014"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate entered into force on January 1, 2026: 1 euro = 1.95583 Bulgarian Lev. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Bulgaria"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "BG"
+                    }
+                  ]
+                },
+                {
+                  "id": "CYP",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "CY"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard (SDDS)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Cyprus"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2019"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Cyprus"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate entered into force on January 1, 2008: 1 euro = 0.585274 Cyprus pounds. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "General trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Cyprus"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "CY"
+                    }
+                  ]
+                },
+                {
+                  "id": "DEU",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "DE"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2022"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Federal Republic of Germany"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Germany"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 1.95583 Deutsche Mark. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries. GDP data before 1991 are calculated by applying backward GDP growth rates of the former Federal Republic of Germany starting from the first official GDP value for the unified Germany (1991)."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Germany"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "DE"
+                    }
+                  ]
+                },
+                {
+                  "id": "ESP",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "ES"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2024"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Kingdom of Spain"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Spain"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 166.386 Spanish peseta. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Spain"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "ES"
+                    }
+                  ]
+                },
+                {
+                  "id": "EST",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "EE"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard (SDDS)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Estonia"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Estonia"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "The following irrevocable euro conversion rate entered into force on January 1, 2011: 1 euro = 15.6466 Estonian kroon. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "General trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Estonia"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "EE"
+                    }
+                  ]
+                },
+                {
+                  "id": "FIN",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "FI"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Finland"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Finland"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 5.94573 Finnish markka. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Finland"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "FI"
+                    }
+                  ]
+                },
+                {
+                  "id": "FRA",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "FR"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2016"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "French Republic"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "France"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 6.55957 French franc. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "France"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "FR"
+                    }
+                  ]
+                },
+                {
+                  "id": "GRC",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "GR"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard (SDDS)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2013"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Hellenic Republic"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Greece"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 340.75 Greek drachma. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Greece"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "GR"
+                    }
+                  ]
+                },
+                {
+                  "id": "HRV",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "HR"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Budgetary central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard (SDDS)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "1996"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "Lendingcategory",
+                      "value": "IBRD"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Croatia"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Croatia"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate entered into force on January 1, 2023: 1 euro = 7.53450 Croatian kuna. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Croatia"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "HR"
+                    }
+                  ]
+                },
+                {
+                  "id": "IRL",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "IE"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard (SDDS)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2024"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2012"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2022"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Ireland"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Ireland"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 0.787564 Irish pound. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "General trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Ireland"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "IE"
+                    }
+                  ]
+                },
+                {
+                  "id": "ITA",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "IT"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Italian Republic"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Italy"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 1936.27 Italian lira. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Italy"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "IT"
+                    }
+                  ]
+                },
+                {
+                  "id": "LTU",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "LT"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Lithuania"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Lithuania"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate entered into force on January 1, 2015: 1 euro = 3.45280 Lithuanian litas. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Lithuania"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "LT"
+                    }
+                  ]
+                },
+                {
+                  "id": "LUX",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "LU"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2013"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Grand Duchy of Luxembourg"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Luxembourg"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 40.3399 Luxembourg franc. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Luxembourg"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "LU"
+                    }
+                  ]
+                },
+                {
+                  "id": "LVA",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "LV"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2013"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Latvia"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Latvia"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate entered into force on January 1, 2014: 1 euro = 0.702804 Latvian lats. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries. Based on data from EUROSTAT, the new reference year is 2010."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Latvia"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "LV"
+                    }
+                  ]
+                },
+                {
+                  "id": "MLT",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "MT"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard (SDDS)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2009"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Malta"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Middle East & North Africa"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Malta"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate entered into force on January 1, 2008: 1 euro = 0.4293 Maltese lira. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries. National accounts data source from 1995 to 2015 is Eurostat; prior to 1995 is UN."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "General trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Malta"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "MT"
+                    }
+                  ]
+                },
+                {
+                  "id": "NLD",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "NL"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Kingdom of the Netherlands"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Netherlands"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 2.20371 Netherlands guilder. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Netherlands"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "NL"
+                    }
+                  ]
+                },
+                {
+                  "id": "PRT",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "PT"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2014"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Portuguese Republic"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Portugal"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate was adopted by the EU Council on January 1, 1999: 1 euro = 200.482 Portuguese escudo. Please note that historical data before 1999 are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Portugal"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "PT"
+                    }
+                  ]
+                },
+                {
+                  "id": "SVK",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "SK"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2013"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2021"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Slovak Republic"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Slovak Republic"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate entered into force on January 1, 2009: 1 euro = 30.126 Slovak koruna. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Slovak Republic"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "SK"
+                    }
+                  ]
+                },
+                {
+                  "id": "SVN",
+                  "metatype": [
+                    {
+                      "id": "2-alphacode",
+                      "value": "SI"
+                    },
+                    {
+                      "id": "BalanceofPaymentsManualinuse",
+                      "value": "BPM6"
+                    },
+                    {
+                      "id": "CurrencyUnit",
+                      "value": "Euro"
+                    },
+                    {
+                      "id": "GovernmentAccountingconcept",
+                      "value": "Consolidated central government"
+                    },
+                    {
+                      "id": "IMFdatadisseminationstandard",
+                      "value": "Special Data Dissemination Standard Plus (SDDS Plus)"
+                    },
+                    {
+                      "id": "IncomeGroup",
+                      "value": "High income"
+                    },
+                    {
+                      "id": "Latestagriculturalcensus",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Latesthouseholdsurvey",
+                      "value": "World Health Survey 2003"
+                    },
+                    {
+                      "id": "Latestindustrialdata",
+                      "value": "2013"
+                    },
+                    {
+                      "id": "Latestpopulationcensus",
+                      "value": "2024"
+                    },
+                    {
+                      "id": "Latesttradedata",
+                      "value": "2018"
+                    },
+                    {
+                      "id": "LongName",
+                      "value": "Republic of Slovenia"
+                    },
+                    {
+                      "id": "Nationalaccountsbaseyear",
+                      "value": "Original chained constant price data are rescaled."
+                    },
+                    {
+                      "id": "Nationalaccountsreferenceyear",
+                      "value": "2020"
+                    },
+                    {
+                      "id": "Othergroups",
+                      "value": "Euro area"
+                    },
+                    {
+                      "id": "PPPsurveyyear",
+                      "value": "Rolling surveys (annual estimation)"
+                    },
+                    {
+                      "id": "Region",
+                      "value": "Europe & Central Asia"
+                    },
+                    {
+                      "id": "ShortName",
+                      "value": "Slovenia"
+                    },
+                    {
+                      "id": "SNApricevaluation",
+                      "value": "Value added at basic prices (VAB)"
+                    },
+                    {
+                      "id": "SourceofmostrecentIncomeandexpendituredata",
+                      "value": "Income survey (IS), 2015"
+                    },
+                    {
+                      "id": "SpecialNotes",
+                      "value": "A simple multiplier is used to convert the national currencies of EMU members to euros. The following irrevocable euro conversion rate entered into force on January 1, 2007: 1 euro = 239.64 Slovenian tolar. Please note that historical data are not actual euros and are not comparable or suitable for aggregation across countries."
+                    },
+                    {
+                      "id": "SystemofNationalAccounts",
+                      "value": "Country uses the 2008 System of National Accounts methodology"
+                    },
+                    {
+                      "id": "Systemoftrade",
+                      "value": "Special trade system"
+                    },
+                    {
+                      "id": "TableName",
+                      "value": "Slovenia"
+                    },
+                    {
+                      "id": "Vitalregistrationcomplete",
+                      "value": "Yes"
+                    },
+                    {
+                      "id": "WB-2code",
+                      "value": "SI"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

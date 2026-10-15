@@ -17,9 +17,12 @@ Outputs:
 
 from __future__ import annotations
 
+import argparse
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
+from urllib.request import urlopen
 
 import pandas as pd
 
@@ -44,12 +47,11 @@ from .generate_atlas_ebook import (
     RTLDIAtlasPDF,
     ETA,
     _bounded_drag,
-    format_money,
+    format_money as format_usd_money,
     get_nation_country_map,
-    load_g0_series,
     load_iso2_lookup,
 )
-from .print_access import WEB_ATLAS_URL, draw_qr_gateway
+from .print_access import draw_qr_gateway
 from .map_geometry import (
     RTLDI_COLOR_SCALE,
     add_metropolitan_france_trace,
@@ -93,6 +95,82 @@ EUROZONE_ISOS = {iso for iso, _ in EUROZONE_MEMBERS_2026}
 OUT_PDF = Path("outputs/atlas/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf")
 OUT_CSV = Path("outputs/atlas/rtl_di_atlas_eurozone_2026.csv")
 OUT_SUMMARY = Path("outputs/atlas/rtl_di_atlas_eurozone_summary_2026.json")
+EUROZONE_REPORT_URL = (
+    "https://github.com/SJAH9/rtldi-atlas/releases/download/v2026.8.8/"
+    "RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf"
+)
+
+WB_EUROZONE_SNAPSHOT = Path("data/raw/wb_eurozone_eur_2026.json")
+GDP_EUR_INDICATOR = "NY.GDP.PCAP.CN"
+WB_EUR_SOURCE = "https://data.worldbank.org/indicator/NY.GDP.PCAP.CN"
+CURRENCY_NOTE = (
+    "All monetary figures in this report use World Bank GDP per capita in current "
+    "local currency (NY.GDP.PCAP.CN), identified as Euro in the country metadata. "
+    "The model is applied directly to these euro-denominated baselines, with "
+    "matching-year World Bank population (SP.POP.TOTL). No USD exchange-rate "
+    "conversion is applied. Historical values for Bulgaria before its 2026 euro "
+    "adoption are retrospectively denominated by the World Bank at its irrevocable "
+    "conversion rate; they are not actual euros in circulation in those years. "
+    "The 21-member model sum includes this retrospective baseline and is not an "
+    "official historical euro-area aggregate."
+)
+
+
+def format_money(eur: float) -> str:
+    return format_usd_money(eur).replace("$", "\u20ac")
+
+
+def format_eur_per_capita(eur: float) -> str:
+    return f"\u20ac{eur:,.0f}"
+
+
+def _load_world_bank_euros(refresh: bool = False) -> dict:
+    if WB_EUROZONE_SNAPSHOT.exists() and not refresh:
+        return json.loads(WB_EUROZONE_SNAPSHOT.read_text())
+    countries = ";".join(sorted(EUROZONE_ISOS))
+    payload = {"retrieved_at": datetime.now(timezone.utc).isoformat(), "responses": {}}
+    for indicator in (GDP_EUR_INDICATOR, "SP.POP.TOTL"):
+        url = (
+            f"https://api.worldbank.org/v2/country/{countries}/indicator/{indicator}"
+            "?format=json&date=2023:2025&per_page=1000"
+        )
+        with urlopen(url, timeout=60) as response:
+            data = json.load(response)
+        if not isinstance(data, list) or len(data) != 2 or data[0]["pages"] != 1:
+            raise RuntimeError(f"Incomplete World Bank response: {url}")
+        payload["responses"][indicator] = {"url": url, "data": data}
+    url = f"https://api.worldbank.org/v2/sources/2/country/{countries}/metadata?format=json"
+    with urlopen(url, timeout=60) as response:
+        metadata = json.load(response)
+    if int(metadata["pages"]) != 1:
+        raise RuntimeError("Incomplete World Bank currency metadata")
+    payload["country_metadata"] = {"url": url, "data": metadata}
+    _world_bank_series(payload)  # Validate currency and coverage before caching.
+    WB_EUROZONE_SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
+    WB_EUROZONE_SNAPSHOT.write_text(json.dumps(payload, indent=2) + "\n")
+    return payload
+
+
+def _world_bank_series(snapshot: dict) -> tuple[dict, dict]:
+    metadata = {}
+    for source in snapshot["country_metadata"]["data"]["source"]:
+        for concept in source["concept"]:
+            for country in concept["variable"]:
+                metadata[country["id"]] = {m["id"]: m["value"] for m in country["metatype"]}
+    series = {}
+    for indicator, response in snapshot["responses"].items():
+        series[indicator] = {}
+        for item in response["data"][1]:
+            if item["value"] is not None:
+                series[indicator].setdefault(item["countryiso3code"], {})[int(item["date"])] = float(item["value"])
+    for iso in EUROZONE_ISOS:
+        if metadata.get(iso, {}).get("CurrencyUnit") != "Euro":
+            raise RuntimeError(f"World Bank has not confirmed EUR units for {iso}")
+        gdp = series.get(GDP_EUR_INDICATOR, {}).get(iso, {})
+        population = series.get("SP.POP.TOTL", {}).get(iso, {})
+        if not any(gdp[y] > 0 and population[y] > 0 for y in gdp.keys() & population.keys()):
+            raise RuntimeError(f"No matched euro GDP/population baseline for {iso}")
+    return series, metadata
 
 
 class EurozonePDF(RTLDIAtlasPDF):
@@ -129,7 +207,7 @@ def _canonical_eta_note(rows: list[dict]) -> dict:
     }
 
 
-def _load_eurozone_rows() -> tuple[list[dict], dict]:
+def _load_eurozone_rows(snapshot: Optional[dict] = None) -> tuple[list[dict], dict]:
     with open("data/processed/rtl_di_nation_breakdown_2026.json") as f:
         all_rows = json.load(f)
     rows = [d for d in all_rows if d.get("iso3") in EUROZONE_ISOS]
@@ -140,8 +218,20 @@ def _load_eurozone_rows() -> tuple[list[dict], dict]:
 
     regression = _canonical_eta_note(rows)
     eta = regression["eta"]
+    series, metadata = _world_bank_series(snapshot if snapshot is not None else _load_world_bank_euros())
 
     for d in rows:
+        d.pop("total_deficit_usd", None)
+        iso = d["iso3"]
+        gdp = series[GDP_EUR_INDICATOR][iso]
+        population = series["SP.POP.TOTL"][iso]
+        year = max(y for y in gdp.keys() & population.keys() if gdp[y] > 0 and population[y] > 0)
+        d["g0"] = gdp[year]
+        d["g0_year"] = year
+        d["population"] = population[year]
+        d["population_year"] = year
+        d["currency"] = "EUR"
+        d["currency_source_note"] = metadata[iso].get("SpecialNotes", "")
         g0 = float(d.get("g0") or 0)
         r = float(d.get("r") or 0)
         pop = float(d.get("population") or 0)
@@ -151,13 +241,13 @@ def _load_eurozone_rows() -> tuple[list[dict], dict]:
         capped_total = capped_dg * pop if pop > 0 else 0.0
         d["raw_delta_g_per_capita"] = raw_dg
         d["delta_g_per_capita"] = capped_dg
-        d["raw_total_deficit_usd"] = raw_total
-        d["total_deficit_usd"] = capped_total
+        d["raw_total_deficit_eur"] = raw_total
+        d["total_deficit_eur"] = capped_total
         d["cap_ratio"] = (capped_total / raw_total) if raw_total > 0 else 1.0
         d["capped"] = capped_total < raw_total - 1e-6
         d["eta"] = eta
 
-    rows_by_loss = sorted(rows, key=lambda x: x.get("total_deficit_usd") or 0, reverse=True)
+    rows_by_loss = sorted(rows, key=lambda x: x.get("total_deficit_eur") or 0, reverse=True)
     for rank, d in enumerate(rows_by_loss, start=1):
         d["eurozone_rank_by_total_deficit"] = rank
     return rows, regression
@@ -165,7 +255,7 @@ def _load_eurozone_rows() -> tuple[list[dict], dict]:
 
 def _aggregate(rows: list[dict], regression: dict) -> dict:
     total_pop = sum(float(d.get("population") or 0) for d in rows)
-    total_lost = sum(float(d.get("total_deficit_usd") or 0) for d in rows)
+    total_lost = sum(float(d.get("total_deficit_eur") or 0) for d in rows)
     weighted_r = (
         sum(float(d.get("r") or 0) * float(d.get("population") or 0) for d in rows) / total_pop
         if total_pop > 0
@@ -222,7 +312,7 @@ def _aggregate(rows: list[dict], regression: dict) -> dict:
 
 def _save_tables(rows: list[dict], summary: dict) -> None:
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-    rows_by_loss = sorted(rows, key=lambda x: x.get("total_deficit_usd") or 0, reverse=True)
+    rows_by_loss = sorted(rows, key=lambda x: x.get("total_deficit_eur") or 0, reverse=True)
     table = pd.DataFrame(
         [
             {
@@ -232,11 +322,16 @@ def _save_tables(rows: list[dict], summary: dict) -> None:
                 "un_region": d.get("un_region"),
                 "r": d.get("r"),
                 "g0": d.get("g0"),
+                "g0_eur": d["g0"],
                 "g0_year": d.get("g0_year"),
                 "vdem_year": d.get("vdem_year"),
                 "delta_g_per_capita": d.get("delta_g_per_capita"),
+                "delta_g_per_capita_eur": d["delta_g_per_capita"],
                 "population": d.get("population"),
-                "total_deficit_usd": d.get("total_deficit_usd"),
+                "total_deficit_eur": d.get("total_deficit_eur"),
+                "population_year": d["population_year"],
+                "currency": "EUR",
+                "gdp_indicator": GDP_EUR_INDICATOR,
                 "eta": d.get("eta"),
             }
             for d in rows_by_loss
@@ -253,9 +348,18 @@ def _save_tables(rows: list[dict], summary: dict) -> None:
                 "weighted_r": summary["weighted_r"],
                 "mean_r": summary["mean_r"],
                 "mean_g0": summary["mean_g0"],
+                "mean_g0_eur": summary["mean_g0"],
+                "display_currency": "EUR",
+                "monetary_source": {
+                    "indicator": GDP_EUR_INDICATOR,
+                    "source": WB_EUR_SOURCE,
+                    "note": CURRENCY_NOTE,
+                    "snapshot": str(WB_EUROZONE_SNAPSHOT),
+                    "baseline_years": sorted({d["g0_year"] for d in rows}),
+                },
                 "eta": summary["eta"],
                 "regression": summary["regression"],
-                "total_eurozone_capital_exclusions_usd": summary["total_lost_gdp"],
+                "total_eurozone_capital_exclusions_eur": summary["total_lost_gdp"],
                 "membership_note": "21 euro-area member states as of 2026, including Bulgaria from 2026-01-01; excludes non-EU microstates using the euro by monetary agreement.",
             },
             indent=2,
@@ -349,7 +453,7 @@ def _get_eurozone_point_map(rows: list[dict]) -> Optional[Path]:
     xs = [coords[d["iso3"]][0] for d in ordered]
     ys = [coords[d["iso3"]][1] for d in ordered]
     rs = [float(d.get("r") or 0) for d in ordered]
-    losses = np.array([float(d.get("total_deficit_usd") or 0) for d in ordered])
+    losses = np.array([float(d.get("total_deficit_eur") or 0) for d in ordered])
     max_loss = float(losses.max()) if len(losses) else 1.0
     sizes = 55 + 520 * np.sqrt(losses / max_loss)
 
@@ -423,7 +527,7 @@ def _format_trend_text(iso3: str, r: float, population: float, g0_by_year: dict,
         points.append((year, dg, dg * float(population)))
     if not points:
         return "Three-year RTLDI projection: insufficient recent GDP data for a reliable 3-position text trend."
-    pieces = [f"{year}: {format_money(total)} total capital exclusions (${dg:,.0f}/cap)" for year, dg, total in points]
+    pieces = [f"{year}: {format_money(total)} total capital exclusions ({format_eur_per_capita(dg)}/cap)" for year, dg, total in points]
     if len(points) >= 2:
         change = points[-1][2] - points[0][2]
         direction = "increase" if change > 0 else "decrease" if change < 0 else "no change"
@@ -462,12 +566,12 @@ def _write_summary_table(pdf: EurozonePDF, rows_by_loss: list[dict]) -> None:
         pdf.cell(col_widths[1], 4.3, d["country"][:28], border=1, fill=zebra)
         pdf.cell(col_widths[2], 4.3, f"{d.get('r', 0):.2f}", border=1, align="C", fill=zebra)
         pdf.set_text_color(*BLACK)
-        pdf.cell(col_widths[3], 4.3, f"${float(d.get('g0') or 0):,.0f}", border=1, align="R", fill=zebra)
-        pdf.cell(col_widths[4], 4.3, f"${float(d.get('delta_g_per_capita') or 0):,.0f}", border=1, align="R", fill=zebra)
+        pdf.cell(col_widths[3], 4.3, format_eur_per_capita(float(d.get('g0') or 0)), border=1, align="R", fill=zebra)
+        pdf.cell(col_widths[4], 4.3, format_eur_per_capita(float(d.get('delta_g_per_capita') or 0)), border=1, align="R", fill=zebra)
         pdf.cell(
             col_widths[5],
             4.3,
-            format_money(float(d.get("total_deficit_usd") or 0)),
+            format_money(float(d.get("total_deficit_eur") or 0)),
             border=1,
             align="R",
             fill=zebra,
@@ -487,7 +591,7 @@ def _write_summary_table(pdf: EurozonePDF, rows_by_loss: list[dict]) -> None:
 
 def _build_pdf(rows: list[dict], summary: dict) -> Path:
     pdf = EurozonePDF()
-    rows_by_loss = sorted(rows, key=lambda x: x.get("total_deficit_usd") or 0, reverse=True)
+    rows_by_loss = sorted(rows, key=lambda x: x.get("total_deficit_eur") or 0, reverse=True)
     rows_alpha = sorted(rows, key=lambda x: x["country"])
 
     pdf.add_chromeless_page()
@@ -520,11 +624,13 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
     pdf.set_font(FONT_NAME, "", 8.8)
     pdf.set_text_color(*INK)
     pdf.multi_cell(142, 4.8, "Scope: euro-area member states as of 2026, including Bulgaria from January 1, 2026. Non-EU microstates using the euro by monetary agreement are excluded from this member-state map.")
+    pdf.set_xy(34, 184)
+    pdf.multi_cell(142, 4.8, "Monetary figures in EUR, calculated directly from World Bank local-currency GDP data. No USD conversion is used.")
 
     pdf.add_page()
     pdf.chapter_title("Executive Description")
     pdf.body_text(
-        "This focused atlas applies the RTLDI 2026 model to the Eurozone. It uses the same nine-protection RTLP score, V-Dem 2024 component crosswalk, World Bank GDP baseline, population weighting, canonical global eta, and 25% contextual cap used in the UN member-state atlas.\n\n"
+        "This focused atlas applies the RTLDI 2026 model to the Eurozone. It retains the nine-protection RTLP score, V-Dem 2024 component crosswalk, canonical global eta, and 25% contextual cap used in the UN member-state atlas. Its monetary baselines are World Bank GDP per capita in current euros, paired with matching-year population data.\n\n"
         f"Across the 21 euro-area member states, the bounded cross-sectional model estimates {format_money(summary['total_lost_gdp'])} in annual capital exclusions associated with missing or incomplete foundational protections. This is not directly observed capital or a guaranteed causal effect."
     )
     pdf.body_text(
@@ -537,20 +643,22 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
         "R is the simple average of nine binary indicators. Eight are derived from V-Dem Country-Year Core v15 (2024 observation year) using the same executable crosswalk as the UN atlas; the ninth uses World Bank undernourishment and poverty data. The current update workflow targets V-Dem v16 and may revise historical scores. This Eurozone report intentionally does not recalculate eta on the smaller regional sample. It uses the canonical global UN-atlas coefficient so the Eurozone figures are directly comparable to the main atlas.\n\n"
         f"The canonical coefficient is eta = {summary['eta']:.2f}. The economic projection is therefore:\n\n"
         f"Delta G per capita = min({summary['eta']:.2f} x (1 - R) x G0, 0.25 x G0).\n\n"
-        "Total capital exclusions = Delta G per capita x population. G0 is the most recent published World Bank GDP per capita value used in the 2026 atlas baseline. V-Dem components reflect 2024 data, the latest source year available in this pipeline."
+        "Total capital exclusions = Delta G per capita x population. G0 is the latest available World Bank GDP per capita in current euros within the 2023-2025 source window, paired with population from the same year. Each profile states that observation year. V-Dem components retain the global atlas's 2024 observations."
     )
     pdf.small_text("Full crosswalk: docs/indicator_crosswalk.md. Source framework: Hubbard, Causality and Attraction v3, DOI 10.5281/zenodo.19468550.")
+    pdf.body_text(CURRENCY_NOTE)
+    pdf.small_text(f"Euro baseline source: {WB_EUR_SOURCE}")
 
     # Place the cartographic QR title on a recto in the assembled duplex volume.
     pdf.add_chromeless_page()
     draw_qr_gateway(
         pdf,
         title="Eurozone Maps and Member Profiles",
-        subtitle="A cartographic view of the 21 euro-area member states, linked directly to the global interactive Atlas.",
-        url=WEB_ATLAS_URL,
-        slug="web-atlas-eurozone-map",
+        subtitle="The standalone Eurozone report: maps, euro-denominated economic projections, and all 21 member-state profiles.",
+        url=EUROZONE_REPORT_URL,
+        slug="eurozone-report-v2026-8-8",
         kicker="Part IV / Cartographic section",
-        note="The maps and profiles that follow use the global RTLP score and eta. Scan to inspect members in full national context and compare every canonical field.",
+        note="Scan to download the standalone PDF attached to release v2026.8.8. This version-specific link opens the Eurozone report directly.",
     )
 
     pdf.add_page()
@@ -609,7 +717,8 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
     pdf.chapter_title("Eurozone Member-State Profiles")
     pdf.small_text("Detailed profiles are ordered alphabetically by country name. The layout, metrics, trend text, country map, and RTLP component breakdown mirror the UN member-state atlas.")
 
-    g0_series = load_g0_series([d["iso3"] for d in rows])
+    g0_series, _ = _world_bank_series(_load_world_bank_euros())
+    g0_series = g0_series[GDP_EUR_INDICATOR]
     iso2_lookup = load_iso2_lookup()
     for d in rows_alpha:
         pdf.add_page()
@@ -632,9 +741,9 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
         pop_str = f"{pop/1e6:,.1f} million" if pop >= 100000 else f"{pop:,.0f}"
         metric_y = pdf.get_y()
         metric_w = (CONTENT_WIDTH - 9) / 4
-        pdf.metric_card(MARGIN, metric_y, metric_w, 22, "GDP per capita G0", f"${float(d.get('g0') or 0):,.0f}")
-        pdf.metric_card(MARGIN + metric_w + 3, metric_y, metric_w, 22, "Capital exclusions / cap", f"${float(d.get('delta_g_per_capita') or 0):,.0f}", fill=PANEL_ALT)
-        pdf.metric_card(MARGIN + (metric_w + 3) * 2, metric_y, metric_w, 22, "Annual total", format_money(float(d.get("total_deficit_usd") or 0)))
+        pdf.metric_card(MARGIN, metric_y, metric_w, 22, "GDP per capita G0", format_eur_per_capita(float(d.get('g0') or 0)))
+        pdf.metric_card(MARGIN + metric_w + 3, metric_y, metric_w, 22, "Capital exclusions / cap", format_eur_per_capita(float(d.get('delta_g_per_capita') or 0)), fill=PANEL_ALT)
+        pdf.metric_card(MARGIN + (metric_w + 3) * 2, metric_y, metric_w, 22, "Annual total", format_money(float(d.get("total_deficit_eur") or 0)))
         pdf.metric_card(MARGIN + (metric_w + 3) * 3, metric_y, metric_w, 22, "Population", pop_str)
         pdf.set_y(metric_y + 25)
         trend_y = pdf.get_y()
@@ -687,6 +796,8 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
     pdf.body_text(
         "Membership note: Bulgaria is included because it adopted the euro on January 1, 2026. The scope excludes Andorra, Monaco, San Marino, Vatican City, Kosovo, and Montenegro because they are not Eurozone member states, even where the euro is used."
     )
+    pdf.body_text(CURRENCY_NOTE)
+    pdf.small_text(f"World Bank euro baseline: {WB_EUR_SOURCE}. Source responses and currency metadata are preserved in {WB_EUROZONE_SNAPSHOT}.")
 
     OUT_PDF.parent.mkdir(parents=True, exist_ok=True)
     pdf.output(OUT_PDF)
@@ -695,7 +806,10 @@ def _build_pdf(rows: list[dict], summary: dict) -> Path:
 
 
 def main() -> int:
-    rows, regression = _load_eurozone_rows()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--refresh-wb", action="store_true", help="Refresh the cached World Bank euro GDP, population, and currency metadata.")
+    args = parser.parse_args()
+    rows, regression = _load_eurozone_rows(_load_world_bank_euros(refresh=args.refresh_wb))
     summary = _aggregate(rows, regression)
     _save_tables(rows, summary)
     out = _build_pdf(rows, summary)

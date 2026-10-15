@@ -2,10 +2,21 @@
   "atlas_year": 2026,
   "scope": "Eurozone member states",
   "n_countries": 21,
-  "total_population": 357603357.0,
-  "weighted_r": 0.7465129280403011,
+  "total_population": 358664361.0,
+  "weighted_r": 0.7465639417436044,
   "mean_r": 0.7619047619047619,
-  "mean_g0": 46990.57525649083,
+  "mean_g0": 45495.222454810595,
+  "mean_g0_eur": 45495.222454810595,
+  "display_currency": "EUR",
+  "monetary_source": {
+    "indicator": "NY.GDP.PCAP.CN",
+    "source": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CN",
+    "note": "All monetary figures in this report use World Bank GDP per capita in current local currency (NY.GDP.PCAP.CN), identified as Euro in the country metadata. The model is applied directly to these euro-denominated baselines, with matching-year World Bank population (SP.POP.TOTL). No USD exchange-rate conversion is applied. Historical values for Bulgaria before its 2026 euro adoption are retrospectively denominated by the World Bank at its irrevocable conversion rate; they are not actual euros in circulation in those years. The 21-member model sum includes this retrospective baseline and is not an official historical euro-area aggregate.",
+    "snapshot": "data/raw/wb_eurozone_eur_2026.json",
+    "baseline_years": [
+      2025
+    ]
+  },
   "eta": 0.36,
   "regression": {
     "eta": 0.36,
@@ -16,6 +27,6 @@
     "weighted_r_squared": null,
     "note": "Canonical global UN-atlas eta; no Eurozone-scoped eta recalculation is used in this report."
   },
-  "total_eurozone_capital_exclusions_usd": 1340318049017.0605,
+  "total_eurozone_capital_exclusions_eur": 1284883507708.7168,
   "membership_note": "21 euro-area member states as of 2026, including Bulgaria from 2026-01-01; excludes non-EU microstates using the euro by monetary agreement."
 }
