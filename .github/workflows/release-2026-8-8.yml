@@ -1,0 +1,52 @@
+name: Publish RTLDI Atlas v2026.8.8
+
+on:
+  push:
+    tags:
+      - v2026.8.8
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-v2026.8.8
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Verify approved PDF artifacts
+        run: |
+          sha256sum --check <<'CHECKSUMS'
+          dc0e7f2b4f83054a10aa32c724bfe3a2d878b1ca45f1e5454249ffd1e81be8fe  outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf
+          6fd0b90c3c45929ec4efbc5c0f99532ec1ab013ae21660271a685d1483fb63af  outputs/atlas/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf
+          CHECKSUMS
+      - name: Upload PDFs and publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: v2026.8.8
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft > /tmp/release-draft-state; then
+            if [ "$(cat /tmp/release-draft-state)" != true ]; then
+              echo "Release is already public; refusing to replace its assets."
+              exit 0
+            fi
+            gh release upload "$RELEASE_TAG" \
+              "outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf#Complete 290-page print Atlas" \
+              "outputs/atlas/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf#Standalone 29-page Eurozone report in euros" \
+              --clobber
+          else
+            gh release create "$RELEASE_TAG" --verify-tag --draft \
+              --title "RTLDI Atlas v2026.8.8 - World Bank Eurozone Data in Euros" \
+              --notes-file docs/releases/v2026.8.8.md \
+              "outputs/atlas/RTLDI_ATLAS_2026_ebook.pdf#Complete 290-page print Atlas" \
+              "outputs/atlas/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf#Standalone 29-page Eurozone report in euros"
+          fi
+          gh release edit "$RELEASE_TAG" --draft=false --latest

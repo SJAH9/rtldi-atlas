@@ -13,8 +13,11 @@ web Atlas is included. The Eurozone QR gateway targets the standalone PDF asset
 at the version-specific `v2026.8.8` release URL. Publish both the complete Atlas
 and standalone Eurozone PDF as release assets. The credential is a generic
 Keychain item with service `github`, account `sjah9`; do not print or commit its
-secret. Release publication uploads both verified PDFs before making the
-release public, so the printed version-specific QR destination is available.
+secret. SSH works with `~/.ssh/id_ed25519_github_sjah9` and `IdentitiesOnly=yes`.
+The exact-tag release workflow `.github/workflows/release-2026-8-8.yml` checks
+both approved PDF hashes, uploads them to a draft release, and then publishes
+it using GitHub's scoped workflow token. This makes the printed version-specific
+QR destination available without requiring local Keychain secret access.
 
 ## v2026.8.7 Work
 
