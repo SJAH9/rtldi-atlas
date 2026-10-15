@@ -1,8 +1,16 @@
 # RTLDI Atlas Handoff Notes
 
-Last updated while preparing release `v2026.8.8` on `main`.
+Last updated after publishing release `v2026.8.8` on `main`.
 
-## v2026.8.8: Featured Eurozone Data Correction
+## v2026.8.8: Published Eurozone Data Correction
+
+Published: https://github.com/SJAH9/rtldi-atlas/releases/tag/v2026.8.8
+
+Both public PDF downloads were fetched and their SHA-256 hashes matched the
+approved local artifacts. The Eurozone QR destination was verified by decoding
+its image, inspecting the PDF link annotations, and downloading the target.
+The complete print Atlas has 290 pages; the standalone Eurozone report has 29.
+GitHub Actions publication run: `38819818380` (success).
 
 The headline update is the print Eurozone report's use of the World Bank's
 euro-denominated national GDP data, as originally intended, rather than the
@@ -14,10 +22,12 @@ at the version-specific `v2026.8.8` release URL. Publish both the complete Atlas
 and standalone Eurozone PDF as release assets. The credential is a generic
 Keychain item with service `github`, account `sjah9`; do not print or commit its
 secret. SSH works with `~/.ssh/id_ed25519_github_sjah9` and `IdentitiesOnly=yes`.
-The exact-tag release workflow `.github/workflows/release-2026-8-8.yml` checks
+The release workflow `.github/workflows/release-2026-8-8.yml` checks
 both approved PDF hashes, uploads them to a draft release, and then publishes
 it using GitHub's scoped workflow token. This makes the printed version-specific
 QR destination available without requiring local Keychain secret access.
+The workflow also triggers when its own file changes on main; it refuses to
+replace an already-public release. Tag `v2026.8.8` is published and must not move.
 
 ## v2026.8.7 Work
 
