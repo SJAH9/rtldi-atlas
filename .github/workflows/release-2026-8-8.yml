@@ -2,6 +2,10 @@ name: Publish RTLDI Atlas v2026.8.8
 
 on:
   push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/release-2026-8-8.yml
     tags:
       - v2026.8.8
 
