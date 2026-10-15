@@ -12,9 +12,9 @@ uses matching-year population and retains source metadata. No change to the
 web Atlas is included. The Eurozone QR gateway targets the standalone PDF asset
 at the version-specific `v2026.8.8` release URL. Publish both the complete Atlas
 and standalone Eurozone PDF as release assets. The credential is a generic
-Keychain item with service `github`, account `sjah9`. macOS currently denies
-secret access (security exit 36); unlock/authorize that item before pushing
-the commit/tag and publishing the release. Never print or commit its secret.
+Keychain item with service `github`, account `sjah9`; do not print or commit its
+secret. Release publication uploads both verified PDFs before making the
+release public, so the printed version-specific QR destination is available.
 
 ## v2026.8.7 Work
 
