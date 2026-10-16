@@ -2,6 +2,25 @@
 
 Last updated after publishing release `v2026.8.8` on `main`.
 
+## Web App Frame
+
+- The eight existing web Atlas pages now enter `outputs/html-atlas/app.html`, a
+  thin persistent header/footer frame. Original documents remain in an iframe;
+  duplicate chrome is hidden, not deleted. `?plain=1` opens the original view.
+- Fullscreen survives navigation, source-page links, country deep links, and
+  browser history. Print and Eurozone PDF links open outside the frame.
+- Includes manifest, install-event handling, normal/maskable/touch icons,
+  same-scope network-first service worker, and offline fallback. External
+  dependencies and unvisited views may still require connectivity.
+- Source: `src/web_app/`; installer: `python -m src.generate_web_app`. The HTML
+  build calls the installer. No Atlas data or print artifacts are recalculated.
+- Ten unit tests pass. `scripts/check_web_app.py` verifies desktop/mobile,
+  day/night, 320-pixel layout, fullscreen continuity, history, map rendering,
+  193-country rows, manifest, service worker, cached offline access, and the
+  install-control event path. Actual OS installation remains browser-controlled.
+- Lucide icons are vendored with their license. No third-party script was added
+  to the frame; existing Atlas CDN dependencies are unchanged.
+
 ## v2026.8.8: Published Eurozone Data Correction
 
 Published: https://github.com/SJAH9/rtldi-atlas/releases/tag/v2026.8.8

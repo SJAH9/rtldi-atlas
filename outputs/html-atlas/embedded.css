@@ -1,0 +1,19 @@
+html.atlas-embedded .site-header,html.atlas-embedded .site-footer { display:none !important; }
+html.atlas-embedded body { margin:0 !important; }
+html.atlas-embedded .site-shell { max-width:none !important; margin:0 !important; min-height:100vh; }
+html.atlas-embedded .site-context-nav { position:sticky; top:0; z-index:20; flex-wrap:nowrap !important; }
+html.atlas-embedded .site-context-nav a { min-height:38px; display:inline-flex; align-items:center; }
+html.atlas-embedded .card { scroll-margin-top:54px !important; }
+html.atlas-embedded h1 { font-size:36px !important; line-height:1.15 !important; }
+@media (max-width:600px) {
+  html.atlas-embedded h1 { font-size:28px !important; }
+  html.atlas-embedded .stat { font-size:26px !important; }
+  html.atlas-embedded .site-shell .text-xl,html.atlas-embedded .lede { font-size:17px !important; line-height:1.5 !important; }
+  html.atlas-embedded .site-shell .p-5 { padding:14px !important; }
+  html.atlas-embedded .site-shell .grid > * { min-width:0; }
+  html.atlas-embedded .hero { padding-left:12px; }
+}
+@media (max-width:360px) {
+  html.atlas-embedded .site-shell .grid { grid-template-columns:minmax(0,1fr) !important; }
+}
+html.atlas-embedded { scroll-padding-top:48px; }

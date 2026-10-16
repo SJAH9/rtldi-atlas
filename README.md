@@ -52,6 +52,8 @@ Use GitHub Pages with the repository root as the static site source. The HTML at
 
 Direct deployed atlas links:
 
+- [Installable Atlas App](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/app.html)
+
 - [HTML Atlas](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/)
 - [Interactive Map](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/global_interactive.html)
 - [Full Data View](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/full_data.html)
@@ -60,6 +62,40 @@ Direct deployed atlas links:
 - [V-Dem Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/vdem.html)
 - [World Bank Data Guide](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/world_bank.html)
 - [About, Authorship, and Citation](https://sjah9.github.io/rtldi-atlas/outputs/html-atlas/about.html)
+
+### Web App Frame and Installation
+
+The web Atlas opens inside a thin, common navigation frame with a persistent
+header, footer, and fullscreen control. Navigation between Atlas pages stays
+inside that frame, including in fullscreen. Existing country links and source
+links remain available. PDFs and external sites open separately.
+
+The app includes a scoped web manifest, 192/512-pixel and maskable icons,
+Apple touch icon, service worker, browser installation prompt support, and an
+offline fallback. Microsoft Edge can recognize it as an installable app; the
+browser's own install/add-to-phone controls remain available. The in-app install
+button appears only when the browser supplies an installation prompt.
+See [Microsoft's PWA guidance](https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps/how-to/).
+
+The service worker uses network-first fetching, caches visited local views and
+assets, and stays within `outputs/html-atlas/`. It does not cache the print PDFs
+or intercept other projects on the GitHub Pages origin. Unvisited views and
+external map/font/style dependencies can still require a connection; full
+offline operation is not claimed. No analytics or user classification is added.
+
+Install or update the frame without rebuilding any Atlas data:
+
+```bash
+python -m src.generate_web_app
+python -m unittest discover -s tests
+```
+
+The normal HTML build also installs it automatically. For browser checks, run a
+local HTTP server at the repository root and use `scripts/check_web_app.py`
+(requires Playwright and Chromium). The script checks desktop/mobile layouts,
+fullscreen continuity, navigation/history, map paths, source deep links,
+manifest/service worker, offline cached access, and the install control. A view
+can be opened without the frame using `?plain=1`.
 
 ### v2026.8.7 (Print atlas publication design overhaul)
 

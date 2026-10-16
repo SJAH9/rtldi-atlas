@@ -1,0 +1,24 @@
+{
+  "id": "./app.html",
+  "name": "RTLDI Atlas 2026",
+  "short_name": "RTLDI Atlas",
+  "description": "The Right to Life Deficit Index Atlas of United Nations Member States.",
+  "lang": "en",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#107e65",
+  "categories": ["education", "reference"],
+  "icons": [
+    {"src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Interactive Map", "url": "./app.html?view=global_interactive.html"},
+    {"name": "Full Data", "url": "./app.html?view=full_data.html"}
+  ]
+}

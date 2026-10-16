@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#107e65">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>RTLDI Atlas 2026</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
+  <link rel="stylesheet" href="app.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="atlas-app">
+    <header class="atlas-header">
+      <a class="atlas-brand" href="index.html" data-view="index.html"><span class="atlas-mark" aria-hidden="true">R</span><span>RTLDI ATLAS <span class="atlas-year">2026</span></span></a>
+      <nav id="atlas-navigation" aria-label="Atlas">
+        <a href="index.html" data-view="index.html">Overview</a>
+        <a href="global_interactive.html" data-view="global_interactive.html">Map</a>
+        <a href="full_data.html" data-view="full_data.html">Full Data</a>
+        <a href="levers.html" data-view="levers.html">Levers</a>
+        <a href="regression.html" data-view="regression.html">Regression</a>
+        <a href="vdem.html" data-view="vdem.html">Sources</a>
+        <a href="about.html" data-view="about.html">About</a>
+      </nav>
+      <div class="atlas-actions">
+        <button id="atlas-install" class="atlas-icon" type="button" aria-label="Install RTLDI Atlas" title="Install RTLDI Atlas" hidden><img src="assets/download.svg" alt=""></button>
+        <button id="atlas-fullscreen" class="atlas-icon" type="button" aria-label="Enter fullscreen" title="Enter fullscreen"><img src="assets/maximize.svg" alt=""></button>
+        <button id="atlas-menu" class="atlas-icon atlas-menu" type="button" aria-label="Open navigation" title="Open navigation" aria-expanded="false" aria-controls="atlas-navigation"><img src="assets/menu.svg" alt=""></button>
+      </div>
+    </header>
+    <main class="atlas-viewport" id="atlas-viewport">
+      <iframe id="atlas-view" title="Atlas overview" allow="fullscreen" data-atlas-frame></iframe>
+      <div id="atlas-message" role="status" hidden></div>
+    </main>
+    <footer class="atlas-footer">
+      <a href="about.html" data-view="about.html">RTLDI Atlas Project</a>
+      <span id="atlas-network" hidden>Offline</span>
+      <div class="atlas-footer-links">
+        <a href="../atlas/RTLDI_ATLAS_2026_ebook.pdf" target="_blank" rel="noopener">Print Atlas</a>
+        <a href="https://github.com/SJAH9/rtldi-atlas/releases/download/v2026.8.8/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf" target="_blank" rel="noopener">Eurozone PDF</a>
+        <a href="https://github.com/SJAH9/rtldi-atlas" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </footer>
+  </div>
+  <noscript><p><a href="index.html?plain=1">Open the Atlas without the app frame</a></p></noscript>
+</body>
+</html>

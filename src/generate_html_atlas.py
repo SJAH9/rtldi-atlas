@@ -1157,6 +1157,9 @@ document.addEventListener('DOMContentLoaded', boot);
 
     rdf_path = write_rdf_atlas(data, HTML_DIR / "rtldi_atlas_2026.rdf")
 
+    from src.generate_web_app import install_web_app
+    install_web_app(HTML_DIR)
+
     # Also drop a tiny data.json for transparency / power users
     (HTML_DIR / "data.json").write_text(json.dumps({
         "global": embed_global,
