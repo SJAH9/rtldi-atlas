@@ -59,7 +59,7 @@ def main():
         manifest = context.new_cdp_session(page).send('Page.getAppManifest')
         assert not manifest.get('errors'), manifest.get('errors')
         assert json.loads(manifest['data'])['display'] == 'standalone'
-        page.evaluate('navigator.serviceWorker.ready')
+        page.evaluate("Promise.race([navigator.serviceWorker.ready, new Promise((_, reject) => setTimeout(() => reject(new Error('Service worker registration did not become ready')), 15000))])")
         page.wait_for_function('Boolean(navigator.serviceWorker.controller)')
         page.locator('#atlas-navigation a[data-view="about.html"]').click()
         frame.locator('h1').filter(has_text='About').wait_for()
