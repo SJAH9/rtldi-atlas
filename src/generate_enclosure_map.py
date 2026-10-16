@@ -649,9 +649,6 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
   <main>
     <div class="explore-toolbar">
       <div class="explore-toolbar-title">Click a country to open its national RTLP profile below the map.</div>
-      <div class="map-controls" aria-label="Map controls">
-        <label class="control"><input id="auto-rotate-toggle" type="checkbox" checked> Auto rotate</label>
-      </div>
     </div>
     <div class="map-frame">{plot_html}</div>
     <div class="hint"><span>Hover for quick metrics. Click for the full national explorer panel.</span><span id="selection-hint">No country selected</span></div>
@@ -665,19 +662,23 @@ def build_interactive_html(fig, df: pd.DataFrame, atlas_year: int = 2026) -> str
 const COUNTRY_DATA = {countries_json};
 function applyMapTheme() {{
   const night = document.documentElement.dataset.theme === 'night';
+  const styles = getComputedStyle(document.documentElement);
+  const themeValue = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
+  const surface = themeValue('--atlas-surface', night ? '#111827' : 'white');
+  const water = themeValue('--atlas-water', night ? 'rgba(15,23,42,0.95)' : 'rgba(230,242,255,0.6)');
   document.body.classList.toggle('night-mode', night);
   const graph = document.getElementById('rtldi-map');
   if (graph && window.Plotly) {{
     Plotly.relayout(graph, {{
-      'paper_bgcolor': night ? '#111827' : 'white',
-      'plot_bgcolor': night ? '#111827' : 'white',
-      'geo.bgcolor': night ? '#111827' : 'white',
-      'geo.landcolor': night ? 'rgba(30,41,59,0.95)' : 'rgba(245,245,245,0.9)',
-      'geo.oceancolor': night ? 'rgba(15,23,42,0.95)' : 'rgba(230,242,255,0.6)',
-      'geo.lakecolor': night ? 'rgba(15,23,42,0.95)' : 'rgba(230,242,255,0.6)',
+      'paper_bgcolor': surface,
+      'plot_bgcolor': surface,
+      'geo.bgcolor': surface,
+      'geo.landcolor': themeValue('--atlas-land', night ? 'rgba(30,41,59,0.95)' : 'rgba(245,245,245,0.9)'),
+      'geo.oceancolor': water,
+      'geo.lakecolor': water,
       'geo.coastlinecolor': night ? 'rgba(148,163,184,0.5)' : 'rgba(180,180,180,0.6)',
       'geo.framecolor': night ? 'rgba(100,116,139,0.55)' : 'rgba(150,150,150,0.5)',
-      'font.color': night ? '#e5edf7' : '#2a3f5f'
+      'font.color': themeValue('--atlas-ink', night ? '#e5edf7' : '#2a3f5f')
     }});
   }}
 }}
@@ -844,9 +845,7 @@ function bindMapMotion() {{
   let baseWallTime = Date.now();
   let mapPaused = false;
   let isAutoRelayout = false;
-  let autoRotateEnabled = true;
   const earthRotationDegreesPerMs = 360 / 86164090.5;
-  const toggle = document.getElementById('auto-rotate-toggle');
 
   function finishAutoRelayout(relayout) {{
     isAutoRelayout = true;
@@ -887,13 +886,6 @@ function bindMapMotion() {{
     mapPaused = false;
   }}
 
-  if (toggle) {{
-    autoRotateEnabled = toggle.checked;
-    toggle.addEventListener('change', () => {{
-      autoRotateEnabled = toggle.checked;
-      if (autoRotateEnabled) anchorRotationToBrowserTime();
-    }});
-  }}
   ['plotly_click', 'plotly_selected'].forEach(name => graph.on(name, pauseMotion));
   graph.on('plotly_relayout', () => {{
     if (!isAutoRelayout) {{
@@ -914,7 +906,7 @@ function bindMapMotion() {{
   anchorRotationToBrowserTime();
 
   function tick() {{
-    if (autoRotateEnabled && !mapPaused) {{
+    if (!mapPaused) {{
       const lonDelta = (Date.now() - baseWallTime) * earthRotationDegreesPerMs;
       rotationLon = wrapLongitude(baseRotationLon + lonDelta);
       centerLon = wrapLongitude(baseCenterLon + lonDelta);

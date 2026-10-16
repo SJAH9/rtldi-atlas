@@ -29,8 +29,19 @@ def main():
         page.screenshot(path=str(screenshots / 'desktop-overview.png'))
         assert page.locator('.atlas-header').count() == 1
         assert frame.locator('.site-header').evaluate('(el) => getComputedStyle(el).display') == 'none'
+        assert frame.locator('h1').inner_text() == 'Overview'
+        assert frame.locator('.atlas-overview-metric').count() == 4
+        assert frame.locator('h1').evaluate('(el) => getComputedStyle(el).fontSize') == '26px'
+        assert frame.locator('body').evaluate('(el) => getComputedStyle(el).backgroundColor') == page.locator('.atlas-header').evaluate('(el) => getComputedStyle(el).backgroundColor')
+        assert page.locator('.atlas-header').bounding_box()['height'] <= 34
+        assert page.locator('.atlas-footer').bounding_box()['height'] <= 26
+        frame.locator('body').evaluate('(el) => el.dataset.stateCheck = "preserved"')
+        frame.locator('body').evaluate('() => scrollTo(0, 100)')
+        scroll = frame.locator('body').evaluate('() => scrollY')
         page.locator('#atlas-fullscreen').click()
         page.wait_for_function('Boolean(document.fullscreenElement)')
+        assert frame.locator('body').get_attribute('data-state-check') == 'preserved'
+        assert frame.locator('body').evaluate('() => scrollY') == scroll
         page.locator('#atlas-navigation a[data-view="levers.html"]').click()
         frame.locator('h1').filter(has_text='Levers').wait_for()
         assert page.evaluate('Boolean(document.fullscreenElement)')
@@ -54,6 +65,7 @@ def main():
         frame.locator('#rtldi-map .main-svg').first.wait_for(timeout=45000)
         frame.locator('#rtldi-map').scroll_into_view_if_needed()
         assert frame.locator('#rtldi-map .choroplethlayer path').count() >= 190
+        assert frame.locator('#auto-rotate-toggle').count() == 0
         page.wait_for_timeout(1200)
         page.screenshot(path=str(screenshots / 'desktop-map.png'))
         manifest = context.new_cdp_session(page).send('Page.getAppManifest')
@@ -63,7 +75,7 @@ def main():
         page.wait_for_function('Boolean(navigator.serviceWorker.controller)')
         page.locator('#atlas-navigation a[data-view="about.html"]').click()
         frame.locator('h1').filter(has_text='About').wait_for()
-        page.wait_for_function("caches.open('rtldi-atlas-app-v1').then(cache => cache.match(new URL('about.html', location.href).href)).then(Boolean)")
+        page.wait_for_function("caches.open('rtldi-atlas-app-v2').then(cache => cache.match(new URL('about.html', location.href).href)).then(Boolean)")
         context.set_offline(True)
         page.reload(wait_until='domcontentloaded')
         frame.locator('h1').filter(has_text='About').wait_for()
@@ -77,6 +89,10 @@ def main():
         page.goto(args.url + 'app.html')
         page.frame_locator('#atlas-view').locator('.site-shell').wait_for()
         assert page.locator('#atlas-menu').is_visible()
+        assert page.locator('#atlas-footer-menu').is_visible()
+        page.locator('#atlas-footer-menu').click()
+        assert page.locator('#atlas-project-links').is_visible()
+        page.screenshot(path=str(screenshots / 'mobile-footer.png'))
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         page.locator('#atlas-menu').click()
         page.screenshot(path=str(screenshots / 'mobile-menu.png'))

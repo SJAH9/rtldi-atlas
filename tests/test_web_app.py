@@ -34,6 +34,7 @@ class WebAppTest(unittest.TestCase):
                     self.assertEqual(image.size, (size, size))
             for asset in ('app.css', 'app.js', 'sw.js', 'bootstrap.js', 'embedded.css', 'offline.html'):
                 self.assertTrue((root / asset).is_file(), asset)
+            self.assertTrue((root / 'theme.css').is_file())
 
     def test_frame_has_one_header_footer_and_correct_pdf_destinations(self):
         html = (Path('src/web_app') / 'app.html').read_text()
@@ -41,6 +42,13 @@ class WebAppTest(unittest.TestCase):
         self.assertEqual(html.count('<footer '), 1)
         self.assertIn('releases/download/v2026.8.8/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf', html)
         self.assertIn('allow="fullscreen"', html)
+
+    def test_rotation_remains_time_based_without_a_visible_switch(self):
+        source = Path('src/generate_enclosure_map.py').read_text()
+        self.assertNotIn('auto-rotate-toggle', source)
+        self.assertIn('360 / 86164090.5', source)
+        self.assertIn('(Date.now() - baseWallTime) * earthRotationDegreesPerMs', source)
+        self.assertIn('if (!mapPaused)', source)
 
 
 if __name__ == '__main__':

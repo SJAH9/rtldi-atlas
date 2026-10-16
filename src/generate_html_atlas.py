@@ -955,37 +955,38 @@ html[data-theme="night"] .card,html[data-theme="night"] td{{background:var(--sit
 </head>
 <body class="bg-slate-100 text-slate-900">
 <div class="max-w-screen-xl mx-auto bg-white min-h-screen shadow-sm site-shell">
-  {site_header("overview", "Global Overview")}
+  {site_header("overview", "Overview")}
 
-  <!-- Hero / Global Snapshot -->
-  <div class="px-6 pt-8 pb-6">
-    <div class="max-w-4xl border-l-4 border-teal-700 pl-5">
-      <h1 class="heading text-5xl font-semibold text-slate-950">Right to Life Deficit Index</h1>
-      <p class="mt-3 text-xl text-slate-600 leading-8">RTLDI extended to measure capital exclusions: the lost potential GDP where capital is kept out of the economy because the nine protections necessary for it to operate are absent.</p>
+  <!-- Overview and headline metrics -->
+  <div class="atlas-overview">
+    <div>
+      <h1 class="atlas-overview-title">Overview</h1>
+      <p class="atlas-overview-subtitle">Institutional protections and their modeled economic effects.</p>
     </div>
 
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div class="bg-slate-50 border border-slate-200 p-5">
+    <div class="atlas-metrics">
+      <div class="atlas-overview-metric">
         <div class="text-xs uppercase tracking-wider text-slate-500">Global Capital Exclusions</div>
         <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">{format_usd(global_total_lost)}</div>
         <div class="text-teal-700 text-sm mt-1">annual, capped</div>
       </div>
-      <div class="bg-slate-50 border border-slate-200 p-5">
+      <div class="atlas-overview-metric">
         <div class="text-xs uppercase tracking-wider text-slate-500">Population-weighted R</div>
         <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">{data.get('weighted_r', 0.21):.2f}</div>
         <div class="text-sm mt-1 text-slate-500">0 none • 1 full set</div>
       </div>
-      <div class="bg-slate-50 border border-slate-200 p-5">
+      <div class="atlas-overview-metric">
         <div class="text-xs uppercase tracking-wider text-slate-500">UN Member States</div>
         <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">193</div>
         <div class="text-sm mt-1 text-slate-500">22 UN regions</div>
       </div>
-      <div class="bg-slate-50 border border-slate-200 p-5">
+      <div class="atlas-overview-metric">
         <div class="text-xs uppercase tracking-wider text-slate-500">Coefficient eta</div>
         <div class="mt-1 text-4xl font-semibold tabular-nums stat text-slate-950">{ETA:.2f}</div>
         <div class="text-sm mt-1 text-slate-500">25% institutional cap</div>
       </div>
     </div>
+    <details class="atlas-overview-notes"><summary>About this index</summary><p>RTLDI extended to measure capital exclusions: the lost potential GDP where capital is kept out of the economy because the nine protections necessary for it to operate are absent.</p></details>
   </div>
 
 

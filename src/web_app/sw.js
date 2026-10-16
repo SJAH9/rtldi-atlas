@@ -1,5 +1,5 @@
-const CACHE = 'rtldi-atlas-app-v1';
-const SHELL = ['app.html', 'app.css', 'app.js', 'bootstrap.js', 'embedded.css', 'manifest.webmanifest', 'offline.html', 'assets/icon-192.png', 'assets/icon-512.png', 'assets/icon-maskable-512.png', 'assets/icon-180.png', 'assets/maximize.svg', 'assets/minimize.svg', 'assets/menu.svg', 'assets/download.svg'];
+const CACHE = 'rtldi-atlas-app-v2';
+const SHELL = ['app.html', 'app.css', 'theme.css', 'app.js', 'bootstrap.js', 'embedded.css', 'manifest.webmanifest', 'offline.html', 'assets/icon-192.png', 'assets/icon-512.png', 'assets/icon-maskable-512.png', 'assets/icon-180.png', 'assets/maximize.svg', 'assets/minimize.svg', 'assets/menu.svg', 'assets/download.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)));
 });

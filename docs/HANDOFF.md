@@ -111,6 +111,26 @@ Release notes are in:
 
 Important caveat: the GitHub Release page itself was not created from this environment because `gh` is not installed and no GitHub token is available. The annotated tag and release notes are pushed and ready for manual GitHub release creation.
 
+## Web Frame Redesign (October 2026)
+
+- Shared theme tokens now unify the wrapper and embedded pages; Overview replaces
+  Global Overview as the page title. The original introduction remains in the
+  expandable About this index section.
+- Compact header/footer retain visible navigation where it fits. Both switch to
+  expandable menus at narrow widths and on small touch screens in fullscreen.
+- Fullscreen preserves iframe state, navigation history, and scroll position.
+- The rotation control is removed; the existing sidereal timing and interaction
+  pause/resume behavior remain unchanged.
+- Source assets live in `src/web_app`; install them with
+  `python -m src.generate_web_app`. Service-worker shell cache is v2.
+- Eleven unit tests passed. Chromium and Microsoft Edge browser checks passed
+  navigation, fullscreen continuity, deep links, data rows, map rendering,
+  manifest, service worker, cached offline access, mobile menus, and install UI.
+- Generated map figure fragments and embedded country data were compared with
+  the preceding commit and are unchanged. No print PDFs or research data changed.
+- The current print release remains v2026.8.8; older release instructions below
+  are historical, not pending work.
+
 ## Recent Work Completed
 
 - Cohesive design pass across print atlas, HTML atlas, Full Data View, interactive map, choropleths, and RDF export.

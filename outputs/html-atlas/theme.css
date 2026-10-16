@@ -1,0 +1,10 @@
+:root {
+  --atlas-surface:#fcfdfc; --atlas-soft:#f1f4f2; --atlas-ink:#202725;
+  --atlas-muted:#596660; --atlas-rule:#d5ded8; --atlas-accent:#16755f;
+  --atlas-water:#eaf0ed; --atlas-land:#e0e7e2;
+}
+html[data-theme="night"] {
+  --atlas-surface:#191d1c; --atlas-soft:#222725; --atlas-ink:#e7ece9;
+  --atlas-muted:#a5b2aa; --atlas-rule:#35403a; --atlas-accent:#78bdaa;
+  --atlas-water:#191d1c; --atlas-land:#303a34;
+}

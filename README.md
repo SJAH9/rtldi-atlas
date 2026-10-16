@@ -65,6 +65,14 @@ Direct deployed atlas links:
 
 ### Web App Frame and Installation
 
+The Overview and embedded pages share the frame's neutral palette and restrained
+teal accent. The introduction remains available under "About this index," with
+four headline metrics in a compact strip. Header and footer fit their contents;
+both navigation menus become expandable when space is limited. Fullscreen
+reduces perimeter spacing without reloading the current view or changing its
+type scale. The map's existing sidereal rotation remains enabled without a
+visible rotation toggle.
+
 The web Atlas opens inside a thin, common navigation frame with a persistent
 header, footer, and fullscreen control. Navigation between Atlas pages stays
 inside that frame, including in fullscreen. Existing country links and source

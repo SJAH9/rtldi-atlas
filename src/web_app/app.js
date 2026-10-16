@@ -9,6 +9,8 @@
   const frame = document.querySelector('#atlas-view');
   const navigation = document.querySelector('#atlas-navigation');
   const menu = document.querySelector('#atlas-menu');
+  const footerMenu = document.querySelector('#atlas-footer-menu');
+  const projectLinks = document.querySelector('#atlas-project-links');
   const fullscreen = document.querySelector('#atlas-fullscreen');
   const install = document.querySelector('#atlas-install');
   const message = document.querySelector('#atlas-message');
@@ -28,6 +30,9 @@
     delete navigation.dataset.open;
     menu.setAttribute('aria-expanded', 'false');
     menu.setAttribute('aria-label', 'Open navigation');
+    delete projectLinks.dataset.open;
+    footerMenu.setAttribute('aria-expanded', 'false');
+    footerMenu.setAttribute('aria-label', 'Open project links');
   }
   function navigate(value, mode = 'push') {
     const view = safeView(value) || 'index.html';
@@ -60,6 +65,7 @@
     try {
       const child = frame.contentDocument;
       child.documentElement.classList.add('atlas-embedded');
+      syncFullscreen();
       child.addEventListener('click', event => {
         closeMenu();
         const link = event.target.closest('a[href]');
@@ -82,11 +88,19 @@
   window.addEventListener('popstate', () => navigate(new URL(location.href).searchParams.get('view'), 'none'));
   menu.addEventListener('click', () => {
     const open = navigation.dataset.open !== 'true';
+    closeMenu();
     navigation.dataset.open = String(open);
     menu.setAttribute('aria-expanded', String(open));
     menu.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
   });
-  document.addEventListener('click', event => { if (!event.target.closest('.atlas-header')) closeMenu(); });
+  footerMenu.addEventListener('click', () => {
+    const open = projectLinks.dataset.open !== 'true';
+    closeMenu();
+    projectLinks.dataset.open = String(open);
+    footerMenu.setAttribute('aria-expanded', String(open));
+    footerMenu.setAttribute('aria-label', open ? 'Close project links' : 'Open project links');
+  });
+  document.addEventListener('click', event => { if (!event.target.closest('.atlas-header,.atlas-footer')) closeMenu(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
 
   function showMessage(text) {
@@ -102,14 +116,28 @@
       else await document.documentElement.requestFullscreen();
     } catch { showMessage('Fullscreen is unavailable in this browser.'); }
   });
-  document.addEventListener('fullscreenchange', () => {
+  function syncFullscreen() {
     const active = Boolean(document.fullscreenElement);
     const label = active ? 'Exit fullscreen' : 'Enter fullscreen';
     fullscreen.title = label;
     fullscreen.setAttribute('aria-label', label);
     fullscreen.setAttribute('aria-pressed', String(active));
     fullscreen.querySelector('img').src = active ? 'assets/minimize.svg' : 'assets/maximize.svg';
-  });
+    try { frame.contentDocument.documentElement.dataset.atlasFullscreen = String(active); } catch {}
+    // Keep the existing iframe and its state through all size changes.
+    const app = document.querySelector('.atlas-app');
+    const header = document.querySelector('.atlas-header');
+    const footer = document.querySelector('.atlas-footer');
+    app.classList.remove('atlas-compact');
+    const crowded = navigation.scrollWidth > navigation.clientWidth + 1 || header.scrollWidth > header.clientWidth + 1 || footer.scrollWidth > footer.clientWidth + 1;
+    const smallFullscreen = active && matchMedia('(pointer:coarse)').matches && innerWidth < 1000 && Math.min(innerWidth, innerHeight) < 600;
+    const compact = crowded || smallFullscreen;
+    app.classList.toggle('atlas-compact', compact);
+    if (!compact) closeMenu();
+  }
+  document.addEventListener('fullscreenchange', syncFullscreen);
+  window.addEventListener('resize', syncFullscreen);
+  syncFullscreen();
   const standalone = () => matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches || navigator.standalone;
   window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault();
@@ -129,6 +157,7 @@
   function updateTheme() {
     const hour = new Date().getHours();
     document.documentElement.dataset.theme = hour < 7 || hour >= 19 ? 'night' : 'day';
+    document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.documentElement).getPropertyValue('--atlas-surface').trim();
   }
   updateTheme();
   setInterval(updateTheme, 60000);
