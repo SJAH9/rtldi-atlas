@@ -68,8 +68,9 @@ Direct deployed atlas links:
 The Overview and embedded pages share the frame's neutral palette and restrained
 teal accent. The introduction remains available under "About this index," with
 four headline metrics in a compact strip. The top navigation contains Overview,
-Map, Full Data, and About. A single Sources menu in the footer collects Levers,
-Regression, V-Dem, and World Bank. Header and footer fit their contents;
+Map, Full Data, and About. A Sources link in the footer opens the existing
+sources page, whose contextual navigation includes Levers, Regression, V-Dem,
+and World Bank. Header and footer fit their contents;
 both navigation menus become expandable when space is limited. Fullscreen
 reduces perimeter spacing without reloading the current view or changing its
 type scale. The map's existing sidereal rotation remains enabled without a

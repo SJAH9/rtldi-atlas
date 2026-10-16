@@ -113,8 +113,9 @@ Important caveat: the GitHub Release page itself was not created from this envir
 
 ## Web Frame Redesign (October 2026)
 
-- Levers, Regression, V-Dem, and World Bank are grouped under Sources in the
-  bottom navigation, leaving Overview, Map, Full Data, and About at the top.
+- A Sources link in the bottom navigation opens the existing sources page and
+  its contextual links to Levers, Regression, V-Dem, and World Bank. No additional
+  Sources menu is introduced. Overview, Map, Full Data, and About remain at top.
 - Shared theme tokens now unify the wrapper and embedded pages; Overview replaces
   Global Overview as the page title. The original introduction remains in the
   expandable About this index section.

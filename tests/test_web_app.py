@@ -45,7 +45,8 @@ class WebAppTest(unittest.TestCase):
         header = html.split('<header ', 1)[1].split('</header>', 1)[0]
         for filename in ('levers.html', 'regression.html', 'vdem.html', 'world_bank.html'):
             self.assertNotIn(filename, header)
-            self.assertIn(f'data-view="{filename}"', html.split('<footer ', 1)[1])
+        self.assertIn('data-view="vdem.html">Sources</a>', html.split('<footer ', 1)[1])
+        self.assertNotIn('atlas-source-links', html)
 
     def test_rotation_remains_time_based_without_a_visible_switch(self):
         source = Path('src/generate_enclosure_map.py').read_text()

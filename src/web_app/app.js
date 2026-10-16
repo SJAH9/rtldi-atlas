@@ -11,8 +11,6 @@
   const menu = document.querySelector('#atlas-menu');
   const footerMenu = document.querySelector('#atlas-footer-menu');
   const projectLinks = document.querySelector('#atlas-project-links');
-  const sources = document.querySelector('#atlas-sources');
-  const sourceLinks = document.querySelector('#atlas-source-links');
   const fullscreen = document.querySelector('#atlas-fullscreen');
   const install = document.querySelector('#atlas-install');
   const message = document.querySelector('#atlas-message');
@@ -35,17 +33,15 @@
     delete projectLinks.dataset.open;
     footerMenu.setAttribute('aria-expanded', 'false');
     footerMenu.setAttribute('aria-label', 'Open project links');
-    sourceLinks.hidden = true;
-    sources.setAttribute('aria-expanded', 'false');
   }
   function navigate(value, mode = 'push') {
     const view = safeView(value) || 'index.html';
     const filename = new URL(view, base).pathname.split('/').pop();
     document.querySelectorAll('a[data-view]').forEach(link => {
-      if (link.dataset.view === filename) link.setAttribute('aria-current', 'page');
+      const sourcePage = ['levers.html', 'regression.html', 'vdem.html', 'world_bank.html'].includes(filename);
+      if (link.dataset.view === filename || (sourcePage && link.closest('.atlas-footer') && link.dataset.view === 'vdem.html')) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
-    sources.dataset.active = String(Boolean(sourceLinks.querySelector('a[aria-current="page"]')));
     frame.title = 'RTLDI Atlas: ' + pages.get(filename);
     document.title = pages.get(filename) + ' | RTLDI Atlas 2026';
     const outer = new URL('app.html', base);
@@ -103,12 +99,6 @@
     projectLinks.dataset.open = String(open);
     footerMenu.setAttribute('aria-expanded', String(open));
     footerMenu.setAttribute('aria-label', open ? 'Close project links' : 'Open project links');
-  });
-  sources.addEventListener('click', () => {
-    const open = sourceLinks.hidden;
-    closeMenu();
-    sourceLinks.hidden = !open;
-    sources.setAttribute('aria-expanded', String(open));
   });
   document.addEventListener('click', event => { if (!event.target.closest('.atlas-header,.atlas-footer')) closeMenu(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
