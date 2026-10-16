@@ -42,6 +42,10 @@ class WebAppTest(unittest.TestCase):
         self.assertEqual(html.count('<footer '), 1)
         self.assertIn('releases/download/v2026.8.8/RTLDI_EUROZONE_CAPITAL_EXCLUSION_MAP_2026.pdf', html)
         self.assertIn('allow="fullscreen"', html)
+        header = html.split('<header ', 1)[1].split('</header>', 1)[0]
+        for filename in ('levers.html', 'regression.html', 'vdem.html', 'world_bank.html'):
+            self.assertNotIn(filename, header)
+            self.assertIn(f'data-view="{filename}"', html.split('<footer ', 1)[1])
 
     def test_rotation_remains_time_based_without_a_visible_switch(self):
         source = Path('src/generate_enclosure_map.py').read_text()

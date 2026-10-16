@@ -42,10 +42,19 @@ def main():
         page.wait_for_function('Boolean(document.fullscreenElement)')
         assert frame.locator('body').get_attribute('data-state-check') == 'preserved'
         assert frame.locator('body').evaluate('() => scrollY') == scroll
-        page.locator('#atlas-navigation a[data-view="levers.html"]').click()
+        assert page.locator('#atlas-navigation a').all_text_contents() == ['Overview', 'Map', 'Full Data', 'About']
+        page.locator('#atlas-sources').click()
+        page.locator('#atlas-source-links a[data-view="levers.html"]').click()
         frame.locator('h1').filter(has_text='Levers').wait_for()
+        assert not page.locator('#atlas-source-links').is_visible()
+        assert page.locator('#atlas-sources').get_attribute('data-active') == 'true'
         assert page.evaluate('Boolean(document.fullscreenElement)')
-        page.locator('#atlas-navigation a[data-view="vdem.html"]').click()
+        page.locator('#atlas-sources').click()
+        page.locator('#atlas-source-links a[data-view="regression.html"]').click()
+        page.wait_for_url('**app.html?view=regression.html')
+        frame.locator('h1').wait_for()
+        page.locator('#atlas-sources').click()
+        page.locator('#atlas-source-links a[data-view="vdem.html"]').click()
         frame.locator('.site-context-link[href="world_bank.html"]').click()
         page.wait_for_url('**app.html?view=world_bank.html')
         frame.locator('h1').filter(has_text='World Bank').wait_for()
@@ -96,7 +105,10 @@ def main():
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         page.locator('#atlas-menu').click()
         page.screenshot(path=str(screenshots / 'mobile-menu.png'))
-        page.locator('#atlas-navigation a[data-view="levers.html"]').click()
+        page.locator('#atlas-sources').click()
+        assert not page.locator('#atlas-navigation').is_visible()
+        page.screenshot(path=str(screenshots / 'mobile-sources.png'))
+        page.locator('#atlas-source-links a[data-view="levers.html"]').click()
         page.frame_locator('#atlas-view').locator('h1').filter(has_text='Levers').wait_for()
         assert not page.locator('#atlas-navigation').is_visible()
         page.screenshot(path=str(screenshots / 'mobile-levers.png'))
